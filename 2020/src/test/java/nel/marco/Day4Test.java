@@ -3,6 +3,7 @@ package nel.marco;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,9 +11,9 @@ class Day4Test {
 
     @Test
     void readinput() throws IOException {
-        System.out.println(Day4.readinput());
-
-        assertEquals(957, Day4.readinput().size());
+        List<String> actual = Day4.readinput();
+//        System.out.println(actual);
+        assertEquals(957, actual.size());
     }
 
     @Test

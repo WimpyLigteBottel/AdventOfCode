@@ -10,29 +10,9 @@ public class Day4 {
 
 
     public static List<String> readinput() throws IOException {
-
-
         String path = "D:\\coding repo\\AdventOfCode\\2020\\src\\main\\resources\\day4";
 
         return Files.readAllLines(Path.of(path));
-
-
-//        return Arrays.stream("""
-//                pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
-//                hcl:#623a2f
-//
-//                eyr:2029 ecl:blu cid:129 byr:1989
-//                iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
-//
-//                hcl:#888785
-//                hgt:164cm byr:2001 iyr:2015 cid:88
-//                pid:545766238 ecl:hzl
-//                eyr:2022
-//
-//                iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
-//
-//                """.split("\n")).toList();
-
     }
 
     public static List<String> foldIntoOneLine(List<String> list) {
@@ -77,14 +57,7 @@ public class Day4 {
         int validPassports = 0;
 
         for (String line : input) {
-            var fields = line.split(" ");
-            Map<String, String> map = new HashMap<>();
-            Arrays.stream(fields).forEach(s -> {
-                String[] keyAndValue = s.split(":");
-                map.put(keyAndValue[0], keyAndValue[1]);
-            });
-
-            ID id = new ID(map);
+            ID id = new ID(line);
             if (id.isValid()) {
                 validPassports++;
             }
@@ -127,17 +100,6 @@ class ID {
     String pid = null;
     String cid = null;
 
-    public ID(Map<String, String> map) {
-        byr = map.get("byr");
-        iyr = map.get("iyr");
-        eyr = map.get("eyr");
-        hgt = map.get("hgt");
-        hcl = map.get("hcl");
-        ecl = map.get("ecl");
-        pid = map.get("pid");
-        cid = map.get("cid");
-    }
-
     public ID(String line) {
         var fields = line.split(" ");
         Map<String, String> map = new HashMap<>();
@@ -145,14 +107,14 @@ class ID {
             String[] keyAndValue = s.split(":");
             map.put(keyAndValue[0], keyAndValue[1]);
         });
-        byr = map.get("byr");
-        iyr = map.get("iyr");
-        eyr = map.get("eyr");
-        hgt = map.get("hgt");
-        hcl = map.get("hcl");
-        ecl = map.get("ecl");
-        pid = map.get("pid");
-        cid = map.get("cid");
+        this.byr = map.get("byr");
+        this.iyr = map.get("iyr");
+        this.eyr = map.get("eyr");
+        this.hgt = map.get("hgt");
+        this.hcl = map.get("hcl");
+        this.ecl = map.get("ecl");
+        this.pid = map.get("pid");
+        this.cid = map.get("cid");
         this.line = line;
     }
 
