@@ -20,6 +20,8 @@ class Day4Test {
 
         var answer1 = Day4.partOne();
         System.out.println("answer1 = " + answer1);
+
+        assertEquals("190", answer1);
     }
 
     @Test
@@ -27,6 +29,9 @@ class Day4Test {
 
         var answer2 = Day4.partTwo();
         System.out.println("answer2 = " + answer2);
+        assertEquals("121", answer2);
+
+
     }
 
     @Test

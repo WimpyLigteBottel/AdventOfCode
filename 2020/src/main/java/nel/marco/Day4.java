@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 
 public class Day4 {
 
@@ -187,56 +188,72 @@ class ID {
             return false;
         }
 
-        isValid = Integer.parseInt(byr) > 1919 && Integer.parseInt(byr) < 2003;
-
-        if (!isValid) {
-            printOutError("byr", byr);
+        if (is4DigitNumbersCorrect())
             return false;
-        }
 
-        isValid = Integer.parseInt(iyr) > 2009 && Integer.parseInt(iyr) < 2021;
-
-        if (!isValid) {
-            printOutError("iyr", iyr);
+        if (isRegexTestsCorrect())
             return false;
-        }
 
-        isValid = Integer.parseInt(eyr) > 2019 && Integer.parseInt(eyr) < 2031;
-
-        if (!isValid) {
-            printOutError("eyr", eyr);
-            return false;
-        }
-
-        isValid = isHeightCorrect();
-
-        if (!isValid) {
+        if (!isHeightCorrect()) {
             printOutError("hgt", hgt);
             return false;
         }
 
+        return true;
+    }
+
+    private boolean isRegexTestsCorrect() {
+        boolean isValid;
         isValid = hcl.matches("#([0-9a-f]{6})");
 
         if (!isValid) {
             printOutError("hcl", hcl);
-            return false;
+            return true;
         }
 
-        isValid = Arrays.stream("amb blu brn gry grn hzl oth".split(" ")).toList().contains(ecl);
+        isValid = ecl.matches("(amb|blu|brn|gry|grn|hzl|oth)");
 
         if (!isValid) {
             printOutError("ecl", ecl);
-            return false;
+            return true;
         }
 
         isValid = pid.matches("[\\d]{9}");
 
         if (!isValid) {
             printOutError("pid", pid);
-            return false;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean is4DigitNumbersCorrect() {
+        Function<String, Boolean> byrValidation = byr -> Integer.parseInt(byr) > 1919 && Integer.parseInt(byr) < 2003;
+        Function<String, Boolean> iyrFunction = iyr -> Integer.parseInt(iyr) > 2009 && Integer.parseInt(iyr) < 2021;
+        Function<String, Boolean> eyrFunction = eyr -> Integer.parseInt(eyr) > 2019 && Integer.parseInt(eyr) < 2031;
+
+        boolean isValid;
+        isValid = byrValidation.apply(byr);
+
+        if (!isValid) {
+            printOutError("byr", byr);
+            return true;
         }
 
-        return true;
+        isValid = iyrFunction.apply(iyr);
+
+        if (!isValid) {
+            printOutError("iyr", iyr);
+            return true;
+        }
+
+        isValid = eyrFunction.apply(eyr);
+
+        if (!isValid) {
+            printOutError("eyr", eyr);
+            return true;
+        }
+        return false;
     }
 
     private boolean isHeightCorrect() {
@@ -254,7 +271,7 @@ class ID {
     }
 
     private void printOutError(String key, String value) {
-        if(printError){
+        if (printError) {
             System.out.printf("%s:%s is not correct\n ", key, value);
             System.out.printf("line=%s\n", line);
         }
