@@ -4,19 +4,17 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class DayTwoTest {
+class Day2Test {
 
     @Test
     void partOne() throws IOException {
 
-        System.out.println(DayTwo.partOne());
+        System.out.println(Day2.partOne());
     }
 
     @Test
     void partTwo() throws IOException {
-        System.out.println(DayTwo.partTwo());
+        System.out.println(Day2.partTwo());
 
     }
 }

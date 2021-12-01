@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class DayTwo {
+public class Day2 {
 
 
     public static List<String> readinput() throws IOException {
