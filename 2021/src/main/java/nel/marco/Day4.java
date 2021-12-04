@@ -192,13 +192,4 @@ public class Day4 {
     }
 }
 
-record BingoBoardWithPulledNumbers(List<Integer> drawnNumbers, int index, int[][] board) {
-
-    public Object key() {
-        return drawnNumbers;
-    }
-
-    public Object value() {
-        return board;
-    }
-}
+record BingoBoardWithPulledNumbers(List<Integer> drawnNumbers, int index, int[][] board) { }
