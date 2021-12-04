@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DayOne {
+public class Day1 {
 
 
     public static List<Integer> readDayOneInput() throws IOException {

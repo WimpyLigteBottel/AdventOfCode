@@ -1,7 +1,6 @@
 package nel.marco;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,8 +25,8 @@ public class Day3Test {
     public void partOne() throws IOException {
         String answer = new Day3().part1(readDayOneInput())+"";
 
-        Assert.assertNotEquals("-1", answer);
-        System.out.println("part 1:"+answer);
+        assertNotEquals("-1", answer);
+        assertEquals("2967914", answer);
 
     }
 
@@ -36,7 +35,7 @@ public class Day3Test {
 
         String answer = new Day3().part2(readDayOneInput())+"";
 
-        Assert.assertNotEquals("-1", answer);
-        System.out.println("part 2:"+answer);
+        assertNotEquals("-1", answer);
+        assertEquals("7041258", answer);
     }
 }
