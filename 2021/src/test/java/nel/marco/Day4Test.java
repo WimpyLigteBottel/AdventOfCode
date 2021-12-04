@@ -18,7 +18,7 @@ class Day4Test {
         Map<Integer, int[][]> allBingoBoards = day4.getAllBingoBoards();
 
 
-        assertEquals(99, allBingoBoards.size());
+        assertEquals(100, allBingoBoards.size());
     }
 
 
