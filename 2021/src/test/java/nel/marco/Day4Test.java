@@ -46,6 +46,6 @@ class Day4Test {
         Map<Integer, int[][]> allBingoBoards = day4.getAllBingoBoards();
         List<Integer> randomNumbers = day4.getRandomNumbers();
         long answer = day4.part2(randomNumbers, allBingoBoards);
-        assertEquals(1924,answer);
+        assertEquals(16830,answer);
     }
 }
