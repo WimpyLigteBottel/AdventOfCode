@@ -65,59 +65,11 @@ class Day5Test {
         assertEquals(3, b.size());
 
     }
-
     @Test
     public void expandPoints2_edgeCase() {
         List<Point> a = day5.expandPointsPart2("6,4 -> 2,0");
         assertEquals(5, a.size());
     }
-
-    @Test
-    void setupBoard_b() {
-        String[][] board = day5.setupBoard(10, 10);
-        for (int i = 0; i < board.length; i++) {
-            board[i][i] = "1";
-        }
-
-        String expected = """
-                1.........
-                .1........
-                ..1.......
-                ...1......
-                ....1.....
-                .....1....
-                ......1...
-                .......1..
-                ........1.
-                .........1
-                """;
-
-        assertEquals(expected, day5.printBoard(board));
-    }
-
-    @Test
-    void setupBoard_a() {
-        String[][] board = day5.setupBoard(10, 10);
-        for (int i = 0; i < board.length; i++) {
-            board[board[0].length - 1 - i][i] = "1";
-        }
-
-        String expected = """
-                .........1
-                ........1.
-                .......1..
-                ......1...
-                .....1....
-                ....1.....
-                ...1......
-                ..1.......
-                .1........
-                1.........
-                """;
-
-        assertEquals(expected, day5.printBoard(board));
-    }
-
 
     @Test
     void part1() throws IOException {

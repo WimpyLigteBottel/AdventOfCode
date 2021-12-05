@@ -89,7 +89,7 @@ public class Day5 {
 
 
         if (from.y() < 0 || from.x() < 0)
-            System.out.println("ERROR");
+           throw new RuntimeException("Error, cant have negative values");
 
 
         return new ArrayList<>(positions);
