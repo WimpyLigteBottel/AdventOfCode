@@ -62,7 +62,8 @@ public class Day5 {
             positions.add(from);
             positions.add(to);
 
-            if (from.x() == from.y() && to.x() == to.y()) {
+            boolean isExact = from.x() == from.y() && to.x() == to.y();
+            if (isExact || from.x() < to.x() && from.y() < to.y() || from.x() > to.x() && from.y() > to.y()) {
                 while (from.x() < to.x()) {
                     from = new Point(from.x() + 1, from.y() + 1);
                     positions.add(from);
@@ -72,10 +73,7 @@ public class Day5 {
                     from = new Point(from.x() - 1, from.y() - 1);
                     positions.add(from);
                 }
-            }
-            //0,0 -> 8,8
-            //8,8 -> 0,0
-            else if (from.x() == to.y() && from.y() == to.x()) {
+            }  else {
                 while (from.x() < to.x()) {
                     from = new Point(from.x() + 1, from.y() - 1);
                     positions.add(from);
@@ -85,35 +83,7 @@ public class Day5 {
                     from = new Point(from.x() - 1, from.y() + 1);
                     positions.add(from);
                 }
-            } else
-                //2,0 -> 6,4                               ||              6,4 -> 2,0
-                if (from.x() < to.x() && from.y() < to.y() || from.x() > to.x() && from.y() > to.y()) {
 
-
-                    //6,4 -> 2,0
-                    while (from.x() > to.x()) {
-                        from = new Point(from.x() - 1, from.y() - 1);
-                        positions.add(from);
-                    }
-
-                    //2,0 -> 6,4
-                    while (from.x() < to.x()) {
-                        from = new Point(from.x() + 1, from.y() + 1);
-                        positions.add(from);
-                    }
-                }
-
-            if (from.x() != to.x() && from.y() != to.y()) {
-                //3,0 -> 2,1
-                while (from.x() > to.x()) {
-                    from = new Point(from.x() - 1, from.y() + 1);
-                    positions.add(from);
-                }
-
-                while (from.x() < to.x()) {
-                    from = new Point(from.x() + 1, from.y() - 1);
-                    positions.add(from);
-                }
             }
         }
 
