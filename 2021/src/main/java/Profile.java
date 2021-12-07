@@ -1,4 +1,4 @@
-import nel.marco.Day6;
+import nel.marco.Day7;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.io.IOException;
@@ -30,22 +30,22 @@ public class Profile {
 
         List<Integer> fishes = readInput(false);
 
-        profile(()-> {
-            new Day6().part1(fishes,80);
-        },5000);
+        profile(() -> {
+            new Day7().part1(fishes);
+        }, 5000);
 
         System.out.println();
 
-        profile(()-> {
-            new Day6().part2(fishes,256);
-        },5000);
+        profile(() -> {
+            new Day7().part2(fishes);
+        }, 5000);
     }
 
     public static List<Integer> readInput(boolean readExample) throws IOException {
 
-        String path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day6";
-        if(readExample){
-            path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day6Example";
+        String path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day7";
+        if (readExample) {
+            path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day7Example";
         }
 
         List<String> stringList = Files.readAllLines(Path.of(path));
