@@ -1,4 +1,3 @@
-import nel.marco.Day7;
 import nel.marco.Day8;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -6,12 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Profile {
-    public static void profile(Runnable runnable, long duration) {
-        System.out.printf("Profiling (%,d ms)...%n", duration);
+    public static void profile(Runnable runnable, String part, long duration) {
+        System.out.printf("Profiling %s (%,d ms)...%n", part, duration);
         DescriptiveStatistics statistics = new DescriptiveStatistics();
 
         long end = System.currentTimeMillis() + duration;
@@ -33,13 +31,13 @@ public class Profile {
 
         profile(() -> {
             new Day8().part1(fishes);
-        }, 5000);
+        }, "(part 1)", 5000);
 
         System.out.println();
 
         profile(() -> {
             new Day8().part2(fishes);
-        }, 5000);
+        }, "(part 2)", 5000);
     }
 
     public static List<String> readInput(boolean readExample) throws IOException {
