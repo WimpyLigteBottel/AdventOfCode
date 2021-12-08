@@ -109,7 +109,7 @@ public class Day8 {
             Pair a = new Pair(8, decoded.get(8));
             Pair b = new Pair(-1, scrambled[j]);
 
-            if(decoded.containsValue(scrambled[j])){
+            if (decoded.containsValue(scrambled[j])) {
                 scrambled[j] = "";
                 continue;
             }
@@ -127,7 +127,7 @@ public class Day8 {
             for (int j = 0; j < scrambled.length; j++) {
                 Pair a = new Pair(8, decoded.get(8));
                 Pair b = new Pair(-1, scrambled[j]);
-                if(decoded.containsValue(scrambled[j])){
+                if (decoded.containsValue(scrambled[j])) {
                     scrambled[j] = "";
                     continue;
                 }
@@ -145,7 +145,7 @@ public class Day8 {
             for (int j = 0; j < scrambled.length; j++) {
                 Pair a = new Pair(8, decoded.get(8));
                 Pair b = new Pair(-1, scrambled[j]);
-                if(decoded.containsValue(scrambled[j])){
+                if (decoded.containsValue(scrambled[j])) {
                     scrambled[j] = "";
                     continue;
                 }
@@ -299,9 +299,8 @@ class DigitDisplay {
                 return;
             }
 
-            if (decoded.get(3) != null) {
+            if (decoded.get(3) != null) { // 2 || 5
                 var three = decoded.get(3).split("");
-
                 for (int i = 0; i < three.length; i++) {
                     tempcode = tempcode.replaceAll(three[i], "");
                 }
@@ -318,8 +317,7 @@ class DigitDisplay {
                     return;
                 }
             }
-        }
-        if (decoded.get(3) != null && decoded.get(4) != null) {
+        } else if (decoded.get(3) != null && decoded.get(4) != null) {
             String tempcode = decoded.get(3);
             var four = decoded.get(4).split("");
             for (int i = 0; i < four.length; i++) {
@@ -331,26 +329,6 @@ class DigitDisplay {
                 modifyableText = modifyableText.replaceAll("5", bottomMiddle);
             }
         }
-
-        if (decoded.size() == 9 && decoded.get(0) != null) {
-            for (int i = 0; i < 9; i++) {
-                boolean isInList = false;
-                if (decoded.get(i).equals(b.value())) {
-                    isInList = true;
-                }
-                if (!isInList && !b.value().contains(bottomLeft)) {
-                    decoded.put(9, b.value());
-                }
-            }
-        }
-        if (decoded.size() == 9) {
-
-            if (!decoded.containsValue(b.value())) {
-                System.out.println(b.value());
-            }
-
-        }
-
 
     }
 
