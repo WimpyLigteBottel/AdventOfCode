@@ -1,5 +1,6 @@
 package nel.marco;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,10 +64,6 @@ public class Day8 {
             default -> scrambledInput;
         };
 
-        if (digitDisplay.isChanged) {
-//            digitDisplay.print();
-        }
-
         return s;
     }
 
@@ -86,7 +83,6 @@ public class Day8 {
 
             DigitDisplay digitDisplay = new DigitDisplay();
             digitDisplay.setDecoded(decoded);
-            digitDisplay.decode(new Pair(1, decoded.get(1)), new Pair(7, decoded.get(7))); // confirm top
 
             updateDecodedMapToContainAllDigits(decoded, scrambled, digitDisplay);
 
@@ -105,47 +101,60 @@ public class Day8 {
     }
 
     private void updateDecodedMapToContainAllDigits(Map<Integer, String> decoded, String[] scrambled, DigitDisplay digitDisplay) {
+
+        digitDisplay.decode(new Pair(1, decoded.get(1)), new Pair(7, decoded.get(7))); // confirm top
+
         //confirm top-right
         for (int j = 0; j < scrambled.length; j++) {
             Pair a = new Pair(8, decoded.get(8));
             Pair b = new Pair(-1, scrambled[j]);
+
+            if(decoded.containsValue(scrambled[j])){
+                scrambled[j] = "";
+                continue;
+            }
             if (scrambled[j].length() == 6) {
                 digitDisplay.decode(a, b);
             }
             decoded.putAll(digitDisplay.decoded);
         }
 
+        scrambled = Arrays.stream(scrambled)
+                .filter(s -> !s.isBlank())
+                .toArray(String[]::new);
 
-        //confirms 3, and 5 + top left and 2 and bottom left
-        for (int x = 0; x < 2; x++) {
+        for (int i = 0; i < 2; i++) {
             for (int j = 0; j < scrambled.length; j++) {
                 Pair a = new Pair(8, decoded.get(8));
                 Pair b = new Pair(-1, scrambled[j]);
+                if(decoded.containsValue(scrambled[j])){
+                    scrambled[j] = "";
+                    continue;
+                }
                 if (scrambled[j].length() == 5) {
                     digitDisplay.decode(a, b);
                 }
                 decoded.putAll(digitDisplay.decoded);
             }
+            scrambled = Arrays.stream(scrambled)
+                    .filter(s -> !s.isBlank())
+                    .toArray(String[]::new);
         }
 
-        if (decoded.get(9) == null && decoded.get(8) != null && decoded.get(0) == null) {
+        for (int i = 0; i < 2; i++) {
             for (int j = 0; j < scrambled.length; j++) {
                 Pair a = new Pair(8, decoded.get(8));
                 Pair b = new Pair(-1, scrambled[j]);
-                if (scrambled[j].length() == 6) {
-                    digitDisplay.decode(a, b);
+                if(decoded.containsValue(scrambled[j])){
+                    scrambled[j] = "";
+                    continue;
                 }
+                digitDisplay.decode(a, b);
                 decoded.putAll(digitDisplay.decoded);
             }
-        }
-
-        for (int j = 0; j < scrambled.length; j++) {
-            Pair a = new Pair(8, decoded.get(8));
-            Pair b = new Pair(-1, scrambled[j]);
-            if (scrambled[j].length() == 6) {
-                digitDisplay.decode(a, b);
-            }
-            decoded.putAll(digitDisplay.decoded);
+            scrambled = Arrays.stream(scrambled)
+                    .filter(s -> !s.isBlank())
+                    .toArray(String[]::new);
         }
 
     }
@@ -334,14 +343,13 @@ class DigitDisplay {
                 }
             }
         }
-        if(decoded.size() == 9){
+        if (decoded.size() == 9) {
 
-            if(!decoded.containsValue(b.value())){
+            if (!decoded.containsValue(b.value())) {
                 System.out.println(b.value());
             }
 
         }
-
 
 
     }
@@ -367,12 +375,8 @@ class DigitDisplay {
         try {
             return Integer.parseInt(a);
         } catch (Exception e) {
-
+            throw new RuntimeException("I dont have this decoded");
         }
-
-
-        throw new RuntimeException("I dont have this decoded");
-
     }
 }
 
