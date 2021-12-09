@@ -3,6 +3,7 @@ package nel.marco;
 import nel.marco.util.Point;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 public class Day9 {
 
@@ -248,9 +249,25 @@ class Part2 {
 
         List<Long> areas = new ArrayList<>();
 
+        List<Future<Long>> futures = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(12);
         for (Point point : centerOfAllThePoints) {
-            areas.add(findArea(point));
+            Future<Long> submit = executorService.submit(() -> findArea(point));
+            futures.add(submit);
         }
+
+        while(futures.size() >0){
+            Long area = null;
+            try {
+                area = futures.remove(0).get();
+                areas.add(area);
+
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        executorService.shutdown();
 
         areas.sort(Long::compareTo);
 
