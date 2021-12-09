@@ -1,5 +1,7 @@
 package nel.marco;
 
+import nel.marco.util.Point;
+
 import java.util.*;
 
 public class Day5 {
@@ -175,13 +177,4 @@ public class Day5 {
 
 }
 
-record Point(int x, int y) {
 
-    @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
-    }
-}
