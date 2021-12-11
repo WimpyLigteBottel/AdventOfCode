@@ -29,9 +29,6 @@ public class Profile {
     }
 
     public static void main(String[] args) throws IOException {
-
-
-
         Day11 day11 = new Day11();
 
         profile(() -> {
