@@ -1,8 +1,5 @@
 package nel.marco;
 
-import nel.marco.util.Point;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Day11 {
@@ -26,109 +23,163 @@ public class Day11 {
 
     public long part1(List<String> input) {
         Octopus[][] board = setupBoard(input);
-        Octopus[][] nextBoard = copyBoard(board);
 
 
         long total = 0L;
         for (int i = 0; i < 100; i++) {
-            total += increaseAllOctopuseLevels(1, nextBoard);
+            increaseAllOctopuseLevels(1, board);
+            total += indicateFlashing(board);
         }
 
         return total;
     }
 
-    public long increaseAllOctopuseLevels(int number, Octopus[][] board) {
-        long total = 0L;
-        long before = total;
+    public void printBoard(Octopus[][] board) {
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board.length; x++) {
+                System.out.print(board[y][x].energyLevel());
+            }
+            System.out.println();
+        }
+    }
+
+    public void increaseAllOctopuseLevels(int number, Octopus[][] board) {
+
+        boolean hasTenEnergy = false;
+
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board.length; x++) {
                 board[y][x] = new Octopus(false, board[y][x].energyLevel() + number);
+                if(board[y][x].energyLevel() >= 10)
+                    hasTenEnergy = true;
             }
         }
-        total += indicateFlashing(board);
 
-        return total;
+
+        while(hasTenEnergy){
+            hasTenEnergy = false;
+            for (int y = 0; y < board.length; y++) {
+                for (int x = 0; x < board.length; x++) {
+                    if (board[y][x].energyLevel() >= 10) {
+                        board[y][x] = new Octopus(true, 0);
+                        increaseAdjacentOctopuses(1, x, y, board);
+                        hasTenEnergy = true;
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void updateFlashing(Octopus octopus) {
+        if (octopus.energyLevel() >= 10){
+            octopus = new Octopus(true, 0);
+        }
     }
 
     public long indicateFlashing(Octopus[][] board) {
         long counter = 0;
 
-        List<Point<Integer,Integer>> needsToIncrease = new ArrayList<>();
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board.length; x++) {
-                if (!board[y][x].hasFlashed() && board[y][x].energyLevel() > 8) {
-                    board[y][x] = new Octopus(true, board[y][x].energyLevel());
-                    needsToIncrease.addAll(increaseAdjacentOctopuses(1, x, y, board));
+                if (!board[y][x].hasFlashed() && board[y][x].energyLevel() > 9) {
+                    board[y][x] = new Octopus(true, 0);
+                }
+            }
+        }
+
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board.length; x++) {
+                if (board[y][x].hasFlashed()) {
                     counter++;
                 }
             }
         }
 
+
         return counter;
     }
 
-    public List<Point> increaseAdjacentOctopuses(int number, int x, int y, Octopus[][] board) {
+    private boolean hasNotFlashed(Octopus octopus) {
 
-        List<Point> needsToIncrease = new ArrayList<>();
+        return !octopus.hasFlashed();
+    }
+
+    public void increaseAdjacentOctopuses(int number, int x, int y, Octopus[][] board) {
 
         //top row
         try {
             Octopus topLeft = board[y - 1][x - 1];
             Octopus octopus = new Octopus(topLeft.hasFlashed(), topLeft.energyLevel() + number);
-            needsToIncrease.add(new Point(x,y));
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y - 1][x - 1] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
         try {
 
             Octopus topMiddle = board[y - 1][x];
             Octopus octopus = new Octopus(topMiddle.hasFlashed(), topMiddle.energyLevel() + number);
-            needsToIncrease.add(new Point(x,y));
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y - 1][x] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
         try {
 
             Octopus topRight = board[y - 1][x + 1];
             Octopus octopus = new Octopus(topRight.hasFlashed(), topRight.energyLevel() + number);
-            needsToIncrease.add(octopus);
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y - 1][x + 1] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
 
         //middle row
         try {
             Octopus middleLeft = board[y][x - 1];
             Octopus octopus = new Octopus(middleLeft.hasFlashed(), middleLeft.energyLevel() + number);
-            needsToIncrease.add(octopus);
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y][x - 1] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
         try {
             Octopus middleRight = board[y][x + 1];
             Octopus octopus = new Octopus(middleRight.hasFlashed(), middleRight.energyLevel() + number);
-            needsToIncrease.add(octopus);
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y][x + 1] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
 
 
         //bottom row
         try {
-            Octopus bottomLeft = board[y - 1][x - 1];
+            Octopus bottomLeft = board[y + 1][x - 1];
             Octopus octopus = new Octopus(bottomLeft.hasFlashed(), bottomLeft.energyLevel() + number);
-            needsToIncrease.add(octopus);
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y + 1][x - 1] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
         try {
-            Octopus bottomMiddle = board[y - 1][x];
+            Octopus bottomMiddle = board[y + 1][x];
             Octopus octopus = new Octopus(bottomMiddle.hasFlashed(), bottomMiddle.energyLevel() + number);
-            needsToIncrease.add(octopus);
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y + 1][x] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
         try {
-            Octopus bottomRight = board[y - 1][x + 1];
+            Octopus bottomRight = board[y + 1][x + 1];
             Octopus octopus = new Octopus(bottomRight.hasFlashed(), bottomRight.energyLevel() + number);
-            needsToIncrease.add(octopus);
-        } catch (Exception e) {
+            if (hasNotFlashed(octopus))
+                board[y + 1][x + 1] = octopus;
+            updateFlashing(octopus);
+        } catch (Exception ignore) {
         }
 
-        return needsToIncrease;
     }
 
     public Octopus[][] copyBoard(Octopus[][] currentBoard) {
@@ -145,6 +196,15 @@ public class Day11 {
 
 
     public long part2(List<String> input) {
+        Octopus[][] board = setupBoard(input);
+
+        for (int i = 1; i < 1000; i++) {
+            increaseAllOctopuseLevels(1, board);
+            if(indicateFlashing(board) == 100){
+                return i;
+            }
+        }
+
         return -1;
     }
 }

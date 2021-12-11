@@ -30,10 +30,13 @@ class Day11Test {
     @Test
     void part1() throws IOException {
         assertEquals(1656, day11.part1(readInput(true)));
-        assertEquals(-1, day11.part1(readInput(false)));
+        assertEquals(1562, day11.part1(readInput(false)));
     }
 
     @Test
-    void part2() {
+    void part2() throws IOException {
+
+        assertEquals(195, day11.part2(readInput(true)));
+        assertEquals(-1, day11.part2(readInput(false)));
     }
 }

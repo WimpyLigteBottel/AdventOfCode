@@ -1,4 +1,5 @@
 import nel.marco.Day10;
+import nel.marco.Day11;
 import nel.marco.Day8;
 import nel.marco.Day9;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -31,7 +32,7 @@ public class Profile {
 
 
 
-        Day10 day10 = new Day10();
+        Day11 day11 = new Day11();
 
         profile(() -> {
             List<String> strings = null;
@@ -40,8 +41,8 @@ public class Profile {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            day10.part1(strings);
-        }, "(day 10.1)", 5000);
+            day11.part1(strings);
+        }, "(day 11.1)", 5000);
 
         System.out.println();
 
@@ -52,16 +53,16 @@ public class Profile {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            day10.part2(strings);
-        }, "(day 10.2)", 5000);
+            day11.part2(strings);
+        }, "(day 11.2)", 5000);
     }
 
 
     public static List<String> readInput(boolean readExample) throws IOException {
 
-        String path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day10";
+        String path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day11";
         if (readExample) {
-            path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day10Example";
+            path = "D:\\coding repo\\AdventOfCode\\2021\\src\\main\\resources\\day11Example";
         }
 
         List<String> stringList = Files.readAllLines(Path.of(path));
