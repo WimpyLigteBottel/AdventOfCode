@@ -102,12 +102,12 @@ public class Day8 {
 
     private void updateDecodedMapToContainAllDigits(Map<Integer, String> decoded, String[] scrambled, DigitDisplay digitDisplay) {
 
-        digitDisplay.decode(new Pair(1, decoded.get(1)), new Pair(7, decoded.get(7))); // confirm top
+        digitDisplay.decode(new Point(1, decoded.get(1)), new Point(7, decoded.get(7))); // confirm top
 
         //confirm top-right
         for (int j = 0; j < scrambled.length; j++) {
-            Pair a = new Pair(8, decoded.get(8));
-            Pair b = new Pair(-1, scrambled[j]);
+            Point a = new Point(8, decoded.get(8));
+            Point b = new Point(-1, scrambled[j]);
 
             if (decoded.containsValue(scrambled[j])) {
                 scrambled[j] = "";
@@ -125,8 +125,8 @@ public class Day8 {
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < scrambled.length; j++) {
-                Pair a = new Pair(8, decoded.get(8));
-                Pair b = new Pair(-1, scrambled[j]);
+                Point a = new Point(8, decoded.get(8));
+                Point b = new Point(-1, scrambled[j]);
                 if (decoded.containsValue(scrambled[j])) {
                     scrambled[j] = "";
                     continue;
@@ -143,8 +143,8 @@ public class Day8 {
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < scrambled.length; j++) {
-                Pair a = new Pair(8, decoded.get(8));
-                Pair b = new Pair(-1, scrambled[j]);
+                Point a = new Point(8, decoded.get(8));
+                Point b = new Point(-1, scrambled[j]);
                 if (decoded.containsValue(scrambled[j])) {
                     scrambled[j] = "";
                     continue;
@@ -237,7 +237,7 @@ class DigitDisplay {
 
     }
 
-    public void decode(Pair a, Pair b) {
+    public void decode(Point a, Point b) {
         if (a.key() == 1 && b.key() == 7) { //decode .1111.
             String topRow = b.value();
             topRow = topRow.replaceAll(a.value().charAt(0) + "", "");

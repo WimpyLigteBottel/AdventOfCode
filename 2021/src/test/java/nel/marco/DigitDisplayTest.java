@@ -2,10 +2,7 @@ package nel.marco;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DigitDisplayTest {
 
@@ -21,7 +18,7 @@ class DigitDisplayTest {
     void decode() {
 
         DigitDisplay digitDisplay = new DigitDisplay();
-        digitDisplay.decode(new Pair(1,"be"),new Pair(7,"edb"));
+        digitDisplay.decode(new Point(1,"be"),new Point(7,"edb"));
     }
 
     @Test
@@ -29,6 +26,6 @@ class DigitDisplayTest {
 
         DigitDisplay digitDisplay = new DigitDisplay();
         digitDisplay.setDecoded(Map.of(1,"ab"));
-        digitDisplay.decode(new Pair(8,"acedgfb"),new Pair(6,"cdfgeb"));
+        digitDisplay.decode(new Point(8,"acedgfb"),new Point(6,"cdfgeb"));
     }
 }
