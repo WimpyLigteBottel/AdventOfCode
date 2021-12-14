@@ -33,7 +33,7 @@ class Day8Test {
     void part1() throws IOException {
 
         assertEquals(26, day8.part1(readInput(true)));
-        assertEquals(26, day8.part1(readInput(false)));
+        assertEquals(369, day8.part1(readInput(false)));
     }
 
     @Test
