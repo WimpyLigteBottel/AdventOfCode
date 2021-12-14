@@ -92,41 +92,26 @@ public class Day12 {
         return path;
     }
 
-    private String findPathPart2(String path, String lastValue, List<String> input, Set<String> validPath, boolean duplicateUsed) {
+    private String findPathPart2(String path, String lastValue, List<String> input, Set<String> validPath) {
         path += "," + lastValue;
-        if (lastValue.equals("end")) {
+        if (path.contains("end")) {
             validPath.add(path);
             return path;
         }
 
-        //No character allowed above 2 if its small
-        String[] split = path.split(",");
-        for (int x = 0; x < split.length; x++) {
-            long characterAlreadyCount = countCharacter(path, split[x]);
-            boolean isCaveSmall = split[x].charAt(0) >= 'a';
+        if (containsMiniCaveWithMoreThan(path, 2)) {
+            return path;
+        }
 
-            if (characterAlreadyCount > 2 && isCaveSmall) {
-                return path;
-            }
+        if (doesSmallCavesContainMoreThanOneDuplicate(path)) {
+            return path;
         }
 
         List<String> goTo = getAllValuesThatValueCanGoTo(lastValue, input);
         goTo.remove("start");
-
         for (String nextCharacter : goTo) {
-            boolean isSmallCave = nextCharacter.charAt(0) >= 'a';
-            if (duplicateUsed && countCharacter(path, nextCharacter) > 2 && path.contains(nextCharacter) && isSmallCave) {
-                continue;
-            }
-
-            boolean hasDuplicateTemp = false;
-            split = path.split(",");
-            split = Arrays.stream(split).filter(s -> !s.equals("start")).toArray(String[]::new);
-
-            findPathPart2(path, nextCharacter, input, validPath, true);
-            findPathPart2(path, nextCharacter, input, validPath, false);
+            findPathPart2(path, nextCharacter, input, validPath);
         }
-
 
         return path;
     }
@@ -136,6 +121,47 @@ public class Day12 {
         return Arrays.stream(path.split(","))
                 .filter(s -> s.equals(character))
                 .count();
+    }
+
+    public boolean doesSmallCavesContainMoreThanOneDuplicate(String path) {
+
+        List<String> collect = Arrays.stream(path.split(",")).collect(Collectors.toList());
+        collect.remove("start");
+
+        List<String> miniCaves = collect.stream()
+                .filter(s -> s.charAt(0) >= 'a')
+                .collect(Collectors.toList());
+
+        Map<String, Integer> map = new TreeMap<>();
+
+        miniCaves.forEach(s -> {
+            map.putIfAbsent(s, 0);
+            map.put(s, map.get(s) + 1);
+        });
+
+        long miniCavesAmount = map.values().stream().filter(integer -> integer >= 2).count();
+        return miniCavesAmount >= 2;
+    }
+
+
+    public boolean containsMiniCaveWithMoreThan(String path, int amount) {
+
+        List<String> collect = Arrays.stream(path.split(",")).collect(Collectors.toList());
+        collect.remove("start");
+
+        List<String> miniCaves = collect.stream()
+                .filter(s -> s.charAt(0) >= 'a')
+                .collect(Collectors.toList());
+
+        Map<String, Integer> map = new TreeMap<>();
+
+        miniCaves.forEach(s -> {
+            map.putIfAbsent(s, 0);
+            map.put(s, map.get(s) + 1);
+        });
+
+        long miniCavesAmount = map.values().stream().filter(integer -> integer > amount).count();
+        return miniCavesAmount >= 1;
     }
 
     private List<String> getAllValuesThatValueCanGoTo(String character, List<String> map) {
@@ -165,8 +191,9 @@ public class Day12 {
         Set<String> validPaths = new TreeSet<>();
 
         start.forEach(s -> {
-            findPathPart2("start", s, input, validPaths, false);
+            findPathPart2("start", s, input, validPaths);
         });
+
 
         return validPaths.size();
     }

@@ -36,7 +36,7 @@ class Day12Test {
 
     @Test
     void part2() throws IOException {
-        assertEquals(103, day12.part2(readInput(true)), "Part 2 Example message is wrong");//6231
-        assertEquals(-1, day12.part2(readInput(false)),"Part 2 actual is wrong");
+        assertEquals(3509, day12.part2(readInput(true)), "Part 2 Example message is wrong");//6231
+        assertEquals(133621, day12.part2(readInput(false)),"Part 2 actual is wrong");
     }
 }
