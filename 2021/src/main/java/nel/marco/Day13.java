@@ -9,6 +9,56 @@ import java.util.stream.Collectors;
 public class Day13 {
 
 
+
+
+    public long part1(List<String> input) {
+        PaperFolding paperFolding = new PaperFolding();
+        String[][] map = paperFolding.createMap(input, new Point(11, 15));
+        List<String> foldInfo = paperFolding.getFoldInfo(input);
+        System.out.println(printBoard(map));
+        System.out.println();
+        for (String s : foldInfo) {
+            boolean x = s.contains("x");
+            if (x) {
+                map = paperFolding.foldAlongX(map, Integer.parseInt(s.split("=")[1]));
+            } else {
+                map = paperFolding.foldAlongY(map, Integer.parseInt(s.split("=")[1]));
+            }
+
+            System.out.println(printBoard(map));
+            System.out.println();
+        }
+
+
+        return -1;
+    }
+
+
+
+    public String printBoard(String[][] board) {
+
+        StringBuilder sb = new StringBuilder(1000);
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                sb.append(board[i][j]);
+            }
+            sb.append("\n");
+        }
+
+
+        return sb.toString();
+    }
+
+
+    public long part2(List<String> input) {
+
+        return -1;
+    }
+
+}
+
+class PaperFolding{
+
     public List<String> removeFoldInfo(List<String> input) {
         return input.stream().filter(s -> !s.isBlank() && !s.startsWith("fold")).collect(Collectors.toList());
     }
@@ -17,9 +67,7 @@ public class Day13 {
         return input.stream().filter(s -> !s.isBlank() && s.startsWith("fold")).collect(Collectors.toList());
     }
 
-
     public String[][] createMap(List<String> input, Point maxValues) {
-
         String[][] map = new String[maxValues.y()][maxValues.x()];
 
         for (int y = 0; y < maxValues.y(); y++) {
@@ -41,31 +89,6 @@ public class Day13 {
         return map;
     }
 
-    public long part1(List<String> input) {
-        Point maxValues = new Point(11, 15);
-        String[][] map = createMap(input, maxValues);
-
-        List<String> foldInfo = getFoldInfo(input);
-        System.out.println(printBoard(map));
-        System.out.println("XXXXXXXXXXXXXXXXXXXXX");
-        for (String s : foldInfo) {
-            boolean x = s.contains("x");
-
-            if (x) {
-                map = foldAlongX(map, Integer.parseInt(s.split("=")[1]));
-            } else {
-                map = foldAlongY(map, Integer.parseInt(s.split("=")[1]));
-            }
-
-            System.out.println(printBoard(map));
-            System.out.println();
-
-        }
-
-
-        return -1;
-    }
-
     public String[][] foldAlongX(String[][] map, int amount) {
         int smallMapX = map.length;
         int smallMapY = amount;
@@ -84,6 +107,9 @@ public class Day13 {
                 newMap[x][y] = map[x][y];
             }
         }
+
+        //Get each point and invert
+        //TODO: forloop
         return newMap;
     }
 
@@ -106,28 +132,14 @@ public class Day13 {
                 newMap[x][y] = map[x][y];
             }
         }
+
+        //Get each point and invert
+        //TODO: forloop
+
         return newMap;
 
     }
 
-    public String printBoard(String[][] board) {
 
-        StringBuilder sb = new StringBuilder(1000);
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                sb.append(board[i][j]);
-            }
-            sb.append("\n");
-        }
-
-
-        return sb.toString();
-    }
-
-
-    public long part2(List<String> input) {
-
-        return -1;
-    }
 
 }
