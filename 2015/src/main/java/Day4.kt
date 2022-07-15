@@ -55,18 +55,15 @@ class Day4 {
 fun main(args: Array<String>) {
 
 
-    var readAllLines = Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day4"))
-//    readAllLines = Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day4Test"))
+    var readAllLines = MarcoUtil.readInput(4)
     val day = Day4()
     val input = readAllLines.get(0)
 
 
     val part1: () -> Unit = {
-        day.part1(input)
         println("part1 = ${day.part1(input)}")
     }
     val part2: () -> Unit = {
-        day.part2(input)
         println("part2 = ${day.part2(input)}")
     }
     MarcoUtil.time("part1", part1);

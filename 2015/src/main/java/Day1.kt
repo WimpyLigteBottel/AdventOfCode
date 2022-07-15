@@ -4,9 +4,7 @@ import java.nio.file.Path
 class Part1 {
 
     fun main(args: Array<String>) {
-        val readAllLines = Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day1"))
-        var input = readAllLines.get(0);
-
+        var input = MarcoUtil.readInput(1).get(0);
 
         part1(input)
         part2(input)

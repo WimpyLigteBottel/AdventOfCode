@@ -77,8 +77,7 @@ class Day2 {
 }
 
 fun main(args: Array<String>) {
-    var readAllLines = Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day2"))
-//    readAllLines = Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day2Test"))
+    var readAllLines =MarcoUtil.readInput(2)
     val day2 = Day2()
     println("part1 = ${day2.part1(readAllLines)}")
     println("part2 = ${day2.part2(readAllLines)}")
