@@ -21,36 +21,25 @@ fun main(args: Array<String>) {
 }
 
 fun answerOne(elves: List<String>): String {
-    var highestCalories = -1;
-    elves.forEach { s ->
-        val totalCalories = s.split("\n")
+    val listOfCalories = elves.map { s ->
+        s.split("\n")
             .filter { it != "" }
             .sumOf {
                 Integer.parseInt(it)
             }
+    }.sortedDescending()
 
-        if (totalCalories >= highestCalories) {
-            highestCalories = totalCalories
-        }
-    }
-
-    return "$highestCalories"
+    return listOfCalories[0].toString()
 }
 
 fun answerTwo(elves: List<String>): String {
-    val listOfCalories = mutableListOf<Int>()
-    elves.forEach { s ->
-        val totalCalories = s.split("\n")
+    val listOfCalories = elves.map { s ->
+        s.split("\n")
             .filter { it != "" }
             .sumOf {
                 Integer.parseInt(it)
             }
-
-        listOfCalories.add(totalCalories)
-    }
-
-    listOfCalories.sortDescending()
-
+    }.sortedDescending()
 
     return listOfCalories.subList(0, 3).sum().toString()
 }
