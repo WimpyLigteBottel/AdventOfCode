@@ -3,7 +3,7 @@ import java.nio.file.Path
 
 fun readInput(exampleInput: Boolean = false): String {
     if (exampleInput) {
-        return Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2022\\src\\main\\resources\\day1"))
+        return Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2022\\src\\main\\resources\\day1_example"))
             .joinToString("\n")
     }
 
@@ -16,11 +16,8 @@ fun main(args: Array<String>) {
     val input = readInput()
     val elves = input.split("\n\n")
 
-
-
     println(answerOne(elves))
     println(answerTwo(elves))
-
 }
 
 fun answerOne(elves: List<String>): String {
@@ -41,7 +38,6 @@ fun answerOne(elves: List<String>): String {
 }
 
 fun answerTwo(elves: List<String>): String {
-    var highestCalories = -1
     val listOfCalories = mutableListOf<Int>()
     elves.forEach { s ->
         val totalCalories = s.split("\n")
