@@ -6,39 +6,30 @@ class Day2(var readInput: List<String>) {
 
 
     fun answerOne(): String {
-        return readInput.map {
+        return readInput.sumOf {
             val results = it.split(" ")
 
-            val opponent = OPPONENT.values().find { it.letter == (results[0]) }!!
-            val me = ME.values().find { it.letter == (results[1]) }!!
+            val opponent = OPPONENT.find(results[0])
+            val me = ME.find(results[1])
 
             determineScore(opponent, me)
-        }.sum().toString()
+        }.toString()
     }
 
     fun answerTwo(): String {
-        return readInput.map {
+        return readInput.sumOf {
             val results = it.split(" ")
 
-            val opponent = OPPONENT.values().find { it.letter == (results[0]) }!!
+            val opponent = OPPONENT.find(results[0])
             val me = determineCounterPlay(opponent, results[1])
 
             determineScore(opponent, me)
-        }.sum().toString()
+        }.toString()
     }
 
     fun determineCounterPlay(opponent: OPPONENT, input: String): ME {
-
-        var condition = when (input) {
-            "Y" -> "DRAW"
-            "X" -> "LOSE"
-            "Z" -> "WIN"
-            else -> ""
-        }
-
-
-        when (condition) {
-            "DRAW" -> {
+        when (WinCondition.find(input)) {
+            WinCondition.DRAW -> {
                 return when (opponent) {
                     OPPONENT.ROCK -> ME.ROCK
                     OPPONENT.PAPER -> ME.PAPER
@@ -46,7 +37,7 @@ class Day2(var readInput: List<String>) {
                 }
             }
 
-            "LOSE" -> {
+            WinCondition.LOSE -> {
                 return when (opponent) {
                     OPPONENT.ROCK -> ME.SCISSORS
                     OPPONENT.PAPER -> ME.ROCK
@@ -54,16 +45,12 @@ class Day2(var readInput: List<String>) {
                 }
             }
 
-            "WIN" -> {
+            WinCondition.WIN -> {
                 return when (opponent) {
                     OPPONENT.ROCK -> ME.PAPER
                     OPPONENT.PAPER -> ME.SCISSORS
                     OPPONENT.SCISSORS -> ME.ROCK
                 }
-            }
-
-            else -> {
-                throw RuntimeException("Failed to understand win condition")
             }
         }
     }
@@ -101,13 +88,38 @@ class Day2(var readInput: List<String>) {
     enum class OPPONENT(var letter: String) {
         ROCK("A"),
         PAPER("B"),
-        SCISSORS("C")
+        SCISSORS("C");
+
+        companion object {
+            fun find(s: String): OPPONENT {
+                return OPPONENT.values().find { it.letter == (s) }!!
+            }
+        }
+
     }
 
     enum class ME(var letter: String) {
         ROCK("X"),
         PAPER("Y"),
-        SCISSORS("Z")
+        SCISSORS("Z");
+
+        companion object {
+            fun find(s: String): ME {
+                return ME.values().find { it.letter == (s) }!!
+            }
+        }
+    }
+
+    enum class WinCondition(var letter: String) {
+        LOSE("X"),
+        DRAW("Y"),
+        WIN("Z");
+
+        companion object {
+            fun find(s: String): WinCondition {
+                return WinCondition.values().find { it.letter == (s) }!!
+            }
+        }
     }
 
 }
