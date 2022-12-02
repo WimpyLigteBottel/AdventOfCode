@@ -1,19 +1,12 @@
+import nel.marco.ReadUtil
 import java.nio.file.Files
 import java.nio.file.Path
 
-fun readInput(exampleInput: Boolean = false): String {
-    if (exampleInput) {
-        return Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2022\\src\\main\\resources\\day1_example"))
-            .joinToString("\n")
-    }
 
-    return Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2022\\src\\main\\resources\\day1"))
-        .joinToString("\n")
-}
 
 fun main(args: Array<String>) {
 
-    val input = readInput()
+    val input = ReadUtil.readInput(1)
     val elves = input.split("\n\n")
 
     println(answerOne(elves))
