@@ -1,7 +1,5 @@
 package nel.marco
 
-import java.lang.RuntimeException
-
 class Day3(var readInput: List<String>) {
 
     var mapOfValues = setupValue()
@@ -23,27 +21,15 @@ class Day3(var readInput: List<String>) {
     }
 
     fun answerOne(): String {
-
         setupValue()
 
-        var total = readInput.map {
+        val total = readInput.map {
             val length = it.length
-            val bagOne = it.substring(0, length / 2)
-            val bagTwo = it.substring(length / 2)
+            val bagOne = it.substring(0, length / 2).toList()
+            val bagTwo = it.substring(length / 2).toList()
 
-            val setUnique = mutableSetOf<String>()
-
-            bagOne.forEach {
-                if (bagTwo.contains(it)) {
-                    setUnique.add(it.toString())
-                }
-            }
-
-            if (setUnique.size != 1) {
-                println("BROKEN")
-            }
-
-            mapOfValues.get(setUnique.first()).toString()
+            val intersectingCharacter = bagOne.intersect(bagTwo).first().toString()
+            mapOfValues[intersectingCharacter].toString()
         }.sumOf { Integer.parseInt(it) }
 
         return "$total"
@@ -58,15 +44,12 @@ class Day3(var readInput: List<String>) {
         while (readInput.size > counter) {
             val subList = readInput.subList(counter, counter + 3)
 
-            val setUnique = mutableSetOf<String>()
+            val intersectingCharacter = subList[0].toList()
+                .intersect(subList[1].toList())
+                .intersect(subList[2].toList())
+                .first().toString()
 
-            subList[0].forEach {
-                if (subList[1].contains(it) && subList[2].contains(it)) {
-                    setUnique.add(it.toString())
-                }
-            }
-
-            totalValue += Integer.parseInt(mapOfValues.get(setUnique.first()).toString())
+            totalValue += mapOfValues[intersectingCharacter]!!
             counter += 3
         }
 
