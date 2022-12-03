@@ -6,6 +6,9 @@ import java.time.Instant
 class MarcoUtil {
 
     companion object {
+
+
+        val basePath = "D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\"
         fun time(name: String, work: () -> Unit): Unit {
             val now = Instant.now()
             work.invoke()
@@ -15,12 +18,12 @@ class MarcoUtil {
         }
 
         fun readInput(day: Int): List<String> {
-            return Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day$day"))
+            return Files.readAllLines(Path.of("${basePath}day$day"))
         }
 
-        fun readInput(day: Int, testInput: Boolean): List<String> {
+        fun readInput(day: Int, testInput: Boolean = false): List<String> {
             if (testInput)
-                return Files.readAllLines(Path.of("D:\\coding repo\\AdventOfCode\\2015\\src\\main\\resources\\day${day}Test"))
+                return Files.readAllLines(Path.of("${basePath}day${day}Test"))
             else
                 return readInput(day)
         }
