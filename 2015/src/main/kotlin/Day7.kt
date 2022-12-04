@@ -7,67 +7,52 @@ class Day7(private var input: MutableList<String>) {
 
 
     fun part1(): Int {
-
-        input.reverse()
-
-
-         input
-            .map {
-                val text = it.split("->")
-                "${text[1]} -> ${text[0]}"
-            }
-            .sorted()
-            .sortedBy { it.split("->")[0].length }
-            .forEach {
-
-                mapResults.put(it.split("->")[0].trim(), it.split("->")[1])
-            }
-
-        for (x in 0..mapResults.size)
-            tryToFillAsMuchAsPossible()
-
-        return mapResults["a"]!!.trim().toInt()
-    }
-
-    fun part2(): Int {
-
-        input.reverse()
-
-
         input
             .map {
                 val text = it.split("->")
                 "${text[1]} -> ${text[0]}"
             }
-            .sorted()
-            .sortedBy { it.split("->")[0].length }
             .forEach {
                 val key = it.split("->")[0].trim()
                 var value = it.split("->")[1]
 
-                if(key == "b")
-                    value = "956"
-
-                mapResults.put(key, value)
+                mapResults[key] = value
             }
 
+        tryToFillAsMuchAsPossible()
 
-        for (x in 0..mapResults.size)
-            tryToFillAsMuchAsPossible()
+        return mapResults["a"]!!.trim().toInt()
+    }
 
+    fun part2(): Int {
+        input
+            .map {
+                val text = it.split("->")
+                "${text[1]} -> ${text[0]}"
+            }
+            .forEach {
+                val key = it.split("->")[0].trim()
+                var value = it.split("->")[1]
+
+                if (key == "b")
+                    value = "956"
+
+                mapResults[key] = value
+            }
+
+        tryToFillAsMuchAsPossible()
 
         return mapResults["a"]!!.trim().toInt()
     }
 
     private fun tryEquations() {
-        var equationHasHappened = false
         mapResults.forEach {
             if (it.value.contains("RSHIFT")) {
                 val split = it.value.trim().split("RSHIFT")
 
                 if (split[0].isDigit() && split[1].isDigit()) {
                     mapResults[it.key] = split[0].trim().toInt().shr(split[1].trim().toInt()).toString()
-                    equationHasHappened = true
+                    tryToFillAsMuchAsPossible()
                 }
             }
 
@@ -75,7 +60,7 @@ class Day7(private var input: MutableList<String>) {
                 val split = it.value.trim().split("LSHIFT")
                 if (split[0].isDigit() && split[1].isDigit()) {
                     mapResults[it.key] = split[0].trim().toInt().shl(split[1].trim().toInt()).toString()
-                    equationHasHappened = true
+                    tryToFillAsMuchAsPossible()
                 }
             }
 
@@ -83,7 +68,7 @@ class Day7(private var input: MutableList<String>) {
                 val split = it.value.trim().split(" OR ")
                 if (split[0].isDigit() && split[1].isDigit()) {
                     mapResults[it.key] = split[0].trim().toInt().or(split[1].trim().toInt()).toString()
-                    equationHasHappened = true
+                    tryToFillAsMuchAsPossible()
                 }
             }
 
@@ -91,21 +76,16 @@ class Day7(private var input: MutableList<String>) {
                 val split = it.value.trim().split(" AND ")
                 if (split[0].isDigit() && split[1].isDigit()) {
                     mapResults[it.key] = split[0].trim().toInt().and(split[1].trim().toInt()).toString()
-                    equationHasHappened = true
+                    tryToFillAsMuchAsPossible()
                 }
             }
         }
 
         solveNOT()
-
-        if (equationHasHappened)
-            tryToFillAsMuchAsPossible()
     }
 
-    private fun solveNOT() {
-
+    private fun solveNOT(){
         val regex = "(NOT.+)\\d{1,10}".toRegex()
-
         mapResults.forEach { outer ->
 
             val find = regex.find(mapResults[outer.key.trim()]!!)
@@ -114,30 +94,29 @@ class Day7(private var input: MutableList<String>) {
                 if (outer.value.contains(" NOT ")) {
 
                     val split = outer.value.split(" NOT ")
-                    if (split.size == 2 && split[1].isDigit())
+                    if (split.size == 2 && split[1].isDigit()) {
                         mapResults[outer.key] = (-split[1].trim().toInt() - 1).toString()
+                        tryToFillAsMuchAsPossible()
+                    }
                 }
             }
 
         }
+
     }
 
     private fun tryToFillAsMuchAsPossible() {
-        var replaceHappened = false
         mapResults.forEach { outer ->
             if (mapResults[outer.key.trim()]!!.isDigit()) {
                 mapResults.forEach { inner ->
                     val value = mapResults[inner.key]!!
                     if (value.contains(" ${outer.key} ")) {
                         mapResults[inner.key] = mapResults[inner.key]!!.replace(outer.key, outer.value)
-                        replaceHappened = true
+                        tryEquations()
                     }
                 }
             }
         }
-
-        if (replaceHappened)
-            tryEquations()
     }
 
 
@@ -166,6 +145,6 @@ fun main(args: Array<String>) {
         val day = Day7(readAllLines)
         println("part2 = ${day.part2()}")
     }
-    MarcoUtil.time("part1", part1);
-    MarcoUtil.time("part2", part2);
+    MarcoUtil.time("part1", part1)
+    MarcoUtil.time("part2", part2)
 }
