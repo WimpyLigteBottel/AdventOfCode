@@ -6,89 +6,151 @@ class Day7(private var input: MutableList<String>) {
     val wires = mutableSetOf<String>()
 
 
-    fun String.isDigit(): Boolean {
-        try {
-            Integer.parseInt(this)
-        } catch (e: NumberFormatException) {
-            return false
-        }
-        return true
-
-    }
-
-    fun String.isNotDigit(): Boolean {
-        return !this.isDigit()
-    }
-
     fun part1(): Int {
 
-        input = input.sorted() as MutableList<String>
+        input.reverse()
 
-        input.forEach {
-            val pair = it.SPLIT()
-            mapResults.put(pair.first, pair.second)
+
+         input
+            .map {
+                val text = it.split("->")
+                "${text[1]} -> ${text[0]}"
+            }
+            .sorted()
+            .sortedBy { it.split("->")[0].length }
+            .forEach {
+
+                mapResults.put(it.split("->")[0].trim(), it.split("->")[1])
+            }
+
+        for (x in 0..mapResults.size)
+            tryToFillAsMuchAsPossible()
+
+        return mapResults["a"]!!.trim().toInt()
+    }
+
+    fun part2(): Int {
+
+        input.reverse()
+
+
+        input
+            .map {
+                val text = it.split("->")
+                "${text[1]} -> ${text[0]}"
+            }
+            .sorted()
+            .sortedBy { it.split("->")[0].length }
+            .forEach {
+                val key = it.split("->")[0].trim()
+                var value = it.split("->")[1]
+
+                if(key == "b")
+                    value = "956"
+
+                mapResults.put(key, value)
+            }
+
+
+        for (x in 0..mapResults.size)
+            tryToFillAsMuchAsPossible()
+
+
+        return mapResults["a"]!!.trim().toInt()
+    }
+
+    private fun tryEquations() {
+        var equationHasHappened = false
+        mapResults.forEach {
+            if (it.value.contains("RSHIFT")) {
+                val split = it.value.trim().split("RSHIFT")
+
+                if (split[0].isDigit() && split[1].isDigit()) {
+                    mapResults[it.key] = split[0].trim().toInt().shr(split[1].trim().toInt()).toString()
+                    equationHasHappened = true
+                }
+            }
+
+            if (it.value.contains("LSHIFT")) {
+                val split = it.value.trim().split("LSHIFT")
+                if (split[0].isDigit() && split[1].isDigit()) {
+                    mapResults[it.key] = split[0].trim().toInt().shl(split[1].trim().toInt()).toString()
+                    equationHasHappened = true
+                }
+            }
+
+            if (it.value.contains(" OR ")) {
+                val split = it.value.trim().split(" OR ")
+                if (split[0].isDigit() && split[1].isDigit()) {
+                    mapResults[it.key] = split[0].trim().toInt().or(split[1].trim().toInt()).toString()
+                    equationHasHappened = true
+                }
+            }
+
+            if (it.value.contains(" AND ")) {
+                val split = it.value.trim().split(" AND ")
+                if (split[0].isDigit() && split[1].isDigit()) {
+                    mapResults[it.key] = split[0].trim().toInt().and(split[1].trim().toInt()).toString()
+                    equationHasHappened = true
+                }
+            }
         }
 
-        mapResults.entries.forEach {
-            if (it.key.isDigit() && it.value.isNotDigit()) {
+        solveNOT()
 
-                //repalce all value with key
-                mapResults.entries.forEach { next ->
-                    if (next.key.contains(" ${it.value} ")) {
-                        mapResults.remove(next.key)
-                        mapResults.put(key = next.key.replace(" ${it.value} ", it.value), value = next.value)
-                        println(next)
+        if (equationHasHappened)
+            tryToFillAsMuchAsPossible()
+    }
+
+    private fun solveNOT() {
+
+        val regex = "(NOT.+)\\d{1,10}".toRegex()
+
+        mapResults.forEach { outer ->
+
+            val find = regex.find(mapResults[outer.key.trim()]!!)
+
+            find?.let {
+                if (outer.value.contains(" NOT ")) {
+
+                    val split = outer.value.split(" NOT ")
+                    if (split.size == 2 && split[1].isDigit())
+                        mapResults[outer.key] = (-split[1].trim().toInt() - 1).toString()
+                }
+            }
+
+        }
+    }
+
+    private fun tryToFillAsMuchAsPossible() {
+        var replaceHappened = false
+        mapResults.forEach { outer ->
+            if (mapResults[outer.key.trim()]!!.isDigit()) {
+                mapResults.forEach { inner ->
+                    val value = mapResults[inner.key]!!
+                    if (value.contains(" ${outer.key} ")) {
+                        mapResults[inner.key] = mapResults[inner.key]!!.replace(outer.key, outer.value)
+                        replaceHappened = true
                     }
                 }
             }
         }
 
-
-//            val pair = s.SPLIT()
-//            if (pair.first.isDigit() && pair.second.isNotDigit()) {
-//                input.forEachIndexed { index, s ->
-//                    input[index] = s.replace(pair.second, pair.first)
-//                }
-//            }
-
-
-//ao OR an -> ap
-        //SPLIT  ALL OR STATEMENTS
-        input.forEach {
-            if (it.contains(" OR ")) {
-                val value1 = it.SPLIT().first.split(" OR ")[0]
-                val value2 = it.SPLIT().first.split(" OR ")[1]
-                wires.add(value1 + "-> ${it.SPLIT().second}")
-                wires.add(value2 + "-> ${it.SPLIT().second}")
-            }
-        }
-
-        println(wires)
-
-
-        return -1
-    }
-
-    private fun findNext(text: String): String {
-        return input.first {
-            it.SPLIT().second == text
-        }
-    }
-
-    private fun startingPoint(): String {
-        return findNext("a")
+        if (replaceHappened)
+            tryEquations()
     }
 
 
-    fun String.SPLIT(): Pair<String, String> {
-        val split = this.split("->")
-        return Pair(split[0].trim(), split[1].trim())
+}
+
+private fun String.isDigit(): Boolean {
+    try {
+        Integer.parseInt(this.trim())
+    } catch (e: NumberFormatException) {
+        return false
     }
 
-
-    fun part2(): Int {
-        return -1
-    }
+    return true
 }
 
 
