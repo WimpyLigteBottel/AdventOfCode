@@ -46,17 +46,11 @@ class Day6(private var input: List<String>) {
 
     var size = 1000
     var map = Array(size) { Array(size) { 0 } }
-    fun switchPart1(lightTask: LightTask, turnTo: Int = 1) {
-
-        var startX = lightTask.fromPair.first
-        var startY = lightTask.fromPair.second
-
-        var endX = lightTask.toPair.first
-        var endY = lightTask.toPair.second
+    fun switch(lightTask: LightTask, turnTo: Int = 1) {
 
         for (x in 0 until size) {
             for (y in 0 until size) {
-                if (x.between(startX, endX) && y.between(startY, endY)) {
+                if (lightTask.between(x, y)) {
                     map[y][x] = turnTo
                 }
             }
@@ -64,16 +58,9 @@ class Day6(private var input: List<String>) {
     }
 
     fun switchpart2(lightTask: LightTask, turnTo: Int = 1) {
-
-        var startX = lightTask.fromPair.first
-        var startY = lightTask.fromPair.second
-
-        var endX = lightTask.toPair.first
-        var endY = lightTask.toPair.second
-
         for (x in 0 until size) {
             for (y in 0 until size) {
-                if (x.between(startX, endX) && y.between(startY, endY)) {
+                if (lightTask.between(x, y)) {
                     map[y][x] += turnTo
 
                     if (map[y][x] <= 0)
@@ -84,34 +71,22 @@ class Day6(private var input: List<String>) {
     }
 
     fun toggle(lightTask: LightTask) {
-        var startX = lightTask.fromPair.first
-        var startY = lightTask.fromPair.second
-
-        var endX = lightTask.toPair.first
-        var endY = lightTask.toPair.second
-
-
         for (x in 0 until size) {
             for (y in 0 until size) {
-                if (x.between(startX, endX) && y.between(startY, endY)) {
-                    if (map[y][x] == 1)
-                        map[y][x] = 0
-                    else
+                if (lightTask.between(x, y)) {
+                    if (map[y][x] == 0)
                         map[y][x] = 1
+                    else
+                        map[y][x] = 0
                 }
             }
         }
     }
 
     fun String.pair(): Pair<Int, Int> {
-        var left = this.split(",")[0]
-        var right = this.split(",")[1]
+        val results = this.split(",")
 
-        return Pair(left.toInt(), right.toInt())
-    }
-
-    fun Int.between(start: Int, end: Int): Boolean {
-        return this >= start && this <= end
+        return Pair(results[0].toInt(), results[1].toInt())
     }
 
     fun part1(): Int {
@@ -121,11 +96,11 @@ class Day6(private var input: List<String>) {
         }.forEach {
             when (it.action) {
                 "turn on" -> {
-                    switchPart1(it, 1);
+                    switch(it, 1);
                 }
 
                 "turn off" -> {
-                    switchPart1(it, 0);
+                    switch(it, 0);
                 }
 
                 "toggle" -> {
@@ -139,20 +114,18 @@ class Day6(private var input: List<String>) {
 
 
     private fun getAction(line: String): LightTask {
-        val digitRegex = "(\\d{0,3},\\d{0,3}).+ (\\d{0,3},\\d{0,3})".toRegex()
-        val actionRegex = "turn on|turn off|toggle".toRegex()
+        val digitRegex = "(\\d{1,3},\\d{1,3}).+ (\\d{1,3},\\d{1,3})".toRegex()
+        val actionRegex = "(turn on|turn off|toggle)".toRegex()
 
         val action = actionRegex.find(line)!!.groupValues[0]
         val digits1 = digitRegex.find(line)!!.destructured.component1().pair()
         val digits2 = digitRegex.find(line)!!.destructured.component2().pair()
-
 
         return LightTask(
             action = action,
             fromPair = digits1,
             toPair = digits2
         )
-
 
     }
 
@@ -177,39 +150,37 @@ class Day6(private var input: List<String>) {
 
         return map.sumOf { it.sum() }
     }
-
-    fun printMap() {
-
-        val sb = StringBuilder(10000)
-
-        map.forEach {
-            it.forEach {
-                sb.append("$it")
-            }
-            sb.append("\n")
-        }
-
-        println(sb)
-    }
-
-
 }
 
 
 fun main(args: Array<String>) {
 
-//    var readAllLines = MarcoUtil.readInput(6, true)
-//    val day = Day6(readAllLines)
-//
-//    val part1: () -> Unit = {
-//        println("part1 = ${day.part1()}")
-//    }
-//    val part2: () -> Unit = {
-//        println("part2 = ${day.part2()}")
-//    }
-//    MarcoUtil.time("part1", part1);
-//    MarcoUtil.time("part2", part2);
+    var readAllLines = MarcoUtil.readInput(6, false)
+
+    val part1: () -> Unit = {
+        val day = Day6(readAllLines)
+        println("part1 = ${day.part1()}")
+    }
+    val part2: () -> Unit = {
+        val day = Day6(readAllLines)
+        println("part2 = ${day.part2()}")
+    }
+    MarcoUtil.time("part1", part1);
+    MarcoUtil.time("part2", part2);
 }
 
 
-data class LightTask(val action: String, val fromPair: Pair<Int, Int>, val toPair: Pair<Int, Int>)
+data class LightTask(val action: String, val fromPair: Pair<Int, Int>, val toPair: Pair<Int, Int>) {
+
+    fun between(x: Int, y: Int): Boolean {
+        return betweenX(x) && betweenY(y)
+    }
+
+    private fun betweenX(value: Int): Boolean {
+        return value in fromPair.first..toPair.first
+    }
+
+    private fun betweenY(value: Int): Boolean {
+        return value in fromPair.second..toPair.second
+    }
+}
