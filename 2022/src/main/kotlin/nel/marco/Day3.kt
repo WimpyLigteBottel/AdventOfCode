@@ -60,9 +60,18 @@ class Day3(var readInput: List<String>) {
 }
 
 fun main(args: Array<String>) {
-    val input = ReadUtil.readInputAsList(3, false)
-    println("answer 1=" + Day3(input).answerOne())
-    println("answer 2=" + Day3(input).answerTwo())
+    var readAllLines = MarcoUtil.readInput(3, false) as MutableList<String>
+
+    val part1: () -> Unit = {
+        val day = Day3(readAllLines)
+        println("part1 = ${day.answerOne()}")
+    }
+    val part2: () -> Unit = {
+        val day = Day3(readAllLines)
+        println("part2 = ${day.answerTwo()}")
+    }
+    MarcoUtil.time("part1", part1)
+    MarcoUtil.time("part2", part2)
 }
 
 
