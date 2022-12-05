@@ -44,9 +44,9 @@ class Day3(var readInput: List<String>) {
         while (readInput.size > counter) {
             val subList = readInput.subList(counter, counter + 3)
 
-            val intersectingCharacter = subList[0].toList()
-                .intersect(subList[1].toList())
-                .intersect(subList[2].toList())
+            val intersectingCharacter = subList[0].toSet()
+                .intersect(subList[1].toSet())
+                .intersect(subList[2].toSet())
                 .first().toString()
 
             totalValue += mapOfValues[intersectingCharacter]!!
