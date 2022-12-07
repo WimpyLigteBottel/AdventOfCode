@@ -34,13 +34,18 @@ fun main(args: Array<String>) {
     var readAllLines = MarcoUtil.readInput(Day6.day, false) as MutableList<String>
 
     val part1: () -> Unit = {
-        val day = Day6(readAllLines)
-        println("part1 = ${day.answerOne()}")
+        val day = Day6(readAllLines).process(readAllLines.get(0))
+//        println("part1 = ${day.answerOne()}")
     }
     val part2: () -> Unit = {
-        val day = Day6(readAllLines)
-        println("part2 = ${day.answerTwo()}")
+        val day = Day6(readAllLines).process(readAllLines.get(0),14)
+//        println("part2 = ${day.answerTwo()}")
     }
-    MarcoUtil.time("part1", part1)
-    MarcoUtil.time("part2", part2)
+
+    for (x in 0..10) {
+        MarcoUtil.avgTime("part1", part1)
+        MarcoUtil.avgTime("part2", part2)
+        println("XXXXXXXXXXXXX")
+    }
+
 }
