@@ -1,5 +1,6 @@
-package nel.marco
+package nel.marco.v1
 
+import nel.marco.MarcoUtil
 import java.lang.RuntimeException
 
 class Day2(var readInput: List<String>) {

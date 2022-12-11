@@ -1,4 +1,6 @@
-package nel.marco
+package nel.marco.v1
+
+import nel.marco.MarcoUtil
 
 
 class Day6(var readInput: List<String>) {

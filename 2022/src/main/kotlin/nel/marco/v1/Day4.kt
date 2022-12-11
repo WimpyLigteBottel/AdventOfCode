@@ -1,5 +1,6 @@
-package nel.marco
+package nel.marco.v1
 
+import nel.marco.MarcoUtil
 import java.util.stream.IntStream
 
 class Day4(var readInput: List<String>) {

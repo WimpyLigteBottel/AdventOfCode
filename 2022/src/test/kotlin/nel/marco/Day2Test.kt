@@ -1,5 +1,6 @@
 package nel.marco
 
+import nel.marco.v1.Day2
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
