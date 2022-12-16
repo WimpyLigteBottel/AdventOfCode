@@ -1,7 +1,7 @@
 package nel.marco
 
 
-class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
+class Day9(var readInput: List<String>, var mapsize: Int = 10) {
 
     var map = Array(mapsize) { Array(mapsize) { "." } }
     val tailSpots = mutableSetOf<Point>()
@@ -10,8 +10,8 @@ class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
         val day: Int = 9
     }
 
-    var x = 100
-    var y = 100
+    var x = 0
+    var y = 0
 
     var knots = hashMapOf<Int, Point>()
     var HEAD = Point(x, y)
@@ -34,7 +34,7 @@ class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
     fun answerOne(): Int {
         knots[0] = HEAD
         knots[1] = TAIL
-        tailSpots.add(knots[1]!!)
+        tailSpots.add(Point(TAIL))
         readInput.forEach {
             executeStep(it.direction(), it.moveAmount())
         }
@@ -55,26 +55,25 @@ class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
     fun executeStep(direction: String, moveAmount: Int = 1): String {
         for (x in 0 until moveAmount) {
             HEAD.direction(direction)
-            knots[0]!!.direction(direction)
             if (!HEAD.isOneSpotAway(TAIL)) {
                 moveTCloser()
                 tailSpots.add(Point(TAIL))
+
             }
         }
-        return printMap()
+        return ""
     }
 
     private fun moveTCloser() {
         if (HEAD.x > TAIL.x) {
-            TAIL = TAIL.right()
+            TAIL.right()
         } else if (HEAD.x < TAIL.x) {
-            TAIL = TAIL.left()
+            TAIL.left()
         }
-        //y
         if (HEAD.y > TAIL.y) {
-            TAIL = TAIL.up()
+            TAIL.up()
         } else if (HEAD.y < TAIL.y) {
-            TAIL = TAIL.down()
+            TAIL.down()
         }
     }
 
@@ -84,6 +83,7 @@ class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
 
 
     fun printMap(): String {
+        println()
         draw()
         val sb = StringBuilder(100)
         for (x in 0 until map[0].size) {
@@ -92,7 +92,7 @@ class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
             }
             sb.append("\n")
         }
-//        clearMap()
+        clearMap()
         return sb.substring(0, sb.length - 1).toString()
     }
 
@@ -100,8 +100,8 @@ class Day9(var readInput: List<String>, var mapsize: Int = 1000) {
 }
 
 fun main(args: Array<String>) {
-//    var readAllLines = MarcoUtil.readInput(Day9.day, true) as MutableList<String>
-    var readAllLines = MarcoUtil.readInput(Day9.day, false) as MutableList<String>
+    var readAllLines = MarcoUtil.readInput(Day9.day, true) as MutableList<String>
+//    var readAllLines = MarcoUtil.readInput(Day9.day, false) as MutableList<String>
 
     val part1: () -> Unit = {
         val day = Day9(readAllLines)

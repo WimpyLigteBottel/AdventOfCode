@@ -13,23 +13,30 @@ data class Point(var x: Int, var y: Int) {
     }
 
     fun clone(): Point {
-        return Point(x, y)
+        return Point(this.x, this.y)
     }
 
     fun isOneSpotAway(other: Point): Boolean {
-        val clone = this.clone()
-        return clone == other ||
-                clone.up() == other ||
-                clone.up().right() == other ||
-                clone.up().left() == other ||
-                clone.down() == other ||
-                clone.down().right() == other ||
-                clone.down().left() == other ||
-                clone.left() == other ||
-                clone.right() == other
+
+        val above = Point(this).up() == other ||
+                Point(this).up().right() == other ||
+                Point(this).up().left() == other
+
+
+        val below = Point(this).down() == other ||
+                Point(this).down().left() == other ||
+                Point(this).down().right() == other
+
+
+        val sides = Point(this).left() == other ||
+                Point(this).right() == other
+
+
+        return Point(this) == other || above || below || sides
+
     }
 
-    fun direction(input: String) {
+    fun direction(input: String): Point {
         when (input) {
             "D" -> {
                 down()
@@ -47,6 +54,7 @@ data class Point(var x: Int, var y: Int) {
                 left()
             }
         }
+        return this
     }
 
     fun right(): Point {
@@ -67,5 +75,23 @@ data class Point(var x: Int, var y: Int) {
     fun down(): Point {
         y--
         return this
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Point
+
+        if (x != other.x) return false
+        if (y != other.y) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        return result
     }
 }
