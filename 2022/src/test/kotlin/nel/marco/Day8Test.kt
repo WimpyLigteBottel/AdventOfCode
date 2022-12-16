@@ -1,5 +1,6 @@
 package nel.marco
 
+import nel.marco.v1.Day8
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
