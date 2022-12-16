@@ -22,8 +22,7 @@ class Day9Test {
 
     @Test
     fun answerTwo() {
-
-        assertEquals(8, dayExample.answerTwo())
-        assertEquals(8, day.answerTwo())
+        assertEquals(1, dayExample.answerTwo())
+        assertEquals(2536, day.answerTwo())
     }
 }

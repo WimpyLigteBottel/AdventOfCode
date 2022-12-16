@@ -10,31 +10,13 @@ class Day9(var readInput: List<String>, var mapsize: Int = 10) {
         val day: Int = 9
     }
 
-    var x = 0
-    var y = 0
-
     var knots = hashMapOf<Int, Point>()
-    var HEAD = Point(x, y)
-    var TAIL = Point(x, y)
 
-
-    fun draw() {
-        map[TAIL.x][TAIL.y] = "T"
-        map[HEAD.x][HEAD.y] = "H"
-    }
-
-    private fun clearMap() {
-        for (a in 0 until mapsize) {
-            for (b in 0 until mapsize) {
-                map[a][b] = "."
-            }
-        }
-    }
 
     fun answerOne(): Int {
-        knots[0] = HEAD
-        knots[1] = TAIL
-        tailSpots.add(Point(TAIL))
+        for (x in 0 until 2)
+            knots[x] = Point(0, 0)
+        tailSpots.add(Point(knots[1]!!))
         readInput.forEach {
             executeStep(it.direction(), it.moveAmount())
         }
@@ -43,7 +25,9 @@ class Day9(var readInput: List<String>, var mapsize: Int = 10) {
     }
 
     fun answerTwo(): Int {
-        tailSpots.add(Point(TAIL))
+        for (x in 0 until 10)
+            knots[x] = Point(0, 0)
+        tailSpots.add(lastPoint())
         readInput.forEach {
             executeStep(it.direction(), it.moveAmount())
         }
@@ -52,50 +36,39 @@ class Day9(var readInput: List<String>, var mapsize: Int = 10) {
     }
 
 
-    fun executeStep(direction: String, moveAmount: Int = 1): String {
+    fun executeStep(direction: String, moveAmount: Int = 1) {
         for (x in 0 until moveAmount) {
-            HEAD.direction(direction)
-            if (!HEAD.isOneSpotAway(TAIL)) {
-                moveTCloser()
-                tailSpots.add(Point(TAIL))
-
+            knots[0]!!.direction(direction)
+            knots.keys.forEach {
+                if (it != 0) {
+                    if (!knots[it - 1]!!.isOneSpotAway(knots[it]!!)) {
+                        moveTCloser(it - 1, it)
+                        tailSpots.add( lastPoint())
+                    }
+                }
             }
         }
-        return ""
+
     }
 
-    private fun moveTCloser() {
-        if (HEAD.x > TAIL.x) {
-            TAIL.right()
-        } else if (HEAD.x < TAIL.x) {
-            TAIL.left()
+    private fun lastPoint() = Point(knots[knots.keys.max()]!!)
+
+    private fun moveTCloser(headKey: Int = 0, tailKey: Int = 0) {
+        if (knots[headKey]!!.x > knots[tailKey]!!.x) {
+            knots[tailKey]!!.right()
+        } else if (knots[headKey]!!.x < knots[tailKey]!!.x) {
+            knots[tailKey]!!.left()
         }
-        if (HEAD.y > TAIL.y) {
-            TAIL.up()
-        } else if (HEAD.y < TAIL.y) {
-            TAIL.down()
+        if (knots[headKey]!!.y > knots[tailKey]!!.y) {
+            knots[tailKey]!!.up()
+        } else if (knots[headKey]!!.y < knots[tailKey]!!.y) {
+            knots[tailKey]!!.down()
         }
     }
 
 
     private fun String.direction() = this.split(" ")[0]
     private fun String.moveAmount() = this.split(" ")[1].toInt()
-
-
-    fun printMap(): String {
-        println()
-        draw()
-        val sb = StringBuilder(100)
-        for (x in 0 until map[0].size) {
-            for (y in map.indices) {
-                sb.append(map[x][y])
-            }
-            sb.append("\n")
-        }
-        clearMap()
-        return sb.substring(0, sb.length - 1).toString()
-    }
-
 
 }
 
