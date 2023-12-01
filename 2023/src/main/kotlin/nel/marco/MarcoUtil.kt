@@ -20,7 +20,7 @@ class MarcoUtil {
         }
 
         fun avgTime(name: String, work: () -> Unit) {
-            val futureDate = Instant.now().plusSeconds(5)
+            val futureDate = Instant.now().plusSeconds(60)
 
             val mutableListOf = mutableListOf<Long>()
             while (Instant.now().isBefore(futureDate)) {

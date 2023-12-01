@@ -5,7 +5,6 @@ import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     var readAllLines = MarcoUtil.readInput(1, true) as MutableList<String>
-
     val day1 = Day1(readAllLines)
     executeTimes("ANSWER 1") {
         day1.answerOne()
@@ -17,7 +16,7 @@ fun main(args: Array<String>) {
 
 fun executeTimes(name: String = "", block: () -> Unit) {
     var total = 0L
-    for (x in 0..1000)
+    for (x in 0..1_000_000)
         total += measureTimeMillis(block)
 
     println("$name -> " + total + "ms")
@@ -26,8 +25,12 @@ fun executeTimes(name: String = "", block: () -> Unit) {
 class Day1(var readInput: List<String>) {
     var map = mutableMapOf<String, String>()
     var mapReversed = mutableMapOf<String, String>()
+    var letters = mutableListOf<String>()
 
     init {
+        for (x in 'a'..'z') {
+            letters.add(x.toString())
+        }
         map["one"] = "1"
         map["two"] = "2"
         map["three"] = "3"
@@ -49,55 +52,30 @@ class Day1(var readInput: List<String>) {
     }
 
     fun answerOne(): String {
-
-        var letters = mutableListOf<String>()
-        var mutableList = mutableListOf<String>()
-
-        for (x in 'a'..'z') {
-            letters.add(x.toString())
-        }
-
-        readInput.forEachIndexed { index, s ->
-            var string = s + ""
-            letters.forEach {
-                string = string.replace(it, "")
-            }
-            mutableList.add(string)
-        }
-
-        var sum = 0
-        mutableList.forEach {
-            val first = it.trim().first().toString()
-            val last = it.reversed().trim().first().toString()
-            sum += (first + last).toInt()
-        }
-
-        return "$sum"
+        return readInput
+            .map { it.replaceRemainingLetters().trim() } // gets rid of letters
+            .map { it.first() + "" + it.last() }
+            .sumOf { it.toInt() }
+            .toString()
     }
 
     fun answerTwo(): String {
-        var sum = 0L
-        readInput.forEach {
-            val together = it.findFirstAndLast()
-            sum += together.toLong()
-        }
+        return readInput
+            .map {
+                var first = findFirstDigit(it, map)
+                var last = findFirstDigit(it.reversed(), mapReversed)
 
-        return "$sum"
-    }
-
-    private fun String.findFirstAndLast(): String {
-        var first = findFirstDigit(this, map)
-        var last = findFirstDigit(this.reversed(), mapReversed)
-
-        return first + last;
+                first + last
+            }
+            .sumOf { it.toLong() }
+            .toString()
     }
 
     private fun findFirstDigit(inputNotMutable: String, map: MutableMap<String, String>): String {
-
         var input = inputNotMutable
         outerloop@ for (start in 0..input.length) {//innerLoop
-            for (end in start + 1..input.length) {
-                var selection = inputNotMutable.substring(start, end)
+            for (end in start + 3..input.length) {
+                val selection = inputNotMutable.substring(start, end)
                 for ((key, value) in map) {
                     if (selection.contains(key)) {
                         input = input.replaceFirst(key, value)
@@ -112,11 +90,6 @@ class Day1(var readInput: List<String>) {
     }
 
     private fun String.replaceRemainingLetters(): String {
-        var letters = mutableListOf<String>()
-        for (x in 'a'..'z') {
-            letters.add(x.toString())
-        }
-
         var string = this
         letters.forEach {
             string = string.replace(it, "")
