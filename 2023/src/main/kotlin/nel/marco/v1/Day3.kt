@@ -97,17 +97,14 @@ data class Map(
         val tempNumbers = mutableListOf<Int>()
 
         // Gets the top row correct digit
-        if (upLeft.isDigit() && !up.isDigit()) {
+        if (upLeft.isDigit()) {
             tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
         }
-        if (!upLeft.isDigit() && up.isDigit()) {
+        if (up.isDigit() && !upLeft.isDigit()) {
             tempNumbers.add(findFullNumber(up.getPointFromMap()))
         }
-        if (!up.isDigit() && upRight.isDigit()) {
+        if (upRight.isDigit() && !up.isDigit()) {
             tempNumbers.add(findFullNumber(upRight.getPointFromMap()))
-        }
-        if (up.isDigit() && upLeft.isDigit()) {
-            tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
         }
 
         // same row digit
@@ -119,16 +116,13 @@ data class Map(
         }
 
         // Gets the bottom row correct digit
-        if (downLeft.isDigit() && down.isDigit()) {
-            tempNumbers.add(findFullNumber(down.getPointFromMap()))
-        }
-        if (downLeft.isDigit() && !down.isDigit()) {
+        if (downLeft.isDigit()) {
             tempNumbers.add(findFullNumber(downLeft.getPointFromMap()))
         }
-        if (!downLeft.isDigit() && down.isDigit()) {
+        if (down.isDigit() && !downLeft.isDigit()) {
             tempNumbers.add(findFullNumber(down.getPointFromMap()))
         }
-        if (!down.isDigit() && downRight.isDigit()) {
+        if (downRight.isDigit() && !down.isDigit()) {
             tempNumbers.add(findFullNumber(downRight.getPointFromMap()))
         }
         return tempNumbers
