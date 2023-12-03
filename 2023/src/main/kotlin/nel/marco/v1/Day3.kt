@@ -20,27 +20,25 @@ class Day3(var readInput: List<String>) {
 
         var map = Map().buildMap(readInput)
 
-        val symbolLocations = map.findAllSymbolLocations()
-
-        val connectedNumbersToSymbols = map.findNumbersConnected(symbolLocations)
-
-        val result = connectedNumbersToSymbols.sumOf { it }
-
-
-        return "$result"
+        return map
+            .findAllSymbolLocations()
+            .map { map.findNumbersSoundingPoint(it) }
+            .flatMap { it.toList() }
+            .sumOf { it }
+            .toString()
     }
 
     fun answerTwo(): String {
 
         var map = Map().buildMap(readInput)
 
-        val symbolLocations = map.findAllSymbolLocations()
-
-        val connectedNumbersToSymbols = map.findNumbersConnectedVersion2(symbolLocations)
-
-        val result = connectedNumbersToSymbols.sumOf { it }
-
-        return "$result"
+        return map
+            .findAllSymbolLocations()
+            .map { map.findNumbersSoundingPoint(it) } // find all numbers connect to symbol
+            .filter { it.size == 2 } // only allow gear rations (2 numbers connected to 1 symbol only)
+            .map { it[0] * it[1] } // calculate the new formula
+            .sumOf { it } // Add them together
+            .toString()
     }
 
 }
@@ -88,126 +86,56 @@ data class Map(
         return listOfLocations
     }
 
-    fun findNumbersConnected(listOfLocations: List<Point>): MutableList<Int> {
+    fun findNumbersSoundingPoint(it: Point): MutableList<Int> {
+        val down = it.clone().up().getPointFromMap()
+        val downLeft = it.clone().left().up().getPointFromMap()
+        val downRight = it.clone().right().up().getPointFromMap()
 
-        var numbers = mutableListOf<Int>()
+        val left = it.clone().left().getPointFromMap()
+        val right = it.clone().right().getPointFromMap()
 
-        listOfLocations.forEach {
-            var down = it.clone().up().getPointFromMap()
-            var downLeft = it.clone().left().up().getPointFromMap()
-            var downRight = it.clone().right().up().getPointFromMap()
+        val up = it.clone().down().getPointFromMap()
+        val upRight = it.clone().right().down().getPointFromMap()
+        val upLeft = it.clone().left().down().getPointFromMap()
 
-            var left = it.clone().left().getPointFromMap()
-            var right = it.clone().right().getPointFromMap()
+        val tempNumbers = mutableListOf<Int>()
 
-            var up = it.clone().down().getPointFromMap()
-            var upRight = it.clone().right().down().getPointFromMap()
-            var upLeft = it.clone().left().down().getPointFromMap()
-
-            var tempNumbers = mutableListOf<Int>()
-
-            // Gets the top row correct digit
-            if (upLeft.isDigit() && !up.isDigit()) {
-                tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
-            }
-            if (!upLeft.isDigit() && up.isDigit()) {
-                tempNumbers.add(findFullNumber(up.getPointFromMap()))
-            }
-            if (!up.isDigit() && upRight.isDigit()) {
-                tempNumbers.add(findFullNumber(upRight.getPointFromMap()))
-            }
-            if (up.isDigit() && upLeft.isDigit()) {
-                tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
-            }
-
-            // same row digit
-            if (left.isDigit()) {
-                tempNumbers.add(findFullNumber(left.getPointFromMap()))
-            }
-            if (right.isDigit()) {
-                tempNumbers.add(findFullNumber(right.getPointFromMap()))
-            }
-
-            // Gets the bottom row correct digit
-            if (downLeft.isDigit() && down.isDigit()) {
-                tempNumbers.add(findFullNumber(down.getPointFromMap()))
-            }
-            if (downLeft.isDigit() && !down.isDigit()) {
-                tempNumbers.add(findFullNumber(downLeft.getPointFromMap()))
-            }
-            if (!downLeft.isDigit() && down.isDigit()) {
-                tempNumbers.add(findFullNumber(down.getPointFromMap()))
-            }
-            if (!down.isDigit() && downRight.isDigit()) {
-                tempNumbers.add(findFullNumber(downRight.getPointFromMap()))
-            }
-
-            numbers.addAll(tempNumbers)
+        // Gets the top row correct digit
+        if (upLeft.isDigit() && !up.isDigit()) {
+            tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
+        }
+        if (!upLeft.isDigit() && up.isDigit()) {
+            tempNumbers.add(findFullNumber(up.getPointFromMap()))
+        }
+        if (!up.isDigit() && upRight.isDigit()) {
+            tempNumbers.add(findFullNumber(upRight.getPointFromMap()))
+        }
+        if (up.isDigit() && upLeft.isDigit()) {
+            tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
         }
 
-        return numbers
-    }
-
-    fun findNumbersConnectedVersion2(listOfLocations: List<Point>): MutableList<Int> {
-
-        var numbers = mutableListOf<Int>()
-
-        listOfLocations.forEach {
-            var down = it.clone().up().getPointFromMap()
-            var downLeft = it.clone().left().up().getPointFromMap()
-            var downRight = it.clone().right().up().getPointFromMap()
-
-            var left = it.clone().left().getPointFromMap()
-            var right = it.clone().right().getPointFromMap()
-
-            var up = it.clone().down().getPointFromMap()
-            var upRight = it.clone().right().down().getPointFromMap()
-            var upLeft = it.clone().left().down().getPointFromMap()
-
-            var tempNumbers = mutableListOf<Int>()
-
-            // Gets the top row correct digit
-            if (upLeft.isDigit() && !up.isDigit()) {
-                tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
-            }
-            if (!upLeft.isDigit() && up.isDigit()) {
-                tempNumbers.add(findFullNumber(up.getPointFromMap()))
-            }
-            if (!up.isDigit() && upRight.isDigit()) {
-                tempNumbers.add(findFullNumber(upRight.getPointFromMap()))
-            }
-            if (up.isDigit() && upLeft.isDigit()) {
-                tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
-            }
-
-            // same row digit
-            if (left.isDigit()) {
-                tempNumbers.add(findFullNumber(left.getPointFromMap()))
-            }
-            if (right.isDigit()) {
-                tempNumbers.add(findFullNumber(right.getPointFromMap()))
-            }
-
-            // Gets the bottom row correct digit
-            if (downLeft.isDigit() && down.isDigit()) {
-                tempNumbers.add(findFullNumber(down.getPointFromMap()))
-            }
-            if (downLeft.isDigit() && !down.isDigit()) {
-                tempNumbers.add(findFullNumber(downLeft.getPointFromMap()))
-            }
-            if (!downLeft.isDigit() && down.isDigit()) {
-                tempNumbers.add(findFullNumber(down.getPointFromMap()))
-            }
-            if (!down.isDigit() && downRight.isDigit()) {
-                tempNumbers.add(findFullNumber(downRight.getPointFromMap()))
-            }
-
-            if (tempNumbers.size == 2) {
-                numbers.add(tempNumbers[0] * tempNumbers[1])
-            }
+        // same row digit
+        if (left.isDigit()) {
+            tempNumbers.add(findFullNumber(left.getPointFromMap()))
+        }
+        if (right.isDigit()) {
+            tempNumbers.add(findFullNumber(right.getPointFromMap()))
         }
 
-        return numbers
+        // Gets the bottom row correct digit
+        if (downLeft.isDigit() && down.isDigit()) {
+            tempNumbers.add(findFullNumber(down.getPointFromMap()))
+        }
+        if (downLeft.isDigit() && !down.isDigit()) {
+            tempNumbers.add(findFullNumber(downLeft.getPointFromMap()))
+        }
+        if (!downLeft.isDigit() && down.isDigit()) {
+            tempNumbers.add(findFullNumber(down.getPointFromMap()))
+        }
+        if (!down.isDigit() && downRight.isDigit()) {
+            tempNumbers.add(findFullNumber(downRight.getPointFromMap()))
+        }
+        return tempNumbers
     }
 
     fun findFullNumber(startPoint: Point): Int {

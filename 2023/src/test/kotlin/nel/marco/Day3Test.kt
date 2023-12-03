@@ -46,7 +46,7 @@ class Day3Test {
     @Test
     fun answerTwo_part2() {
         assertEquals("467835", Day3(ReadUtil.readInputAsList(dayNumber, exampleInput = true)).answerTwo())
-        assertEquals("467835", Day3(ReadUtil.readInputAsList(dayNumber, exampleInput = false)).answerTwo())
+        assertEquals("84883664", Day3(ReadUtil.readInputAsList(dayNumber, exampleInput = false)).answerTwo())
     }
 
 
