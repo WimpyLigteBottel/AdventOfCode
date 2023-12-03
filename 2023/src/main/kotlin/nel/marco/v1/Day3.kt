@@ -128,7 +128,7 @@ data class Map(
         return tempNumbers
     }
 
-    fun findFullNumber(startPoint: Point): Int {
+    private fun findFullNumber(startPoint: Point): Int {
         var left = startPoint.clone().left().getPointFromMap()
 
         while (left.isDigit()) {
@@ -137,11 +137,10 @@ data class Map(
 
         val lastValidDigit = left.clone().right().getPointFromMap()
 
-
         return readFromCurrentToRight(lastValidDigit)
     }
 
-    fun readFromCurrentToRight(point: Point): Int {
+    private fun readFromCurrentToRight(point: Point): Int {
         var listOfNumber = mutableListOf<String>()
         listOfNumber.add(point.value)
 
