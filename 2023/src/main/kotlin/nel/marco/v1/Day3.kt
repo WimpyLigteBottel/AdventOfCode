@@ -45,33 +45,29 @@ class Day3(var readInput: List<String>) {
 
 
 data class Map(
-    var map: Array<Array<String>> = emptyArray(),
     var transformed: Array<Array<Point>> = emptyArray(),
 ) {
 
     fun buildMap(row: List<String>): Map {
-        map = row.map {
+        var map = row.map {
             it.split("").toTypedArray() // 467..114..
         }.toTypedArray()
 
-        val columns = Array(map[0].size, { j -> Point(0, 0, "") }) // create columns
-        transformed = Array(map.size, { i -> columns.clone() }) // create rows
+        val columns = Array(map[0].size) { Point() }
+        transformed = Array(map.size) { columns.clone() }
 
 
-        updateTransformMap()
-
-        return this
-    }
-
-
-    fun updateTransformMap() {
         map.forEachIndexed { y, row ->
             map[y].forEachIndexed { x, character ->
                 transformed[y][x] = Point(
-                    x = x, y = y, value = character
+                    x = x,
+                    y = y,
+                    value = character
                 )
             }
         }
+
+        return this
     }
 
     fun findAllSymbolLocations(): MutableList<Point> {
