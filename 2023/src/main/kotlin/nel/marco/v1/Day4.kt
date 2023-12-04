@@ -43,36 +43,32 @@ class Day4(var readInput: List<String>) {
     private fun Pair<List<String>, List<String>>.intersect() = this.second.intersect(this.first)
 
     fun answerTwo(): String {
-        var copies = readInput.toMutableList()
+        var gameTickets = readInput.toMutableList()
         var mapCounter = mutableMapOf<String, Long>()
-        var uniqueSet = copies.toList()
-        while (copies.isNotEmpty()) {
-
-            val timesWon = copies[0].split(":")[1]
+        var uniqueSet = gameTickets.toList()
+        while (gameTickets.isNotEmpty()) {
+            var currentGameTicket = gameTickets[0]
+            val timesWon = currentGameTicket.split(":")[1]
                 .extractWinningAndActualNumberPair()
                 .intersect()
                 .count()
 
-            val countOfCopies = copies.count { x -> x.startsWith(copies[0]) }
+            val copiesOfGameTicket = gameTickets.count { x -> x == currentGameTicket }
 
-            val gameNumber = copies[0].split(":")[0]
+            // Add the number of times current ticket won
+            val gameNumber = currentGameTicket.split(":")[0]
             mapCounter.putIfAbsent(gameNumber, 0)
-            mapCounter[gameNumber] = mapCounter[gameNumber]!! + countOfCopies
+            mapCounter[gameNumber] = mapCounter[gameNumber]!! + copiesOfGameTicket
 
-
+            // There could be error one (there are not more tickets after winning)
             runCatching {
-                var tempList = mutableListOf<String>()
-                for (x in 1..timesWon) {
-                    tempList.add(uniqueSet[x])
+                for (nextTicketIndex in 1..timesWon) {
+                    for (repeat in 1..copiesOfGameTicket) {
+                        gameTickets.add(uniqueSet[nextTicketIndex])
+                    }
                 }
-                for (x in 1..countOfCopies) {
-                    copies.addAll(tempList)
-                }
-                // remove all the duplicates because they have been processed
-                copies.removeIf { it == copies[0] }
-
-                // sort the remaining once's
-                copies.sort()
+                // remove all the duplicates because they have been processed and speed up the process
+                gameTickets.removeIf { it == currentGameTicket }
             }
             // remove the first element in the unique set
             uniqueSet = uniqueSet.subList(1, uniqueSet.size)
