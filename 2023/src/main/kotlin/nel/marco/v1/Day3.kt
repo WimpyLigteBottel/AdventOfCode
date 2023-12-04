@@ -1,6 +1,5 @@
 package nel.marco.v1
 
-import nel.marco.MarcoUtil
 import nel.marco.Point
 
 
@@ -60,7 +59,7 @@ data class Map(
     }
 
     fun findAllSymbolLocations(): MutableList<Point> {
-        var listOfLocations = mutableListOf<Point>()
+        val listOfLocations = mutableListOf<Point>()
         transformed.forEachIndexed { y, row ->
             transformed[y].forEachIndexed { x, point ->
                 if ("[^0-9\\.\\n]".toRegex().matches(point.value)) {
@@ -71,48 +70,48 @@ data class Map(
         return listOfLocations
     }
 
-    fun findNumbersSoundingPoint(it: Point): MutableList<Int> {
-        val down = it.clone().up().getPointFromMap()
-        val downLeft = it.clone().left().up().getPointFromMap()
-        val downRight = it.clone().right().up().getPointFromMap()
+    fun findNumbersSoundingPoint(center: Point): MutableList<Int> {
+        val down = center.clone().up().getPointFromMap()
+        val downLeft = center.clone().left().up().getPointFromMap()
+        val downRight = center.clone().right().up().getPointFromMap()
 
-        val left = it.clone().left().getPointFromMap()
-        val right = it.clone().right().getPointFromMap()
+        val left = center.clone().left().getPointFromMap()
+        val right = center.clone().right().getPointFromMap()
 
-        val up = it.clone().down().getPointFromMap()
-        val upRight = it.clone().right().down().getPointFromMap()
-        val upLeft = it.clone().left().down().getPointFromMap()
+        val up = center.clone().down().getPointFromMap()
+        val upRight = center.clone().right().down().getPointFromMap()
+        val upLeft = center.clone().left().down().getPointFromMap()
 
         val tempNumbers = mutableListOf<Int>()
 
         // Gets the top row correct digit
         if (upLeft.isDigit()) {
-            tempNumbers.add(findFullNumber(upLeft.getPointFromMap()))
+            tempNumbers.add(findFullNumber(upLeft))
         }
         if (up.isDigit() && !upLeft.isDigit()) {
-            tempNumbers.add(findFullNumber(up.getPointFromMap()))
+            tempNumbers.add(findFullNumber(up))
         }
         if (upRight.isDigit() && !up.isDigit()) {
-            tempNumbers.add(findFullNumber(upRight.getPointFromMap()))
+            tempNumbers.add(findFullNumber(upRight))
         }
 
         // same row digit
         if (left.isDigit()) {
-            tempNumbers.add(findFullNumber(left.getPointFromMap()))
+            tempNumbers.add(findFullNumber(left))
         }
         if (right.isDigit()) {
-            tempNumbers.add(findFullNumber(right.getPointFromMap()))
+            tempNumbers.add(findFullNumber(right))
         }
 
         // Gets the bottom row correct digit
         if (downLeft.isDigit()) {
-            tempNumbers.add(findFullNumber(downLeft.getPointFromMap()))
+            tempNumbers.add(findFullNumber(downLeft))
         }
         if (down.isDigit() && !downLeft.isDigit()) {
-            tempNumbers.add(findFullNumber(down.getPointFromMap()))
+            tempNumbers.add(findFullNumber(down))
         }
         if (downRight.isDigit() && !down.isDigit()) {
-            tempNumbers.add(findFullNumber(downRight.getPointFromMap()))
+            tempNumbers.add(findFullNumber(downRight))
         }
         return tempNumbers
     }
@@ -124,16 +123,15 @@ data class Map(
             left = left.clone().left().getPointFromMap()
         }
 
-        val lastValidDigit = left.clone().right().getPointFromMap()
+        val lastValidDigit = left.right().getPointFromMap()
 
         return readFromCurrentToRight(lastValidDigit)
     }
 
     private fun readFromCurrentToRight(point: Point): Int {
-        var listOfNumber = mutableListOf<String>()
-        listOfNumber.add(point.value)
+        val listOfNumber = mutableListOf(point.value)
 
-        var right = point.clone().right().getPointFromMap();
+        var right = point.right().getPointFromMap();
         while (right.isDigit()) {
             listOfNumber.add(right.value)
             right = right.right().getPointFromMap()

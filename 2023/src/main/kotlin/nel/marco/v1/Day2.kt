@@ -5,13 +5,10 @@ class Day2(readInput: List<String>) : Day(readInput) {
 
     override fun answerOne(): String {
 
-        val result = readInput.map {
-            GameOuput().updateField(it)
-        }
+        val result = readInput
+            .map { GameOuput().build(it) } // build the game with necessary fields filled
             .filter { it.isValid() }
-            .sumOf {
-                it.gameId
-            }
+            .sumOf { it.gameId }
 
 
 
@@ -20,12 +17,9 @@ class Day2(readInput: List<String>) : Day(readInput) {
 
     override fun answerTwo(): String {
 
-        val result = readInput.map {
-            GameOuput().updateField(it)
-        }
-            .sumOf {
-                it.powerSet()
-            }
+        val result = readInput
+            .map { GameOuput().build(it) }
+            .sumOf { it.powerSetOfEachColorMaxValue() }
 
         return result.toString()
     }
@@ -41,7 +35,7 @@ data class GameOuput(
 ) {
 
     //Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-    fun updateField(input: String): GameOuput {
+    fun build(input: String): GameOuput {
         gameId = "Game \\d+".toRegex().findAll(input).first().value.replace(":", "").replace("Game ", "").toInt()
 
         green = "\\d+ green".toRegex().findAll(input).map {
@@ -60,7 +54,7 @@ data class GameOuput(
         return this
     }
 
-    fun powerSet(): Long {
+    fun powerSetOfEachColorMaxValue(): Long {
         val redMax = red.max().toLong()
         val greenMax = green.max().toLong()
         val blueMax = blue.max().toLong()
