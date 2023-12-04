@@ -79,6 +79,22 @@ data class Point(var x: Int = 0, var y: Int = 0, var value: String = "") {
         return this
     }
 
+    fun Point.surroundingPoints(): List<Point> {
+        val down = this.clone().up()
+        val downLeft = this.clone().left().up()
+        val downRight = this.clone().right().up()
+
+        val left = this.clone().left()
+        val right = this.clone().right()
+
+        val up = this.clone().down()
+        val upRight = this.clone().right().down()
+        val upLeft = this.clone().left().down()
+
+
+        return listOf(up, down, left, right, upLeft, upRight, downLeft, downRight)
+    }
+
     fun isDigit(): Boolean {
         return isDigitRegex.matches(this.value)
     }
