@@ -17,7 +17,7 @@ class Day2Test {
     @Test
     fun answerTwo_part2() {
         assertEquals("2286", Day2(ReadUtil.readInputAsList(2, exampleInput = true)).answerTwo())
-        assertEquals("2505", Day2(ReadUtil.readInputAsList(2, exampleInput = false)).answerTwo())
+        assertEquals("70265", Day2(ReadUtil.readInputAsList(2, exampleInput = false)).answerTwo())
     }
 
 

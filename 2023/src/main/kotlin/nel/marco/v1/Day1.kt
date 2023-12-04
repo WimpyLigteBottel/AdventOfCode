@@ -1,28 +1,7 @@
 package nel.marco.v1
 
-import nel.marco.MarcoUtil
-import kotlin.system.measureTimeMillis
 
-fun main(args: Array<String>) {
-    var readAllLines = MarcoUtil.readInput(1, true) as MutableList<String>
-    val day1 = Day1(readAllLines)
-    executeTimes("ANSWER 1") {
-        day1.answerOne()
-    }
-    executeTimes("ANSWER 2") {
-        day1.answerTwo()
-    }
-}
-
-fun executeTimes(name: String = "", block: () -> Unit) {
-    var total = 0L
-    for (x in 0..1_000_000)
-        total += measureTimeMillis(block)
-
-    println("$name -> " + total + "ms")
-}
-
-class Day1(var readInput: List<String>) {
+class Day1(readInput: List<String>) : Day(readInput) {
     var map = mutableMapOf<String, String>()
     var mapReversed = mutableMapOf<String, String>()
     var letters = mutableListOf<String>()
@@ -51,7 +30,7 @@ class Day1(var readInput: List<String>) {
         mapReversed["nine".reversed()] = "9"
     }
 
-    fun answerOne(): String {
+    override fun answerOne(): String {
         return readInput
             .map { it.replaceRemainingLetters().trim() } // gets rid of letters
             .map { it.first() + "" + it.last() }
@@ -59,7 +38,7 @@ class Day1(var readInput: List<String>) {
             .toString()
     }
 
-    fun answerTwo(): String {
+    override fun answerTwo(): String {
         return readInput
             .map {
                 var first = findFirstDigit(it, map)

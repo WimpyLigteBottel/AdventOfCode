@@ -1,80 +1,74 @@
 package nel.marco.v1
 
-import nel.marco.MarcoUtil
+import kotlin.math.pow
 
 
-fun main(args: Array<String>) {
-    var readAllLines = MarcoUtil.readInput(4, true) as MutableList<String>
-    val day = Day4(readAllLines)
-    executeTimes("ANSWER 1") {
-        day.answerOne()
-    }
-    executeTimes("ANSWER 2") {
-        day.answerTwo()
-    }
-}
-
-
-class Day4(var readInput: List<String>) {
-
-    fun answerOne(): String {
+class Day4(readInput: List<String>) : Day(readInput) {
+    override fun answerOne(): String {
 
         return readInput
             .map { it.split(":")[1] } // Get everything after ":"
-            .map { it.extractWinningAndActualNumberPair() } // get winning and actual number pair
+            .map { it.extractNumbers() } // get winning and actual number pair
             .map { it.intersect().count() } // intersect and count the amount of winning numbers
             .filter { it > 0 } // only wining numbers
-            .sumOf { Math.pow(2.0, it.toDouble() - 1).toInt() } // calculate points and sum it
+            .sumOf { 2.0.pow(it.toDouble() - 1).toInt() } // calculate points and sum it
             .toString()
     }
 
-    private fun extractWinningAndActualNumberPair(afterGame: String, side: Int = 0) =
-        "\\d+".toRegex()
-            .findAll(afterGame.split("|")[side])
-            .map { it.value }
-            .toList()
 
-    private fun String.extractWinningAndActualNumberPair(): Pair<List<String>, List<String>> {
-        val winningNumbers = extractWinningAndActualNumberPair(this, 0)
-        val actualNumbers = extractWinningAndActualNumberPair(this, 1)
-        return Pair(winningNumbers, actualNumbers)
-    }
+    override fun answerTwo(): String {
+        val gameTickets = readInput.toMutableList()
+        val originalList = readInput.toMutableList()
 
-    private fun Pair<List<String>, List<String>>.intersect() = this.second.intersect(this.first)
+        val mapCounter = mutableMapOf<String, Long>()
 
-    fun answerTwo(): String {
-        var gameTickets = readInput.toMutableList()
-        var mapCounter = mutableMapOf<String, Long>()
-        var uniqueSet = gameTickets.toList()
         while (gameTickets.isNotEmpty()) {
-            var currentGameTicket = gameTickets[0]
-            val timesWon = currentGameTicket.split(":")[1]
-                .extractWinningAndActualNumberPair()
+            val currentGameTicket = gameTickets[0]
+            val split = currentGameTicket.split(":")
+            val timesWon = split[1]
+                .extractNumbers()
                 .intersect()
                 .count()
 
-            val copiesOfGameTicket = gameTickets.count { x -> x == currentGameTicket }
+            val countOfGameTicket = gameTickets.count { x -> x == currentGameTicket }
 
             // Add the number of times current ticket won
-            val gameNumber = currentGameTicket.split(":")[0]
+            val gameNumber = split[0]
             mapCounter.putIfAbsent(gameNumber, 0)
-            mapCounter[gameNumber] = mapCounter[gameNumber]!! + copiesOfGameTicket
+            mapCounter[gameNumber] = mapCounter[gameNumber]!! + countOfGameTicket
 
-            // There could be error one (there are not more tickets after winning)
-            runCatching {
-                for (nextTicketIndex in 1..timesWon) {
-                    for (repeat in 1..copiesOfGameTicket) {
-                        gameTickets.add(uniqueSet[nextTicketIndex])
-                    }
+
+            // Create the necessary copies of "tickets" i won
+            for (nextTicketIndex in 1..timesWon) {
+                for (repeat in 1..countOfGameTicket) {
+                    gameTickets.add(originalList[nextTicketIndex])
                 }
-                // remove all the duplicates because they have been processed and speed up the process
-                gameTickets.removeIf { it == currentGameTicket }
             }
-            // remove the first element in the unique set
-            uniqueSet = uniqueSet.subList(1, uniqueSet.size)
+
+            // cleanup tickets
+            gameTickets.removeIf { it == currentGameTicket }
+            originalList.removeAt(0)
         }
 
         return mapCounter.values.sum().toString()
+    }
+
+
+    private fun extractNumbers(input: String) =
+        "\\d+".toRegex()
+            .findAll(input)
+            .map { it.value }
+            .toList()
+
+    private fun String.extractNumbers(): Pair<List<String>, List<String>> {
+        val split = this.split("|")
+        val winningNumbers = extractNumbers(split[0])
+        val actualNumbers = extractNumbers(split[1])
+        return Pair(winningNumbers, actualNumbers)
+    }
+
+    private fun Pair<List<String>, List<String>>.intersect() = with(this) {
+        first.intersect(second)
     }
 
 }

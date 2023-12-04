@@ -9,8 +9,6 @@ class MarcoUtil {
 
     companion object {
 
-        val basePath = "/Users/mnel/repo/AdventOfCode/2023/src/main/resources/"
-
         fun time(name: String, work: () -> Unit) {
             val now = Instant.now()
             work.invoke()
@@ -20,9 +18,9 @@ class MarcoUtil {
         }
 
         fun avgTime(name: String, work: () -> Unit) {
-            val futureDate = Instant.now().plusSeconds(60)
+            val futureDate = Instant.now().plusSeconds(5)
 
-            val mutableListOf = mutableListOf<Long>()
+            val mutableListOf = ArrayList<Long>(1000)
             while (Instant.now().isBefore(futureDate)) {
                 val now = Instant.now()
                 work.invoke()
@@ -31,18 +29,6 @@ class MarcoUtil {
             }
 
             println("$name took ${mutableListOf.average()} ms")
-        }
-
-        fun readInput(day: Int): List<String> {
-            return Files.readAllLines(Path.of("${basePath}day$day"))
-        }
-
-        fun readInput(day: Int, testInput: Boolean = false): List<String> {
-            if (testInput) {
-                return Files.readAllLines(Path.of("${basePath}day${day}_example"))
-            } else {
-                return readInput(day)
-            }
         }
     }
 }

@@ -3,20 +3,9 @@ package nel.marco.v1
 import nel.marco.MarcoUtil
 import nel.marco.Point
 
-fun main(args: Array<String>) {
-    val readAllLines = MarcoUtil.readInput(3, testInput = true).toMutableList()
-    val day = Day3(readAllLines)
-    executeTimes("ANSWER 1") {
-        day.answerOne()
-    }
-    executeTimes("ANSWER 2") {
-        day.answerTwo()
-    }
-}
 
-
-class Day3(var readInput: List<String>) {
-    fun answerOne(): String {
+class Day3( readInput: List<String>): Day(readInput) {
+    override fun answerOne(): String {
 
         var map = Map().buildMap(readInput)
 
@@ -28,7 +17,7 @@ class Day3(var readInput: List<String>) {
             .toString()
     }
 
-    fun answerTwo(): String {
+    override fun answerTwo(): String {
 
         var map = Map().buildMap(readInput)
 

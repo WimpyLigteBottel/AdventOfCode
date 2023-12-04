@@ -9,8 +9,13 @@ class ReadUtil {
             return readInputAsList(dayNumber, exampleInput).joinToString("\n")
         }
 
-        fun readInputAsList(dayNumber: Int, exampleInput: Boolean = false): List<String> {
-            val basePath = "/Users/mnel/repo/AdventOfCode/2023/src/main/resources"
+        fun readInputAsList(dayNumber: Int, exampleInput: Boolean = false, macBook: Boolean = false): List<String> {
+
+            val basePath = when (macBook) {
+                true -> "/Users/mnel/repo/AdventOfCode/2023/src/main/resources"
+                false -> "D:\\coding repo\\AdventOfCode\\2023\\src\\main\\resources\\"
+            }
+
 
             if (exampleInput) {
                 return Files.readAllLines(Path.of("$basePath/day${dayNumber}_example"))

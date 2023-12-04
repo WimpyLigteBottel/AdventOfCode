@@ -1,22 +1,9 @@
 package nel.marco.v1
 
-import nel.marco.MarcoUtil
 
-fun main(args: Array<String>) {
-    var readAllLines = MarcoUtil.readInput(2, true) as MutableList<String>
-    val day = Day2(readAllLines)
-    executeTimes("ANSWER 1") {
-        day.answerOne()
-    }
-    executeTimes("ANSWER 2") {
-        day.answerTwo()
-    }
-}
+class Day2(readInput: List<String>) : Day(readInput) {
 
-
-class Day2(var readInput: List<String>) {
-
-    fun answerOne(): String {
+    override fun answerOne(): String {
 
         val result = readInput.map {
             GameOuput().updateField(it)
@@ -31,7 +18,7 @@ class Day2(var readInput: List<String>) {
         return "$result"
     }
 
-    fun answerTwo(): String {
+    override fun answerTwo(): String {
 
         val result = readInput.map {
             GameOuput().updateField(it)

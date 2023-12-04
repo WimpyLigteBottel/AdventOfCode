@@ -1,9 +1,7 @@
 package nel.marco
 
-import nel.marco.v1.Day3
 import nel.marco.v1.Day4
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 
 class Day4Test {
@@ -43,9 +41,19 @@ class Day4Test {
     }
 
     @Test
-    fun answerTwo_part2() {
+    fun answerTwo() {
         assertEquals("30", Day4(ReadUtil.readInputAsList(dayNumber, exampleInput = true)).answerTwo())
         assertEquals("12648035", Day4(ReadUtil.readInputAsList(dayNumber, exampleInput = false)).answerTwo())
+    }
+
+
+    @Test
+    fun answerTwo_benchmark() {
+        val day4 = Day4(ReadUtil.readInputAsList(dayNumber, exampleInput = false))
+
+
+        MarcoUtil.avgTime("part 2") { day4.answerTwo() }
+
     }
 
 
