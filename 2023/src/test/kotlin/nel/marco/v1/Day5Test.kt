@@ -22,7 +22,7 @@ class Day5Test {
     @Test
     fun part1_real() {
         val readInputReal = ReadUtil.readInputAsList(dayNumber, false, true)
-        assertEquals("35", Day5(readInputReal).answerOne())
+        assertEquals("379811651", Day5(readInputReal).answerOne())
     }
 
     @Test

@@ -32,7 +32,7 @@ class Day5(readInput: List<String>) : Day(readInput) {
         println(lowesPerSeed)
 
 
-        return lowesPerSeed.minOf { it.toString() }.toString()
+        return lowesPerSeed.minOf { it }.toString()
     }
 
     private fun populateSeedData(seedData: SeedData) {
@@ -116,29 +116,16 @@ data class SeedData(
 
     fun getMapping(list: List<Guide>, numberToRetrieve: Long): Long {
 
-        val guideWithinRange = list
-            .filter { it.source + it.range >= numberToRetrieve }
-            .sortedBy { it.source + it.range }
-            .let {
-                if (it.isEmpty())
-                    return numberToRetrieve
+        val results = list.map {
+            it.findMatchingNumber(numberToRetrieve)
+        }.filter { it != numberToRetrieve }
 
-                it.first
-            }
-
-        var bigMap = guideWithinRange.toMatchingPair(numberToRetrieve)
-
-        return bigMap[numberToRetrieve] ?: numberToRetrieve
-    }
-
-    fun getListToMap(list: List<Guide>): MutableMap<Long, Long> {
-        var bigMap = mutableMapOf<Long, Long>()
-        list.map { guide ->
-            bigMap.putAll(guide.toMap())
+        if (results.isEmpty()) {
+            return numberToRetrieve
         }
-        return bigMap
-    }
 
+        return results.first
+    }
 
 }
 
@@ -148,38 +135,21 @@ data class Guide(
     val range: Long,
 ) {
 
-    fun toMatchingPair(numberToRetrieve: Long): MutableMap<Long, Long> {
-        val seedToSoilMap: MutableMap<Long, Long> = mutableMapOf()
+    fun findMatchingNumber(numberToRetrieve: Long): Long {
+        val index = this.toSourceRangeIndexOnly(numberToRetrieve).toInt()
+        if (index == -1)
+            return numberToRetrieve
 
-        val destinations = this.toDestinationRange(numberToRetrieve)
+        return destination + index
+    }
 
-        val sources = this.toSourceRange(numberToRetrieve)
-
-        destinations.forEachIndexed { index, i ->
-            seedToSoilMap[sources[index]] = destinations[index]
+    fun toSourceRangeIndexOnly(numberToRetrieve: Long): Long {
+        if (source + range > numberToRetrieve && source > numberToRetrieve) {
+            return -1
+        } else if (source + range <= numberToRetrieve) {
+            return -1
         }
-        return seedToSoilMap
-    }
-
-    fun toMap(): MutableMap<Long, Long> {
-        val seedToSoilMap: MutableMap<Long, Long> = mutableMapOf()
-
-        val destinations = this.toDestinationRange(0)
-
-        val sources = this.toSourceRange(0)
-
-        destinations.forEachIndexed { index, i ->
-            seedToSoilMap[sources[index]] = destinations[index]
-        }
-        return seedToSoilMap
-    }
-
-    fun toDestinationRange(numberToRetrieve: Long): List<Long> {
-        return LongRange(destination, destination + range - 1 - 0).map { it }
-    }
-
-    fun toSourceRange(numberToRetrieve: Long): List<Long> {
-        return LongRange(source, source + range - 1 - 0).map { it }
+        return numberToRetrieve - source
     }
 }
 
