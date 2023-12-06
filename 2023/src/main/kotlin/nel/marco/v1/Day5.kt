@@ -22,8 +22,6 @@ class Day5(readInput: List<String>) : Day(readInput) {
     }
 
     override fun answerTwo(): String {
-
-
         val seedsToBePlanted = readInput.get(0).split(":")
         val seedData = SeedData(seedsToBePlanted[1].extraNumbers())
         populateSeedData(seedData)
@@ -35,7 +33,7 @@ class Day5(readInput: List<String>) : Day(readInput) {
             .parallelStream()
             .forEach {
                 it.forEach {
-                    LOWEST = Math.min(it.transformSeedThroughLayers(seedData), LOWEST)
+                    LOWEST = it.transformSeedThroughLayers(seedData).coerceAtMost(LOWEST)
                 }
             }
 
