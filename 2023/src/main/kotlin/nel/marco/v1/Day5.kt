@@ -7,32 +7,51 @@ class Day5(readInput: List<String>) : Day(readInput) {
         val seedData = SeedData(seedsToBePlanted[1].extraNumbers())
         populateSeedData(seedData)
 
-        val lowesPerSeed = seedData.seedsToBePlanted
-            .map {
-                seedData.getMapping(seedData.seed_to_soil, it.toLong())
-            }
-            .map {
-                seedData.getMapping(seedData.soil_to_ferilizer, it)
-            }.map {
-                seedData.getMapping(seedData.fertilizer_to_water, it)
-            }
-            .map {
-                seedData.getMapping(seedData.water_to_light, it)
-            }
-            .map {
-                seedData.getMapping(seedData.light_to_temperature, it)
-            }
-            .map {
-                seedData.getMapping(seedData.temperature_to_humidity, it)
-            }
-            .map {
-                seedData.getMapping(seedData.humidity_to_location, it)
-            }
+        val lowesPerSeed = seedData.seedsToBePlanted.map { seedData.getMapping(seedData.seed_to_soil, it.toLong()) }
+            .map { seedData.getMapping(seedData.soil_to_ferilizer, it) }
+            .map { seedData.getMapping(seedData.fertilizer_to_water, it) }
+            .map { seedData.getMapping(seedData.water_to_light, it) }
+            .map { seedData.getMapping(seedData.light_to_temperature, it) }
+            .map { seedData.getMapping(seedData.temperature_to_humidity, it) }
+            .map { seedData.getMapping(seedData.humidity_to_location, it) }
 
         println(lowesPerSeed)
 
-
         return lowesPerSeed.minOf { it }.toString()
+    }
+
+    override fun answerTwo(): String {
+
+
+        val seedsToBePlanted = readInput.get(0).split(":")
+        val seedData = SeedData(seedsToBePlanted[1].extraNumbers())
+        populateSeedData(seedData)
+
+        var LOWEST = Long.MAX_VALUE
+
+        for (x in 0 until seedData.seedsToBePlanted.size step 2) {
+            val start = seedData.seedsToBePlanted[x].toLong()
+            val endInclusive = seedData.seedsToBePlanted[x].toLong() + seedData.seedsToBePlanted[x + 1].toLong() / 2
+
+            for (it in start..endInclusive) {
+                listOf(it).map {
+                    seedData.getMapping(seedData.seed_to_soil, it)
+                }
+                    .map { seedData.getMapping(seedData.soil_to_ferilizer, it) }
+                    .map { seedData.getMapping(seedData.fertilizer_to_water, it) }
+                    .map { seedData.getMapping(seedData.water_to_light, it) }
+                    .map { seedData.getMapping(seedData.light_to_temperature, it) }
+                    .map { seedData.getMapping(seedData.temperature_to_humidity, it) }
+                    .map { seedData.getMapping(seedData.humidity_to_location, it) }
+                    .map {
+                        LOWEST = Math.min(it, LOWEST)
+                    }
+            }
+
+
+        }
+
+        return LOWEST.toString()
     }
 
     private fun populateSeedData(seedData: SeedData) {
@@ -87,9 +106,6 @@ class Day5(readInput: List<String>) : Day(readInput) {
         return action
     }
 
-    override fun answerTwo(): String {
-        return ""
-    }
 
     fun String.extraNumbers() = "\\d+".toRegex().findAll(this).map { it.value }.toList()
 
@@ -114,17 +130,21 @@ data class SeedData(
     var humidity_to_location: MutableList<Guide> = mutableListOf(),
 ) {
 
+    fun getLargestValueAllowed(list: List<Guide>): Long {
+        return list.map {
+            Math.max(it.destination + it.range, it.source + it.range)
+        }.maxOf { it }
+    }
+
     fun getMapping(list: List<Guide>, numberToRetrieve: Long): Long {
+        list.forEach {
+            val number = it.findMatchingNumber(numberToRetrieve)
 
-        val results = list.map {
-            it.findMatchingNumber(numberToRetrieve)
-        }.filter { it != numberToRetrieve }
-
-        if (results.isEmpty()) {
-            return numberToRetrieve
+            if (number != numberToRetrieve) return number
         }
 
-        return results.first
+        return numberToRetrieve
+
     }
 
 }
@@ -137,8 +157,7 @@ data class Guide(
 
     fun findMatchingNumber(numberToRetrieve: Long): Long {
         val index = this.toSourceRangeIndexOnly(numberToRetrieve).toInt()
-        if (index == -1)
-            return numberToRetrieve
+        if (index == -1) return numberToRetrieve
 
         return destination + index
     }
@@ -154,12 +173,5 @@ data class Guide(
 }
 
 enum class ACTIONS {
-    UNKOWN,
-    seed_to_soil,
-    soil_to_fertilizer,
-    fertilizer_to_water,
-    water_to_light,
-    light_to_temperature,
-    temperature_to_humidity,
-    humidity_to_location
+    UNKOWN, seed_to_soil, soil_to_fertilizer, fertilizer_to_water, water_to_light, light_to_temperature, temperature_to_humidity, humidity_to_location
 }

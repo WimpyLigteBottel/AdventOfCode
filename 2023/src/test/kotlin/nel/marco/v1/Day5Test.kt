@@ -1,7 +1,7 @@
 package nel.marco.v1
 
 import nel.marco.ReadUtil
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class Day5Test {
@@ -26,8 +26,15 @@ class Day5Test {
     }
 
     @Test
-    fun part2() {
+    fun part2_example() {
+        val readInputReal = ReadUtil.readInputAsList(dayNumber, true, true)
+        assertEquals("46", Day5(readInputReal).answerTwo())
+    }
 
+    @Test
+    fun part2_real() {
+        val readInputReal = ReadUtil.readInputAsList(dayNumber, false, true)
+        assertEquals("27992443", Day5(readInputReal).answerTwo())
     }
 
 
