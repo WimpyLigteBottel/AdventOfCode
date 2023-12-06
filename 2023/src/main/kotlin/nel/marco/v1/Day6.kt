@@ -1,57 +1,40 @@
 package nel.marco.v1
 
-import java.math.BigInteger
-
 
 class Day6(readInput: List<String>) : Day(readInput) {
 
-    //    Time:      7  15   30
-//    Distance:  9  40  200
     override fun answerOne(): String {
 
-        val times = "\\d+".toRegex().findAll(readInput[0]).map { it.value.toLong() }.toList()
+        val times = readInput[0].extractNumbers()
+        val distances = readInput[1].extractNumbers()
 
-        val distances = "\\d+".toRegex().findAll(readInput[1]).map { it.value.toLong() }.toList()
+        return times
+            .mapIndexed { index, _ -> Race(times[index], distances[index]) }// Create race for each time
+            .map { Boat().numberOfWaysToBeatRace(it) }
+            .fold(1L) { acc, l -> acc * l } // multiply each value with itself until all is combined
+            .toString()
 
-        var races = List(times.size) { index ->
-            Race(times[index], distances[index])
-        }
-
-        var speedTimeEndRange = mutableListOf<Long>()
-
-        for (element in races) {
-            val boat = Boat(1, 1)
-            speedTimeEndRange.add(boat.timesToBeatRace(element))
-        }
-
-
-        var total = 1L
-
-        speedTimeEndRange.forEach {
-            total *= it
-        }
-
-
-        return total.toString()
     }
+
 
     override fun answerTwo(): String {
-        val times = "\\d+".toRegex().findAll(readInput[0]).map { it.value.toLong() }.joinToString("")
-        val distances = "\\d+".toRegex().findAll(readInput[1]).map { it.value.toLong() }.joinToString("")
+        val times = readInput[0].extractNumbers().joinToString("").toLong()
+        val distances = readInput[1].extractNumbers().joinToString("").toLong()
 
-        var race = Race(times.toLong(), distances.toLong())
-        val boat = Boat(1, 1)
-        return boat.timesToBeatRace(race).toString()
+        return Race(times, distances)
+            .let { Boat().numberOfWaysToBeatRace(it) }
+            .toString()
     }
+
+    private fun String.extractNumbers() = "\\d+".toRegex().findAll(this).map { it.value.toLong() }.toList()
 
 }
 
 data class Boat(
-    var speed: Int,
-    var waited: Int,
+    var speed: Int = 1,
+    var waited: Int = 1,
 ) {
-
-    fun timesToBeatRace(race: Race): Long {
+    fun numberOfWaysToBeatRace(race: Race): Long {
         var counter = 0L
 
         while (waited < race.time) {

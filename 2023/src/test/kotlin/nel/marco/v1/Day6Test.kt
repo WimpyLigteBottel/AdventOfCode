@@ -15,7 +15,7 @@ class Day6Test {
         assertEquals("288", Day6(readInputExample).answerOne())
 
         val real = ReadUtil.readInputAsList(dayNumber, false, true)
-        assertEquals("288", Day6(real).answerOne())
+        assertEquals("345015", Day6(real).answerOne())
 
     }
 
