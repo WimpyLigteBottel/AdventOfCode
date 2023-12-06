@@ -31,19 +31,17 @@ class Day5(readInput: List<String>) : Day(readInput) {
 
         for (x in 0 until seedData.seedsToBePlanted.size step 2) {
             val start = seedData.seedsToBePlanted[x].toLong()
-            val endInclusive = seedData.seedsToBePlanted[x].toLong() + seedData.seedsToBePlanted[x + 1].toLong() / 2
+            val endInclusive = seedData.seedsToBePlanted[x].toLong() + seedData.seedsToBePlanted[x + 1].toLong()
 
             for (it in start..endInclusive) {
-                listOf(it).map {
-                    seedData.getMapping(seedData.seed_to_soil, it)
-                }
-                    .map { seedData.getMapping(seedData.soil_to_ferilizer, it) }
-                    .map { seedData.getMapping(seedData.fertilizer_to_water, it) }
-                    .map { seedData.getMapping(seedData.water_to_light, it) }
-                    .map { seedData.getMapping(seedData.light_to_temperature, it) }
-                    .map { seedData.getMapping(seedData.temperature_to_humidity, it) }
-                    .map { seedData.getMapping(seedData.humidity_to_location, it) }
-                    .map {
+                seedData.getMapping(seedData.seed_to_soil, it)
+                    .let { seedData.getMapping(seedData.soil_to_ferilizer, it) }
+                    .let { seedData.getMapping(seedData.fertilizer_to_water, it) }
+                    .let { seedData.getMapping(seedData.water_to_light, it) }
+                    .let { seedData.getMapping(seedData.light_to_temperature, it) }
+                    .let { seedData.getMapping(seedData.temperature_to_humidity, it) }
+                    .let { seedData.getMapping(seedData.humidity_to_location, it) }
+                    .let {
                         LOWEST = Math.min(it, LOWEST)
                     }
             }
