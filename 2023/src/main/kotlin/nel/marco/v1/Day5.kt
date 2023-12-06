@@ -7,7 +7,8 @@ class Day5(readInput: List<String>) : Day(readInput) {
         val seedData = SeedData(seedsToBePlanted[1].extraNumbers())
         populateSeedData(seedData)
 
-        val lowesPerSeed = seedData.seedsToBePlanted.map { seedData.getMapping(seedData.seed_to_soil, it.toLong()) }
+        val lowesPerSeed = seedData.seedsToBePlanted
+            .map { seedData.getMapping(seedData.seed_to_soil, it.toLong()) }
             .map { seedData.getMapping(seedData.soil_to_ferilizer, it) }
             .map { seedData.getMapping(seedData.fertilizer_to_water, it) }
             .map { seedData.getMapping(seedData.water_to_light, it) }
@@ -29,27 +30,26 @@ class Day5(readInput: List<String>) : Day(readInput) {
 
         var LOWEST = Long.MAX_VALUE
 
-        for (x in 0 until seedData.seedsToBePlanted.size step 2) {
-            val start = seedData.seedsToBePlanted[x].toLong()
-            val endInclusive = seedData.seedsToBePlanted[x].toLong() + seedData.seedsToBePlanted[x + 1].toLong()
-
-            for (it in start..endInclusive) {
-                seedData.getMapping(seedData.seed_to_soil, it)
-                    .let { seedData.getMapping(seedData.soil_to_ferilizer, it) }
-                    .let { seedData.getMapping(seedData.fertilizer_to_water, it) }
-                    .let { seedData.getMapping(seedData.water_to_light, it) }
-                    .let { seedData.getMapping(seedData.light_to_temperature, it) }
-                    .let { seedData.getMapping(seedData.temperature_to_humidity, it) }
-                    .let { seedData.getMapping(seedData.humidity_to_location, it) }
-                    .let {
-                        LOWEST = Math.min(it, LOWEST)
-                    }
+        seedData.seedsToBePlanted.chunked(2)
+            .map { LongRange(it.first.toLong(), it.first.toLong() + it.last.toLong()) }
+            .parallelStream()
+            .forEach {
+                it.forEach {
+                    LOWEST = Math.min(it.transformSeedThroughLayers(seedData), LOWEST)
+                }
             }
 
-
-        }
-
         return LOWEST.toString()
+    }
+
+    private fun Long.transformSeedThroughLayers(seedData: SeedData): Long {
+        return this.let { seedData.getMapping(seedData.seed_to_soil, it) }
+            .let { seedData.getMapping(seedData.soil_to_ferilizer, it) }
+            .let { seedData.getMapping(seedData.fertilizer_to_water, it) }
+            .let { seedData.getMapping(seedData.water_to_light, it) }
+            .let { seedData.getMapping(seedData.light_to_temperature, it) }
+            .let { seedData.getMapping(seedData.temperature_to_humidity, it) }
+            .let { seedData.getMapping(seedData.humidity_to_location, it) }
     }
 
     private fun populateSeedData(seedData: SeedData) {
