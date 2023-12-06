@@ -1,5 +1,8 @@
 package nel.marco.v1
 
+import java.util.concurrent.atomic.AtomicLong
+import java.util.stream.IntStream
+
 
 class Day6(readInput: List<String>) : Day(readInput) {
 

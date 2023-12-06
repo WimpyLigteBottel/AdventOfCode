@@ -1,5 +1,6 @@
 package nel.marco.v1
 
+import nel.marco.MarcoUtil
 import nel.marco.ReadUtil
 import org.junit.jupiter.api.Test
 
@@ -26,7 +27,16 @@ class Day6Test {
         assertEquals("71503", Day6(readInputExample).answerTwo())
 
         val real = ReadUtil.readInputAsList(dayNumber, false, true)
-        assertNotEquals("345015", Day6(real).answerTwo())
         assertEquals("42588603", Day6(real).answerTwo())
+    }
+
+
+    @Test
+    fun answerTwo_benchmark() {
+        val real = ReadUtil.readInputAsList(dayNumber, false, true)
+
+        MarcoUtil.avgTime("answer 2", 10){
+            assertEquals("42588603", Day6(real).answerTwo())
+        }
     }
 }
