@@ -77,45 +77,48 @@ val jokerMap = mutableMapOf<String, Long>(
 )
 
 fun String.toPlayer(useJokerRule: Boolean = false): Player {
-    val hand = if (useJokerRule) {
-        this.substring(0, 5)
-            .map { Card(value = it.toString(), points = jokerMap[it.toString()]!!.toLong()) }
-            .toList()
-    } else {
-        this.substring(0, 5)
-            .map { Card(value = it.toString(), points = mapValue[it.toString()]!!.toLong()) }
-            .toList()
-    }
+    val mapToUse = if (useJokerRule) jokerMap else mapValue
+
+    val hand = this.substring(0, 5)
+        .map { it.toString() }
+        .map { it.toCard(mapToUse) }
 
     return Player(
         cards = hand,
-        jokerHand = hand.makeStrongestWithJokers(),
+        jokerHand = hand.strongestHandWithJokers(),
         bid = this.substring(6).toLong(),
         useJokerRule = useJokerRule
     )
 }
 
-private fun List<Card>.makeStrongestWithJokers(): List<Card> {
+fun String.toCard(referenceMap: MutableMap<String, Long>): Card {
+    return Card(
+        value = this,
+        points = referenceMap[this]!!.toLong()
+    )
+}
+
+private fun List<Card>.strongestHandWithJokers(): List<Card> {
     val possibleHands = this.filter { it.value != "J" }
         .map { possibleOption ->
             this.map {
                 if (it.value == "J") return@map possibleOption
                 return@map it
             }
-        }
+        }.map { Player(it) }
 
     if (possibleHands.isEmpty())
         return this
 
-    return getStrongestHand(possibleHands)
+    return getStrongestPlayer(possibleHands).cards
 }
 
-private fun getStrongestHand(possibleHands: List<List<Card>>): List<Card> {
-    return possibleHands.reduce { acc, cards ->
-        if (Player(acc).beats(Player(cards))) {
-            return@reduce acc // was stronger
+private fun getStrongestPlayer(possibleHands: List<Player>): Player {
+    return possibleHands.reduce { strongest, competitor ->
+        if (strongest.beats(competitor)) {
+            return@reduce strongest
         }
-        return@reduce cards // was stronger
+        return@reduce competitor
     }
 }
 
@@ -141,7 +144,7 @@ data class Rules(var cards: List<Card> = emptyList()) {
         return 0
     }
 
-    private fun ofKind(amount: Int) = cards
+    fun ofKind(amount: Int) = cards
         .groupBy { it.value }
         .values
         .map { it.size }
@@ -176,7 +179,7 @@ data class Player(
         return playerAScore > playerBScore
     }
 
-    fun doesABeatB(a: List<Card>, b: List<Card>): Boolean {
+    private fun doesABeatB(a: List<Card>, b: List<Card>): Boolean {
         a.forEachIndexed { index, _ ->
             val cardA = a[index]
             val cardB = b[index]
