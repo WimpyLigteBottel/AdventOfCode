@@ -6,15 +6,14 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 
-class Day6Test {
+class Day7Test {
 
     var dayNumber = 6
 
     @Test
     fun answerOne() {
         val readInputExample = ReadUtil.readInputAsList(dayNumber, true, true)
-        assertEquals("288", Day7(readInputExample).answerOne())
-
+        assertEquals("644-", Day7(readInputExample).answerOne())
         val real = ReadUtil.readInputAsList(dayNumber, false, true)
         assertEquals("345015", Day7(real).answerOne())
 
