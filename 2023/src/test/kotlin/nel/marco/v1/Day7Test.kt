@@ -121,7 +121,7 @@ class Day7Test {
     @Disabled
     fun answerTwo_benchmark() {
         val real = ReadUtil.readInputAsList(dayNumber, false, true)
-        MarcoUtil.avgTime("answer 2", 60) {
+        MarcoUtil.avgTime("answer 2", 10) {
             assertEquals("251515496", Day7(real).answerTwo())
         }
     }
