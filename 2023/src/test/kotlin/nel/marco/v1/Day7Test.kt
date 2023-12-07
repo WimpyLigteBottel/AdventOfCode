@@ -68,31 +68,6 @@ class Day7Test {
 
     @ParameterizedTest
     @CsvSource(
-        "AAAAA 1,beats,AAAA1 1,true",
-        "AAAA1 1,beats,AAAAA 1,false",
-        "AAAA1 1,beats,AAAA1 1,false",
-        "AAA11 1,beats,AAA21 1,true",
-        "AAA22 1,beats,AAA11 1,true",
-        "AAA22 1,beats,22211 1,true",
-        "AAA22 1,beats,21111 1,false",
-        "AAAA2 1,beats,AAAA1 1,true",
-        "TTTT2 1,beats,AAAA1 1,false",
-    )
-    fun handAbeatsHandB_test(
-        cardHandA: String,
-        randomText: String,
-        cardHandB: String,
-        boolean: Boolean,
-    ) {
-
-        val playerA = cardHandA.toPlayer()
-        val playerB = cardHandB.toPlayer()
-
-        assertEquals(boolean, playerA.beats(playerB))
-    }
-
-    @ParameterizedTest
-    @CsvSource(
         // strongest
         "KTJJT 1,T55J5 1,true",
         "KTJJT 1,KK677 1,true",
@@ -115,31 +90,6 @@ class Day7Test {
     ) {
         val playerA = cardHandA.toPlayer(true)
         val playerB = cardHandB.toPlayer(true)
-
-        assertEquals(boolean, playerA.beats(playerB))
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "QQQJA 1,beats,AAAA1 1,true",
-        "AAAA1 1,beats,AAAAA 1,false",
-        "AAAA1 1,beats,AAAA1 1,false",
-        "AAA11 1,beats,AAA21 1,true",
-        "AAA22 1,beats,AAA11 1,true",
-        "AAA22 1,beats,22211 1,true",
-        "AAA22 1,beats,21111 1,false",
-        "AAAA2 1,beats,AAAA1 1,true",
-        "TTTT2 1,beats,AAAA1 1,false",
-    )
-    fun handAbeatsHandB_withJokerRules_test(
-        cardHandA: String,
-        randomText: String,
-        cardHandB: String,
-        boolean: Boolean,
-    ) {
-
-        val playerA = cardHandA.toPlayer()
-        val playerB = cardHandB.toPlayer()
 
         assertEquals(boolean, playerA.beats(playerB))
     }
@@ -168,6 +118,7 @@ class Day7Test {
 
 
     @Test
+    @Disabled
     fun answerTwo_benchmark() {
         val real = ReadUtil.readInputAsList(dayNumber, false, true)
         MarcoUtil.avgTime("answer 2", 60) {

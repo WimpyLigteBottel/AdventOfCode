@@ -4,11 +4,11 @@ class Day7(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerOne(): String {
-        var handsWithRanks = mutableMapOf<Player, Int>()
+        var handsWithRanks: MutableMap<Player, Int>
 
-        readInput.forEach {
-            handsWithRanks.putIfAbsent(it.toPlayer(), 1)
-        }
+        handsWithRanks = readInput
+            .map { it.toPlayer(false) to 1 }
+            .toMap() as MutableMap<Player, Int>
 
         rankHands(handsWithRanks)
 
@@ -17,8 +17,7 @@ class Day7(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerTwo(): String {
-        var handsWithRanks = mutableMapOf<Player, Int>()
-
+        var handsWithRanks: MutableMap<Player, Int>
 
         handsWithRanks = readInput
             .map { it.toPlayer(useJokerRule = true) to 1 }
