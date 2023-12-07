@@ -4,33 +4,30 @@ class Day7(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerOne(): String {
-        var handsWithRanks: MutableMap<Player, Int>
-
-        handsWithRanks = readInput
-            .map { it.toPlayer(false) to 1 }
+        val handsWithRanks = readInput
+            .map { it.toPlayer() to 1 }
             .toMap() as MutableMap<Player, Int>
 
         rankHands(handsWithRanks)
 
-        return "${calculateScore(handsWithRanks)}"
+        return calculateScore(handsWithRanks)
     }
 
 
     override fun answerTwo(): String {
-        var handsWithRanks: MutableMap<Player, Int>
-
-        handsWithRanks = readInput
+        val handsWithRanks: MutableMap<Player, Int> = readInput
             .map { it.toPlayer(useJokerRule = true) to 1 }
             .toMap() as MutableMap<Player, Int>
 
         rankHands(handsWithRanks)
 
-        return "${calculateScore(handsWithRanks)}"
+        return calculateScore(handsWithRanks)
     }
 
     private fun calculateScore(handsWithRanks: MutableMap<Player, Int>) = handsWithRanks
         .map { it.key.bid * it.value }
         .sum()
+        .toString()
 
     private fun rankHands(handsWithRanks: MutableMap<Player, Int>) {
         handsWithRanks.forEach { parent ->
