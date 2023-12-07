@@ -107,46 +107,16 @@ data class Card(var value: String, var points: Long)
 
 
 data class Rules(var cards: List<Card> = emptyList()) {
-    var map = mutableMapOf(
-        "5" to hasFiveKind(),
-        "4" to hasFourKind(),
-        "3" to hasThreeKind(),
-        "2" to hasTwoKind(),
-    )
 
-    fun hasFiveKind(): Boolean {
+    fun ofKind(amount:Int): Boolean {
         return cards
             .groupBy { it.value }
             .values
             .map { it.size }
-            .find { it == 5 } != null
+            .find { it == amount } != null
     }
 
-    fun hasFourKind(): Boolean {
-        return cards
-            .groupBy { it.value }
-            .values
-            .map { it.size }
-            .find { it == 4 } != null
-    }
-
-    fun hasFullHouse() = hasThreeKind() && hasTwoKind()
-
-    fun hasThreeKind(): Boolean {
-        return cards
-            .groupBy { it.value }
-            .values
-            .map { it.size }
-            .find { it == 3 } != null
-    }
-
-    fun hasTwoKind(): Boolean {
-        return cards
-            .groupBy { it.value }
-            .values
-            .map { it.size }
-            .find { it == 2 } != null
-    }
+    fun hasFullHouse() = ofKind(3) && ofKind(2)
 
     fun hasTwoPairs(): Boolean {
         return cards
@@ -195,17 +165,17 @@ data class Player(
             rules = Rules(jokerHand)
         }
 
-        if (rules.hasFiveKind()) {
+        if (rules.ofKind(5)) {
             return 6
-        } else if (rules.hasFourKind()) {
+        } else if (rules.ofKind(4)) {
             return 5 // four kind
         } else if (rules.hasFullHouse()) {
             return 4 // full house
-        } else if (rules.hasThreeKind()) {
+        } else if (rules.ofKind(3)) {
             return 3
         } else if (rules.hasTwoPairs()) {
             return 2
-        } else if (rules.hasTwoKind()) {
+        } else if (rules.ofKind(2)) {
             return 1
         }
 

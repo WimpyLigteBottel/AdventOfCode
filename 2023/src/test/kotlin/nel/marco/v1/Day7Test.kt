@@ -35,10 +35,10 @@ class Day7Test {
         val rules = Rules(cards)
 
 
-        assertEquals(five, rules.hasFiveKind())
-        assertEquals(four, rules.hasFourKind())
-        assertEquals(three, rules.hasThreeKind())
-        assertEquals(two, rules.hasTwoKind())
+        assertEquals(five, rules.ofKind(5))
+        assertEquals(four, rules.ofKind(4))
+        assertEquals(three, rules.ofKind(3))
+        assertEquals(two, rules.ofKind(2))
     }
 
     @ParameterizedTest
