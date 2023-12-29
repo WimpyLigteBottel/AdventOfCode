@@ -46,7 +46,7 @@ class Day9Test {
 
     @Test
     fun answerOne() {
-        assertNotEquals("1834108701", Day9(ReadUtil.readInputAsList(dayNumber, false, true)).answerOne()) // too high
+        assertEquals("1834108701", Day9(ReadUtil.readInputAsList(dayNumber, false, true)).answerOne())
     }
 
 
@@ -64,7 +64,7 @@ class Day9Test {
     @Test
     fun answerTwo() {
         assertEquals("2", Day9(ReadUtil.readInputAsList(dayNumber, true,true)).answerTwo())
-        assertEquals("2", Day9(ReadUtil.readInputAsList(dayNumber, false)).answerTwo())
+        assertEquals("993", Day9(ReadUtil.readInputAsList(dayNumber, false)).answerTwo())
     }
 
 

@@ -7,55 +7,30 @@ class Day9(readInput: List<String>) : Day(readInput) {
 
     override fun answerOne(): String {
 
-        return readInput.map {
-            var rows = mutableListOf<MutableList<BigInteger>>()
-            rows.add(it.split(" ").map { it.toBigInteger() }.toMutableList())
+        return readInput.map { it ->
+            var rows = createRows(it)
 
-            while (rows.last.size > 0) {
-                val row = getDiff(rows.last)
-                rows.add(row)
-            }
-            rows = rows
-                .filter { row -> row.size > 0L }
-                .toMutableList()
-
-            rows = rows.reversed().toMutableList()
-
+            rows.reverse()
             runCatching {
-                for ((index, bigIntegers) in rows.withIndex()) {
+                for ((index, _) in rows.withIndex()) {
                     val nextValue = rows[index + 1].last + rows[index].last
                     rows[index + 1].add(nextValue)
                 }
             }
-
-            rows = rows.reversed().toMutableList()
-
-            rows[0].last
+            rows.reverse()
+            rows
         }
-            .sumOf { it }
+            .sumOf { it[0].last() } // sum all the last digits
             .toString()
     }
 
-    private fun getDiff(numbers: List<BigInteger>) = (1 until numbers.size step 1).map { x ->
-        numbers[x] - numbers[x - 1]
-    }.toMutableList()
+
 
     override fun answerTwo(): String {
         return readInput.map {
-            var rows = mutableListOf<MutableList<BigInteger>>()
-            rows.add(it.split(" ").map { it.toBigInteger() }.toMutableList())
+            var rows = createRows(it)
 
-            while (rows.last.size > 0) {
-                val row = getDiff(rows.last)
-                rows.add(row)
-            }
-
-            rows = rows
-                .filter { row -> row.size > 0L }
-                .toMutableList()
-
-            rows = rows.reversed().toMutableList()
-
+            rows.reverse()
             runCatching {
                 for ((index, bigIntegers) in rows.withIndex()) {
                     val nextValue = rows[index + 1].first - rows[index].first
@@ -63,13 +38,35 @@ class Day9(readInput: List<String>) : Day(readInput) {
                 }
             }
 
-            rows = rows.reversed().toMutableList()
-
-            rows[0].last
+            rows.reverse()
+            rows
         }
-            .sumOf { it }
+            .sumOf { it[0].first() } // sum all the last digits
             .toString()
     }
+
+    private fun createRows(
+        it: String,
+    ): MutableList<MutableList<BigInteger>> {
+        var rows = mutableListOf<MutableList<BigInteger>>()
+
+        rows.add(it.split(" ").map { it.toBigInteger() }.toMutableList())
+
+        while (rows.last.size > 0) {
+            val row = getDiff(rows.last)
+            rows.add(row)
+        }
+
+        rows = rows
+            .filter { row -> row.size > 0L }
+            .toMutableList()
+
+        return rows;
+    }
+
+    private fun getDiff(numbers: List<BigInteger>) =
+        (1 until numbers.size step 1)
+            .map { x -> numbers[x] - numbers[x - 1] }.toMutableList()
 
 
 }
