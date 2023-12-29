@@ -15,7 +15,9 @@ class Day9(readInput: List<String>) : Day(readInput) {
                 val row = getDiff(rows.last)
                 rows.add(row)
             }
-            rows = rows.filter { it.size > 0L }.filter { it.last != BigInteger.ZERO }.toMutableList()
+            rows = rows
+                .filter { row -> row.size > 0L }
+                .toMutableList()
 
             rows = rows.reversed().toMutableList()
 
@@ -39,7 +41,34 @@ class Day9(readInput: List<String>) : Day(readInput) {
     }.toMutableList()
 
     override fun answerTwo(): String {
-        return ""
+        return readInput.map {
+            var rows = mutableListOf<MutableList<BigInteger>>()
+            rows.add(it.split(" ").map { it.toBigInteger() }.toMutableList())
+
+            while (rows.last.size > 0) {
+                val row = getDiff(rows.last)
+                rows.add(row)
+            }
+
+            rows = rows
+                .filter { row -> row.size > 0L }
+                .toMutableList()
+
+            rows = rows.reversed().toMutableList()
+
+            runCatching {
+                for ((index, bigIntegers) in rows.withIndex()) {
+                    val nextValue = rows[index + 1].first - rows[index].first
+                    rows[index + 1].add(0, nextValue)
+                }
+            }
+
+            rows = rows.reversed().toMutableList()
+
+            rows[0].last
+        }
+            .sumOf { it }
+            .toString()
     }
 
 

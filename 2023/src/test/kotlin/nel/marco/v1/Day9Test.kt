@@ -46,14 +46,25 @@ class Day9Test {
 
     @Test
     fun answerOne() {
-        assertNotEquals("1834108708", Day9(ReadUtil.readInputAsList(dayNumber, false, true)).answerOne()) // too high
+        assertNotEquals("1834108701", Day9(ReadUtil.readInputAsList(dayNumber, false, true)).answerOne()) // too high
     }
+
+
+    @ParameterizedTest
+    @CsvSource(
+        "10 13 16 21 30 45,5"
+    )
+    fun answerTwoOwnExample2(csvSource: String, expected: String) {
+        var input = listOf(csvSource)
+
+        assertEquals(expected, Day9(input).answerTwo())
+    }
+
 
     @Test
     fun answerTwo() {
-        val real = ReadUtil.readInputAsList(dayNumber, false, true)
-        val answerTwo = Day9(real).answerTwo()
-        assertEquals("-1", answerTwo)
+        assertEquals("2", Day9(ReadUtil.readInputAsList(dayNumber, true,true)).answerTwo())
+        assertEquals("2", Day9(ReadUtil.readInputAsList(dayNumber, false)).answerTwo())
     }
 
 
