@@ -9,11 +9,11 @@ class Day1Test {
 
     @Test
     fun part1() {
-        assertEquals("3474920",Day1().part1(input))
+        assertEquals("3474920", Day1().part1(input))
     }
 
     @Test
     fun part2() {
-        assertEquals("5209504",Day1().part2(input))
+        assertEquals("5209504", Day1().part2(input))
     }
 }
