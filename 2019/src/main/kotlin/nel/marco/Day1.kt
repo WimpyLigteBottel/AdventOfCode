@@ -1,3 +1,5 @@
+package nel.marco
+
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -15,7 +17,6 @@ class Day1 {
     }
 
     private fun Long.calculate() = ((this.toDouble() / 3) - 2).toLong()
-
 
     private fun calculateRecursively(input: Long): Long {
         if (input <= 3) {
