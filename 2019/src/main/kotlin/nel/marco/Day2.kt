@@ -1,4 +1,4 @@
-package nel.marco.nel
+package nel.marco
 
 import java.nio.file.Files
 import java.nio.file.Path
