@@ -15,27 +15,7 @@ class Day3(
     var cacheMap = mutableMapOf<Point, Pair<String, String>>()
 
     fun part1(input: List<String>): String {
-        val map = mutableMapOf<Point, Pair<String, String>>()
-        val wireA = input[0].split(",")
-        val wireB = input[1].split(",")
-
-        var lastLocation = Point(0, 0)
-        map[lastLocation] = "A" to "o"
-        wireA.forEach { input ->
-            val direction = input.substring(0, 1) //D, U , R , L
-            val amount = input.substring(1) // D[xxx]
-
-            lastLocation = process(direction, amount, lastLocation, map)
-        }
-
-        lastLocation = Point(0, 0)
-        map[lastLocation] = "B" to "o"
-        wireB.forEach { input ->
-            val direction = input.substring(0, 1) //D, U , R , L
-            val amount = input.substring(1) // D[xxx]]
-
-            lastLocation = process(direction, amount, lastLocation, map)
-        }
+        val map = populateMap(input)
 
         cacheMap = map
 
@@ -49,6 +29,33 @@ class Day3(
         return crossingPoints.first().toString()
     }
 
+    private fun populateMap(input: List<String>): MutableMap<Point, Pair<String, String>> {
+        val map = mutableMapOf<Point, Pair<String, String>>()
+
+        //Place wireA
+        input[0].split(",").let {
+            var lastLocation = Point(0, 0)
+            map[lastLocation] = "A" to "o"
+            it.forEach { input ->
+                val direction = input.toDirection()
+                val amount = input.toAmount()
+                lastLocation = process(direction, amount, lastLocation, map)
+            }
+        }
+        //Place wireB
+        input[1].split(",").let {
+            var lastLocation = Point(0, 0)
+            map[lastLocation] = "B" to "o"
+            it.forEach { input ->
+                val direction = input.toDirection()
+                val amount = input.toAmount()
+                lastLocation = process(direction, amount, lastLocation, map)
+            }
+        }
+
+        return map
+    }
+
     private fun manhattanDistance(a: Point, b: Point) =
         ((a.x.absoluteValue - b.x.absoluteValue) + (a.y.absoluteValue - b.y.absoluteValue))
             .let {
@@ -56,8 +63,8 @@ class Day3(
             }
 
     private fun process(
-        direction: String,
-        amount: String,
+        direction: Direction,
+        amount: Int,
         lastLocation2: Point,
         map: MutableMap<Point, Pair<String, String>>,
         sayIfPointIsReached: Point? = null
@@ -65,44 +72,42 @@ class Day3(
         var lastLocation = lastLocation2
         val wireType = map[Point(0, 0)]!!.first
 
-        var count = 0
+        var count = 0 // part 2
 
-        when (Direction.valueOf(direction)) {
+        when (direction) {
             Direction.L -> {
-                repeat(amount.toInt()) {
+                repeat(amount) {
                     count++
                     lastLocation = lastLocation.left()
 
+                    //part 2
                     if (sayIfPointIsReached == lastLocation) {
                         throw CountException(count)
                     }
 
-                    if (map[lastLocation] == null) {
-                        map[lastLocation] = wireType to "|"
-                    } else {
+                    map[lastLocation]?.let {
                         crossingPoint(map[lastLocation]!!, lastLocation, wireType, map)
                     }
+                    map.putIfAbsent(lastLocation, wireType to "o")
                 }
             }
 
             Direction.R -> {
-                repeat(amount.toInt()) {
+                repeat(amount) {
                     count++
-
                     lastLocation = lastLocation.right()
                     if (sayIfPointIsReached == lastLocation) {
                         throw CountException(count)
                     }
-                    if (map[lastLocation] == null) {
-                        map[lastLocation] = wireType to "|"
-                    } else {
+                    map[lastLocation]?.let {
                         crossingPoint(map[lastLocation]!!, lastLocation, wireType, map)
                     }
+                    map.putIfAbsent(lastLocation, wireType to "o")
                 }
             }
 
             Direction.U -> {
-                repeat(amount.toInt()) {
+                repeat(amount) {
                     count++
 
                     lastLocation = lastLocation.up()
@@ -110,26 +115,24 @@ class Day3(
                         throw CountException(count)
                     }
 
-                    if (map[lastLocation] == null) {
-                        map[lastLocation] = wireType to "-"
-                    } else {
+                    map[lastLocation]?.let {
                         crossingPoint(map[lastLocation]!!, lastLocation, wireType, map)
                     }
+                    map.putIfAbsent(lastLocation, wireType to "o")
                 }
             }
 
             Direction.D -> {
-                repeat(amount.toInt()) {
+                repeat(amount) {
                     count++
                     lastLocation = lastLocation.down()
                     if (sayIfPointIsReached == lastLocation) {
                         throw CountException(count)
                     }
-                    if (map[lastLocation] == null) {
-                        map[lastLocation] = wireType to "-"
-                    } else {
+                    map[lastLocation]?.let {
                         crossingPoint(map[lastLocation]!!, lastLocation, wireType, map)
                     }
+                    map.putIfAbsent(lastLocation, wireType to "o")
                 }
             }
         }
@@ -154,54 +157,58 @@ class Day3(
 
 
     fun part2(input: List<String>): String {
-        part1(input) // create the map
-
-        val crossingPoints = cacheMap
-            .filter { it.value.second == "X" } //Points that crossed
-            .map { it.key }
+        val minimalStepsToCrossWire = populateMap(input) // gets all the wires placed
+            .filter { it.value.second == "X" } // Gets all the points that crossed
+            .map { it.key } // Gets only the points
             .map { search ->
                 val wireA = input[0].split(",")
                 val wireB = input[1].split(",")
 
-                val aCount = countWire(mutableMapOf(), wireA, search)
-                val bCount = countWire(mutableMapOf(), wireB, search)
+                val aCount = countWire(wireA = wireA, search = search)
+                val bCount = countWire(wireA = wireB, search = search)
 
                 aCount + bCount
             }.min()
-        return "$crossingPoints"
+        return "$minimalStepsToCrossWire"
     }
 
     private fun countWire(
-        map: MutableMap<Point, Pair<String, String>> = mutableMapOf(),
         wireA: List<String>,
         search: Point
     ): Int {
-        var ACount = 0
+        // setup
+        var counter = 0
+        val map = mutableMapOf<Point, Pair<String, String>>()
         var lastLocation = Point(0, 0)
         map[lastLocation] = "A" to "o"
+
         wireA.forEachIndexed { index, input ->
-            val direction = input.substring(0, 1) //D, U , R , L
-            val amount = input.substring(1) // D[xxx]
+            val direction = input.toDirection()
+            val amount = input.toAmount()
 
             runCatching {
                 lastLocation = process(direction, amount, lastLocation, map, search)
             }.onSuccess {
-                ACount = ACount + amount.toInt()
+                counter += amount
             }.onFailure {
                 val exception = it as CountException
-                ACount += exception.count
-                return ACount
+                counter += exception.count
+                return counter
             }
         }
-        return ACount
+
+        //Ideally the wires did cross otherwise its the entire wire length
+        return counter
     }
 
+    private fun String.toDirection() = Direction.valueOf(this.substring(0, 1))
+    private fun String.toAmount() = this.substring(1).toInt()
 
     enum class Direction {
         L,
         R,
         U,
-        D
+        D;
     }
 
     data class Point(val x: Int, val y: Int) {
