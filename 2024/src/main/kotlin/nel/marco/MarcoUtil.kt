@@ -1,7 +1,5 @@
 package nel.marco
 
-import java.nio.file.Files
-import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
 
@@ -20,7 +18,7 @@ class MarcoUtil {
         fun avgTime(name: String, inSeconds:Long = 5, work: () -> Unit) {
             val futureDate = Instant.now().plusSeconds(inSeconds)
 
-            val mutableListOf = ArrayList<Long>(1000)
+            val mutableListOf = ArrayList<Long>(10000)
             while (Instant.now().isBefore(futureDate)) {
                 val now = Instant.now()
                 work.invoke()
@@ -28,7 +26,7 @@ class MarcoUtil {
                 mutableListOf.add(timeItTook)
             }
 
-            println("$name took ${mutableListOf.average()} ms")
+            println("$name took ${mutableListOf.average()} ms average (totalRuns=${mutableListOf.size};inSeconds=$inSeconds)")
         }
     }
 }

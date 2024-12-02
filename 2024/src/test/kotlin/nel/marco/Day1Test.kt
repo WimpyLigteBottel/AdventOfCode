@@ -18,4 +18,15 @@ class Day1Test {
         assertEquals("23082277", Day1(ReadUtil.readInputAsList(1, macBook = false)).answerTwo())
     }
 
+
+    @Test
+    fun avgTime() {
+        val input = Day1(ReadUtil.readInputAsList(1, macBook = false))
+        MarcoUtil.avgTime("part1") {
+            assertEquals("2375403", input.answerOne())
+        }
+        MarcoUtil.avgTime("part2") {
+            assertEquals("23082277", input.answerTwo())
+        }
+    }
 }
