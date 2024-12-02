@@ -1,18 +1,20 @@
 package nel.marco
 
 import kotlin.math.absoluteValue
+import kotlin.streams.asSequence
 
 
 class Day2(readInput: List<String>) : Day(readInput) {
 
     override fun answerOne(): String {
         return readInput
+            .parallelStream()
             .map { it.split(" ") }
-            .map {
-                val toNumbers = it.map { it.toInt() }
-
+            .map { it.map { it.toInt() } }
+            .map { toNumbers ->
                 (toNumbers.isIncreasing() || toNumbers.isDecreasing()) && isCorrectAppart(toNumbers)
             }
+            .toList()
             .count { it }
             .toString()
 
@@ -21,25 +23,25 @@ class Day2(readInput: List<String>) : Day(readInput) {
 
     override fun answerTwo(): String {
         return readInput
+            .parallelStream() // not necessary strictly performance improvement
             .map { it.split(" ") }
+            .map { it.map(String::toInt) }
+            .map { it.permutationWithOneNumberLess() }
             .map {
-                val toNumbers = it.map { it.toInt() }
-                toNumbers.permutateWithOneNumberLess()
-            }
-            .map {
+                //find one valid sequence
                 it.any { toNumbers ->
                     (toNumbers.isIncreasing() || toNumbers.isDecreasing()) && isCorrectAppart(toNumbers)
                 }
             }
+            .toList()
             .count { it }
             .toString()
     }
 
-    private fun List<Int>.permutateWithOneNumberLess(): MutableList<MutableList<Int>> {
-        var newList = mutableListOf<MutableList<Int>>()
+    private fun List<Int>.permutationWithOneNumberLess(): MutableList<MutableList<Int>> {
+        val newList = mutableListOf<MutableList<Int>>()
 
-
-        for (x in 0..this.size - 1) {
+        for (x in indices) {
             val temp = mutableListOf<Int>()
             temp.addAll(this)
             temp.removeAt(x)
@@ -50,15 +52,12 @@ class Day2(readInput: List<String>) : Day(readInput) {
     }
 
     private fun isCorrectAppart(toNumbers: List<Int>): Boolean {
-        var isCorrectApart = true
         for (x in 0..toNumbers.size - 2) {
-            var apart = (toNumbers[x] - toNumbers[x + 1]).absoluteValue
-
-            if (apart !in 1..3) {
+            if ((toNumbers[x] - toNumbers[x + 1]).absoluteValue !in 1..3) {
                 return false
             }
         }
-        return isCorrectApart
+        return true
     }
 
     private fun List<Int>.isIncreasing(): Boolean {
