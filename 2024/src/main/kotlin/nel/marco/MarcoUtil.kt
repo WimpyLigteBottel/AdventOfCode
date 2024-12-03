@@ -22,11 +22,11 @@ class MarcoUtil {
             while (Instant.now().isBefore(futureDate)) {
                 val now = Instant.now()
                 work.invoke()
-                val timeItTook = Duration.between(now, Instant.now()).toNanos()
+                val timeItTook = Duration.between(now, Instant.now()).toMillis()
                 mutableListOf.add(timeItTook)
             }
 
-            println("$name took ${mutableListOf.average()} ns average (totalRuns=${mutableListOf.size};inSeconds=$inSeconds)")
+            println("$name took ${mutableListOf.average()} ms average (totalRuns=${mutableListOf.size};inSeconds=$inSeconds)")
         }
     }
 }

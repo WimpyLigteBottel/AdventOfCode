@@ -22,12 +22,15 @@ class Day3(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerTwo(): String {
-//        The do() instruction enables future mul instructions.
-//        The don't() instruction disables future mul instructions.
-        val singleLine = readInput.joinToString("")
-        var combine = singleLine.substringBefore("don't()") + singleLine.substringAfterLast("do()")
+        var singleLine = readInput.joinToString("")
 
-        return calculateWithMultiply(combine).toString()
+        val invalidList = """don't\(\).*?do\(\)""".toRegex().findAll(singleLine).map { it.value }.toList()
+
+        invalidList.forEach {
+            singleLine = singleLine.replace(it, "")
+        }
+
+        return calculateWithMultiply(singleLine).toString()
     }
 
 

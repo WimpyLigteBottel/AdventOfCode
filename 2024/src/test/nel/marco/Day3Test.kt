@@ -27,8 +27,8 @@ Handle the new instructions; what do you get if you add up all of the results of
  */
 class Day3Test {
 
-    val input = ReadUtil.readInputAsList(3, exampleInput = false, macBook = true)
-    val exampleInput = ReadUtil.readInputAsList(3, exampleInput = true, macBook = true)
+    val input = ReadUtil.readInputAsList(3, exampleInput = false, macBook = false)
+    val exampleInput = ReadUtil.readInputAsList(3, exampleInput = true, macBook = false)
 
 
     @Test
@@ -41,10 +41,7 @@ class Day3Test {
     @Test
     fun answerTwo() {
         assertEquals("48", Day3(exampleInput).answerTwo())
-        assertNotEquals("172367763", Day3(input).answerTwo())
-        assertNotEquals("186619028", Day3(input).answerTwo())
-        assertNotEquals("8757489", Day3(input).answerTwo())
-        assertEquals("X", Day3(input).answerTwo())
+        assertEquals("113965544", Day3(input).answerTwo())
     }
 
 
@@ -52,10 +49,10 @@ class Day3Test {
     fun avg() {
         val day = Day3(input)
         MarcoUtil.avgTime("part1") {
-            assertEquals("213", day.answerOne())
+            assertEquals("188192787", day.answerOne())
         }
         MarcoUtil.avgTime("part2") {
-            assertEquals("285", day.answerTwo())
+            assertEquals("113965544", day.answerTwo())
         }
     }
 }
