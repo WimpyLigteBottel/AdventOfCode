@@ -46,13 +46,13 @@ class Day3Test {
     }
 
 
-    @RepeatedTest(10)
+    @Test
     fun avg() {
         val day = Day3(input)
-        MarcoUtil.avgTime("part1",5) {
+        MarcoUtil.avgTime("part1",30) {
             assertEquals("188192787", day.answerOne())
         }
-        MarcoUtil.avgTime("part2",5) {
+        MarcoUtil.avgTime("part2",30) {
             assertEquals("113965544", day.answerTwo())
         }
     }

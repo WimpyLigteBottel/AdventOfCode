@@ -11,25 +11,19 @@ class Day3(readInput: List<String>) : Day(readInput) {
     override fun answerOne(): String {
         return readInput
             .parallelStream()
-            .map { calculateWithMultiply(it) }
-            .toList()
+            .mapToLong { calculateWithMultiply(it) }
             .sum()
             .toString()
     }
 
     private fun calculateWithMultiply(it: String) = MULTIPLY_REGEX
         .findAll(it)
-        .map { match ->
-            val (left, right) = match.destructured
-            left.toLong() * right.toLong()
-        }
+        .map { match -> match.groupValues[1].toLong() * match.groupValues[2].toLong() }
         .sumOf { it }
 
 
     override fun answerTwo(): String {
-        var singleLine = readInput.joinToString("")
-
-        var cleanedInput = REMOVE_REGEX.replace(singleLine) { "" } // batch replace all invalid regex's
+        var cleanedInput = REMOVE_REGEX.replace(readInput.joinToString("")) { "" } // batch replace all invalid regex's
 
         return calculateWithMultiply(cleanedInput).toString()
     }
