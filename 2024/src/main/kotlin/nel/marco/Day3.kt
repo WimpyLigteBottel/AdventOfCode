@@ -4,7 +4,7 @@ package nel.marco
 class Day3(readInput: List<String>) : Day(readInput) {
 
     companion object {
-        private val MULTIPLY_REGEX = "mul\\(\\d+,\\d+\\)".toRegex()
+        private val MULTIPLY_REGEX = "mul\\((\\d+),(\\d+)\\)".toRegex()
         private val REMOVE_REGEX = """don't\(\).*?do\(\)""".toRegex()
     }
 
@@ -19,14 +19,9 @@ class Day3(readInput: List<String>) : Day(readInput) {
 
     private fun calculateWithMultiply(it: String) = MULTIPLY_REGEX
         .findAll(it)
-        .map { matchResult ->
-            matchResult.value
-                .removePrefix("mul(")
-                .removeSuffix(")")
-                .split(",")
-                .let { (left, right) ->
-                    left.toLong() * right.toLong()
-                }
+        .map { match ->
+            val (left, right) = match.destructured
+            left.toLong() * right.toLong()
         }
         .sumOf { it }
 
