@@ -2,6 +2,7 @@ package nel.marco
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 
 /*
@@ -45,13 +46,13 @@ class Day3Test {
     }
 
 
-    @Test
+    @RepeatedTest(10)
     fun avg() {
         val day = Day3(input)
-        MarcoUtil.avgTime("part1") {
+        MarcoUtil.avgTime("part1",5) {
             assertEquals("188192787", day.answerOne())
         }
-        MarcoUtil.avgTime("part2") {
+        MarcoUtil.avgTime("part2",5) {
             assertEquals("113965544", day.answerTwo())
         }
     }

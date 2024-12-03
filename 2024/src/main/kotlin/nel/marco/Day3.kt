@@ -4,19 +4,24 @@ package nel.marco
 class Day3(readInput: List<String>) : Day(readInput) {
 
     override fun answerOne(): String {
-        return readInput.map {
-            calculateWithMultiply(it)
-        }.sum().toString()
+        return readInput
+            .parallelStream()
+            .map { calculateWithMultiply(it) }
+            .toList()
+            .sum()
+            .toString()
     }
 
-    private fun calculateWithMultiply(it: String) = "mul\\(\\d{1,3},\\d{1,3}\\)".toRegex()
+    private fun calculateWithMultiply(it: String) = "mul\\(\\d+,\\d+\\)".toRegex()
         .findAll(it)
-        .map {
-            val digits = it.value
+        .map { matchResult ->
+            matchResult.value
                 .replace("mul(", "")
                 .replace(")", "")
                 .split(",")
-            digits[0].toLong() * digits[1].toLong()
+                .let { digits ->
+                    digits[0].toLong() * digits[1].toLong()
+                }
         }
         .sumOf { it }
 
@@ -24,11 +29,11 @@ class Day3(readInput: List<String>) : Day(readInput) {
     override fun answerTwo(): String {
         var singleLine = readInput.joinToString("")
 
-        val invalidList = """don't\(\).*?do\(\)""".toRegex().findAll(singleLine).map { it.value }.toList()
-
-        invalidList.forEach {
-            singleLine = singleLine.replace(it, "")
-        }
+        """don't\(\).*?do\(\)""".toRegex()
+            .findAll(singleLine)
+            .forEach {
+                singleLine = singleLine.replaceFirst(it.value, "")
+            }
 
         return calculateWithMultiply(singleLine).toString()
     }
