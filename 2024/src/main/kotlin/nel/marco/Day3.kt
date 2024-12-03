@@ -3,6 +3,11 @@ package nel.marco
 
 class Day3(readInput: List<String>) : Day(readInput) {
 
+    companion object {
+        private val MULTIPLY_REGEX = "mul\\(\\d+,\\d+\\)".toRegex()
+        private val REMOVE_REGEX = """don't\(\).*?do\(\)""".toRegex()
+    }
+
     override fun answerOne(): String {
         return readInput
             .parallelStream()
@@ -12,15 +17,15 @@ class Day3(readInput: List<String>) : Day(readInput) {
             .toString()
     }
 
-    private fun calculateWithMultiply(it: String) = "mul\\(\\d+,\\d+\\)".toRegex()
+    private fun calculateWithMultiply(it: String) = MULTIPLY_REGEX
         .findAll(it)
         .map { matchResult ->
             matchResult.value
-                .replace("mul(", "")
-                .replace(")", "")
+                .removePrefix("mul(")
+                .removeSuffix(")")
                 .split(",")
-                .let { digits ->
-                    digits[0].toLong() * digits[1].toLong()
+                .let { (left, right) ->
+                    left.toLong() * right.toLong()
                 }
         }
         .sumOf { it }
@@ -29,14 +34,9 @@ class Day3(readInput: List<String>) : Day(readInput) {
     override fun answerTwo(): String {
         var singleLine = readInput.joinToString("")
 
-        """don't\(\).*?do\(\)""".toRegex()
-            .findAll(singleLine)
-            .forEach {
-                singleLine = singleLine.replaceFirst(it.value, "")
-            }
+        var cleanedInput = REMOVE_REGEX.replace(singleLine) { "" } // batch replace all invalid regex's
 
-        return calculateWithMultiply(singleLine).toString()
+        return calculateWithMultiply(cleanedInput).toString()
     }
-
 
 }
