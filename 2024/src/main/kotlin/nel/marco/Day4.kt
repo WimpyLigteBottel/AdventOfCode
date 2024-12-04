@@ -3,12 +3,13 @@ package nel.marco
 
 class Day4(readInput: List<String>) : Day(readInput) {
 
+    val lengthOfPuzzle = readInput[0].length // 10 -> 140 depending on size
+
     override fun answerOne(): String {
         val array = readInput.map { it.toCharArray() }.toTypedArray() // make 2D array
 
         var count = 0
 
-        val lengthOfPuzzle = readInput[0].length // 10 -> 140 depending on size
         for (x in 0 until lengthOfPuzzle) {
             for (y in 0 until lengthOfPuzzle) {
                 runCatching { count += across(array, x, y) }
@@ -26,7 +27,6 @@ class Day4(readInput: List<String>) : Day(readInput) {
     override fun answerTwo(): String {
         val array = readInput.map { it.toCharArray() }.toTypedArray() // make 2D array
         var count = 0
-        val lengthOfPuzzle = readInput[0].length // 10 -> 140 depending on size
         for (x in 0 until lengthOfPuzzle) {
             for (y in 0 until lengthOfPuzzle) {
                 runCatching { count += xmasMleft(array, x, y) }
@@ -45,16 +45,14 @@ class Day4(readInput: List<String>) : Day(readInput) {
         val c = array[x + 1][y + 1] // center
         val d = array[x + 2][y + 0] // bottom left
         val e = array[x + 2][y + 2] // bottom right
-
         // M S
         //  A
         // M S
-        if ("${a}${b}" == "MS") {
-            if ("${d}${e}" == "MS") {
-                if ("${c}" == "A") {
+        if (a == 'M' && b == 'S') {
+            if (d == 'M' && e == 'S') {
+                if (c == 'A') {
                     count++
                 }
-
             }
         }
         return count
@@ -71,12 +69,11 @@ class Day4(readInput: List<String>) : Day(readInput) {
         // M M
         //  A
         // S S
-        if ("${a}${b}" == "MM") {
-            if ("${d}${e}" == "SS") {
-                if ("${c}" == "A") {
+        if (a == 'M' && b == 'M') {
+            if (d == 'S' && e == 'S') {
+                if (c == 'A') {
                     count++
                 }
-
             }
         }
         return count
@@ -93,12 +90,11 @@ class Day4(readInput: List<String>) : Day(readInput) {
         // S S
         //  A
         // M M
-        if ("${a}${b}" == "SS") {
-            if ("${d}${e}" == "MM") {
-                if ("$c" == "A") {
+        if (a == 'S' && b == 'S') {
+            if (d == 'M' && e == 'M') {
+                if (c == 'A') {
                     count++
                 }
-
             }
         }
 
@@ -116,12 +112,11 @@ class Day4(readInput: List<String>) : Day(readInput) {
         // S M
         //  A
         // S M
-        if ("${a}${b}" == "SM") {
-            if ("${d}${e}" == "SM") {
-                if ("${c}" == "A") {
+        if (a == 'S' && b == 'M') {
+            if (d == 'S' && e == 'M') {
+                if (c == 'A') {
                     count++
                 }
-
             }
         }
 
@@ -134,10 +129,11 @@ class Day4(readInput: List<String>) : Day(readInput) {
         val b = array[x][y + 1]
         val c = array[x][y + 2]
         val d = array[x][y + 3]
-        if ("${a}${b}${c}${d}" == "XMAS") {
+
+        if (a == 'X' && b == 'M' && c == 'A' && d == 'S') {
             count++
         }
-        if ("${a}${b}${c}${d}" == "SAMX") {
+        if (a == 'S' && b == 'A' && c == 'M' && d == 'X') {
             count++
         }
 
@@ -150,10 +146,11 @@ class Day4(readInput: List<String>) : Day(readInput) {
         val b = array[x + 1][y]
         val c = array[x + 2][y]
         val d = array[x + 3][y]
-        if ("${a}${b}${c}${d}" == "XMAS") {
+
+        if (a == 'X' && b == 'M' && c == 'A' && d == 'S') {
             count++
         }
-        if ("${a}${b}${c}${d}" == "SAMX") {
+        if (a == 'S' && b == 'A' && c == 'M' && d == 'X') {
             count++
         }
 
@@ -166,10 +163,10 @@ class Day4(readInput: List<String>) : Day(readInput) {
         val b = array[x + 1][y + 1]
         val c = array[x + 2][y + 2]
         val d = array[x + 3][y + 3]
-        if ("${a}${b}${c}${d}" == "XMAS") {
+        if (a == 'X' && b == 'M' && c == 'A' && d == 'S') {
             count++
         }
-        if ("${a}${b}${c}${d}" == "SAMX") {
+        if (a == 'S' && b == 'A' && c == 'M' && d == 'X') {
             count++
         }
 
@@ -182,10 +179,10 @@ class Day4(readInput: List<String>) : Day(readInput) {
         val b = array[x + 2][y + 1]
         val c = array[x + 1][y + 2]
         val d = array[x + 0][y + 3]
-        if ("${a}${b}${c}${d}" == "XMAS") {
+        if (a == 'X' && b == 'M' && c == 'A' && d == 'S') {
             count++
         }
-        if ("${a}${b}${c}${d}" == "SAMX") {
+        if (a == 'S' && b == 'A' && c == 'M' && d == 'X') {
             count++
         }
 
