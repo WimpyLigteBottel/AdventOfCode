@@ -12,10 +12,16 @@ class Day4(readInput: List<String>) : Day(readInput) {
 
         for (x in 0 until lengthOfPuzzle) {
             for (y in 0 until lengthOfPuzzle) {
-                runCatching { count += across(array, x, y) }
-                runCatching { count += vertical(array, x, y) }
-                runCatching { count += diagonal(array, x, y) }
-                runCatching { count += diagonalReversed(array, x, y) }
+                if (y + 3 < lengthOfPuzzle) {
+                    count += across(array, x, y)
+                }
+                if (x + 3 < lengthOfPuzzle) {
+                    count += vertical(array, x, y)
+                }
+                if (y + 3 < lengthOfPuzzle && x + 3 < lengthOfPuzzle) {
+                    count += diagonal(array, x, y)
+                    count += diagonalReversed(array, x, y)
+                }
             }
         }
 
@@ -29,10 +35,12 @@ class Day4(readInput: List<String>) : Day(readInput) {
         var count = 0
         for (x in 0 until lengthOfPuzzle) {
             for (y in 0 until lengthOfPuzzle) {
-                runCatching { count += xmasMleft(array, x, y) }
-                runCatching { count += xmasMtop(array, x, y) }
-                runCatching { count += xmasMbottom(array, x, y) }
-                runCatching { count += xmasMright(array, x, y) }
+                if (x + 2 < lengthOfPuzzle && y + 2 < lengthOfPuzzle) {
+                    count += xmasMleft(array, x, y)
+                    count += xmasMtop(array, x, y)
+                    count += xmasMbottom(array, x, y)
+                    count += xmasMright(array, x, y)
+                }
             }
         }
         return count.toString()
