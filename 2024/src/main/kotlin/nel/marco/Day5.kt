@@ -92,12 +92,12 @@ class Day5(readInput: List<String>) : Day(readInput) {
 
     private fun isInvalidRow(row: String): Boolean {
         val numbersToCheck = row.split(",")
-        verifyList.forEach { (first, second) ->
-            if (isNotValid(first, second, numbersToCheck)) {
-                return true
-            }
+        val indexMap = numbersToCheck.withIndex().associate { it.value to it.index }
+        return verifyList.any { (first, second) ->
+            val a = indexMap[first] ?: -1
+            val b = indexMap[second] ?: Int.MAX_VALUE
+            a > b
         }
-        return false
     }
 
 }
