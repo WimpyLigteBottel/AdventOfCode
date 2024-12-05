@@ -7,8 +7,11 @@ class Day1(readInput: List<String>) : Day(readInput) {
 
     override fun answerOne(): String {
 
-        val leftList = readInput.map { it.split("   ")[0] }.map { it.toInt() }.sorted()
-        val rightList = readInput.map { it.split("   ")[1] }.map { it.toInt() }.sorted()
+        val (leftList, rightList) = readInput
+            .map { it.split("   ") }
+            .map { (a, b) -> a.toLong() to b.toLong() }
+            .unzip()
+            .let { (a, b) -> a.sorted() to b.sorted() }
 
         return leftList
             .zip(rightList) { left, right -> right - left }
@@ -18,15 +21,13 @@ class Day1(readInput: List<String>) : Day(readInput) {
     }
 
     override fun answerTwo(): String {
-        var leftList = readInput.map { it.split("   ")[0] }.map { it.toInt() }.sorted()
-        var rightList = readInput.map { it.split("   ")[1] }.map { it.toInt() }
+        val (leftList, rightList) = readInput
+            .map { it.split("   ") }
+            .map { (a, b) -> a.toLong() to b.toLong() }
+            .unzip()
+            .let { (a, b) -> a.sorted() to b }
 
-        var map = mutableMapOf<Int, Int>()
-
-        rightList.forEach {
-            map.putIfAbsent(it, 0)
-            map[it] = map[it]!! + 1
-        }
+        val map = rightList.groupingBy { it }.eachCount()
 
         return leftList
             .sumOf { it * map.getOrDefault(it, 0) }

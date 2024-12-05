@@ -7,21 +7,20 @@ class Day1Test {
 
     @Test
     fun answerOne() {
-        assertEquals("11", Day1(ReadUtil.readInputAsList(1, exampleInput = true, macBook = false)).answerOne())
-        assertEquals("2375403", Day1(ReadUtil.readInputAsList(1, macBook = false)).answerOne())
+        assertEquals("11", Day1(ReadUtil.readInputAsList(1, exampleInput = true, macBook = true)).answerOne())
+        assertEquals("2375403", Day1(ReadUtil.readInputAsList(1, macBook = true)).answerOne())
     }
 
 
     @Test
     fun answerTwo() {
-        assertEquals("31", Day1(ReadUtil.readInputAsList(1, exampleInput = true, macBook = false)).answerTwo())
-        assertEquals("23082277", Day1(ReadUtil.readInputAsList(1, macBook = false)).answerTwo())
+        assertEquals("31", Day1(ReadUtil.readInputAsList(1, exampleInput = true, macBook = true)).answerTwo())
+        assertEquals("23082277", Day1(ReadUtil.readInputAsList(1, macBook = true)).answerTwo())
     }
 
 
-    @Test
     fun avgTime() {
-        val input = Day1(ReadUtil.readInputAsList(1, macBook = false))
+        val input = Day1(ReadUtil.readInputAsList(1, macBook = true))
         MarcoUtil.avgTime("part1") {
             assertEquals("2375403", input.answerOne())
         }

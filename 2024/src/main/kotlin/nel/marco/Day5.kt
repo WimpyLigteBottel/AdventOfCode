@@ -3,128 +3,92 @@ package nel.marco
 
 class Day5(readInput: List<String>) : Day(readInput) {
 
+    var verifyList: List<Pair<String, String>> = emptyList();
+    var rows: List<String> = emptyList()
+
     override fun answerOne(): String {
+        verifyList = readInput.filter { it.length == 5 }.map { it.split("|")[0] to it.split("|")[1] }
+        rows = readInput.filter { it.length > 5 }
 
-        //split the list
-        val verifyList = readInput.filter { it.length == 5 }
-        val rows = readInput.filter { it.length > 5 }
-
-        return rows.map {
-
-            val numbersToCheck = it.split(",")
-            val middleNumber = findMiddleDigit(numbersToCheck)
-
-            verifyList.forEach {
-                var (first, second) = it.split("|")
-
-                var a = numbersToCheck.indexOf(first)
-                var b = numbersToCheck.indexOf(second)
-
-                if (b == -1) {
-                    b = Int.MAX_VALUE
+        return rows
+            .parallelStream() // performance
+            .mapToInt { // so that i can sum()
+                if (isInvalidRow(it)) {
+                    return@mapToInt 0
                 }
-
-                if (a == -1) {
-                    b = Int.MAX_VALUE
-                }
-
-                //exit early because its invalid
-                if (a > b) {
-                    return@map 0
-                }
+                return@mapToInt findMiddleDigit(it.split(","))
             }
+            .sum()
+            .toString()
+    }
 
+    private fun isNotValid(first: String, second: String, numbersToCheck: List<String>): Boolean {
+        val a = numbersToCheck.indexOf(first)
+        var b = numbersToCheck.indexOf(second)
 
-            return@map middleNumber
-        }.sum().toString()
+        if (b == -1) {
+            b = Int.MAX_VALUE
+        }
+
+        return a > b
     }
 
     private fun findMiddleDigit(numbersToCheck: List<String>): Int {
-        val clone = numbersToCheck.toMutableList()
-
-        while (clone.size != 1) {
-            clone.removeFirst()
-            clone.removeLast()
-        }
-
-        return clone.first().toInt()
+        return numbersToCheck[(numbersToCheck.size / 2)].toInt()
     }
 
 
     override fun answerTwo(): String {
-        //split the list
-        val verifyList = readInput.filter { it.length == 5 }
-        val rows = readInput.filter { it.length > 5 }
+        verifyList = readInput.filter { it.length == 5 }.map { it.split("|")[0] to it.split("|")[1] }
+        rows = readInput.filter { it.length > 5 }
 
-        val invalidRows = isInvalidCheck(rows, verifyList)
-
-
-        val fixedRows = invalidRows
+        return getInvalidRows(rows)
+            .parallelStream() // performance
             .map { invalidRow ->
-
                 val numbersToCheck = invalidRow.split(",").toMutableList()
 
-                while (true) {
-                    verifyList.forEach {
-                        var (first, second) = it.split("|")
+                // keep sorting until its valid
+                while (isInvalidRow(numbersToCheck.joinToString(","))) {
+                    verifyList.forEach { (first, second) ->
+                        if (isNotValid(first, second, numbersToCheck)) {
+                            val tempA = numbersToCheck[numbersToCheck.indexOf(first)]
+                            val tempB = numbersToCheck[numbersToCheck.indexOf(second)]
 
-                        var a = numbersToCheck.indexOf(first)
-                        var b = numbersToCheck.indexOf(second)
-
-                        if (b == -1) {
-                            b = Int.MAX_VALUE
+                            numbersToCheck[numbersToCheck.indexOf(first)] = tempB
+                            numbersToCheck[numbersToCheck.indexOf(second)] = tempA
                         }
-
-                        if (a == -1) {
-                            b = Int.MAX_VALUE
-                        }
-
-                        if (a > b) {
-                            var tempA = numbersToCheck[a]
-                            var tempB = numbersToCheck[b]
-
-                            numbersToCheck[a] = tempB
-                            numbersToCheck[b] = tempA
-                        }
-                    }
-                    if (isInvalidCheck(listOf(numbersToCheck.joinToString(",")), verifyList).size == 0) {
-                        break
                     }
                 }
 
 
                 return@map numbersToCheck
             }
-
-
-        // all rows are fixed now just find middle digit and add them
-        return fixedRows.map { findMiddleDigit(it) }.sum().toString()
+            .mapToInt { findMiddleDigit(it) }
+            .sum()
+            .toString()
     }
 
-    private fun isInvalidCheck(
+    private fun getInvalidRows(
         rows: List<String>,
-        verifyList: List<String>
-    ) = rows.map { row ->
-        val numbersToCheck = row.split(",")
-        verifyList.forEach {
-            var (first, second) = it.split("|")
-
-            var a = numbersToCheck.indexOf(first)
-            var b = numbersToCheck.indexOf(second)
-
-            if (b == -1) {
-                b = Int.MAX_VALUE
-            }
-
-            if (a == -1) {
-                b = Int.MAX_VALUE
-            }
-
-            //exit early because its invalid
-            if (a > b) {
+    ) = rows
+        .parallelStream()
+        .map { row ->
+            if (isInvalidRow(row)) {
                 return@map row
             }
+            return@map ""
         }
-        return@map ""
-    }.filter { it.isNotBlank() }
+        .filter { it.isNotBlank() }
+        .toList()
+
+    private fun isInvalidRow(row: String): Boolean {
+        val numbersToCheck = row.split(",")
+        verifyList.forEach { (first, second) ->
+            if (isNotValid(first, second, numbersToCheck)) {
+                return true
+            }
+        }
+        return false
+    }
+
 }

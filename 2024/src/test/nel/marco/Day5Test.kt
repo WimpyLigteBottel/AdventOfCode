@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test
 
 class Day5Test {
 
-    val input = ReadUtil.readInputAsList(5, exampleInput = false, macBook = false)
-    val exampleInput = ReadUtil.readInputAsList(5, exampleInput = true, macBook = false)
+    val input = ReadUtil.readInputAsList(5, exampleInput = false, macBook = true)
+    val exampleInput = ReadUtil.readInputAsList(5, exampleInput = true, macBook = true)
 
 
     @Test
@@ -23,7 +23,6 @@ class Day5Test {
         assertEquals("123", Day5(exampleInput).answerTwo())
         assertEquals("5346", Day5(input).answerTwo())
     }
-
 
     @Test
     fun avg() {
