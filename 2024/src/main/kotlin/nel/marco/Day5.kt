@@ -7,7 +7,8 @@ class Day5(readInput: List<String>) : Day(readInput) {
     var rows: List<String> = emptyList()
 
     override fun answerOne(): String {
-        verifyList = readInput.filter { it.length == 5 }
+        verifyList = readInput
+            .filter { it.length == 5 }
             .map {
                 val parts = it.split("|")
                 parts[0] to parts[1]
@@ -81,13 +82,7 @@ class Day5(readInput: List<String>) : Day(readInput) {
         rows: List<String>,
     ) = rows
         .parallelStream()
-        .map { row ->
-            if (isInvalidRow(row)) {
-                return@map row
-            }
-            return@map ""
-        }
-        .filter { it.isNotBlank() }
+        .filter { isInvalidRow(it) }
         .toList()
 
     private fun isInvalidRow(row: String): Boolean {
