@@ -7,7 +7,11 @@ class Day5(readInput: List<String>) : Day(readInput) {
     var rows: List<String> = emptyList()
 
     override fun answerOne(): String {
-        verifyList = readInput.filter { it.length == 5 }.map { it.split("|")[0] to it.split("|")[1] }
+        verifyList = readInput.filter { it.length == 5 }
+            .map {
+                val parts = it.split("|")
+                parts[0] to parts[1]
+            }
         rows = readInput.filter { it.length > 5 }
 
         return rows
@@ -39,7 +43,12 @@ class Day5(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerTwo(): String {
-        verifyList = readInput.filter { it.length == 5 }.map { it.split("|")[0] to it.split("|")[1] }
+        verifyList = readInput
+            .filter { it.length == 5 }
+            .map {
+                val parts = it.split("|")
+                parts[0] to parts[1]
+            }
         rows = readInput.filter { it.length > 5 }
 
         return getInvalidRows(rows)
