@@ -1,0 +1,135 @@
+package nel.marco
+
+
+class Day6(readInput: List<String>) : Day(readInput) {
+
+
+    override fun answerOne(): String {
+        val guardMap: MutableList<MutableList<Point>> = readInput.mapIndexed { y, s ->
+            s.mapIndexed { x, c ->
+                Point(x, y, value = c.toString())
+            }.toMutableList()
+        }.toMutableList()
+
+
+        runCatching {
+            var guard = guardMap.flatten().find { it.value == "^" }!!
+
+            while (true) {
+                val nextPosition = findNextPosition(guard, guardMap)
+
+                //update old position
+                guardMap[guard.y][guard.x] = guard.clone().copy(value = "X")
+                // update future position
+                guardMap[nextPosition.y][nextPosition.x] = nextPosition.copy()
+
+                guard = nextPosition
+            }
+        }.onFailure {
+            printMap(guardMap)
+        }
+
+        return (guardMap.flatten().count { it.value != "." && it.value != "#" }).toString()
+    }
+
+    private fun findNextPosition(guard: Point, guardMap: List<List<Point>>, failureCount: Int = 0): Point {
+
+        if (failureCount >= 4) {
+            throw RuntimeException("FAILED, i am stuck in loop")
+        }
+
+        val nextStep: Point = when (guard.copy().value) {
+            "^" -> guard.copy().down()
+            "<" -> guard.copy().left()
+            ">" -> guard.copy().right()
+            "v" -> guard.copy().up()
+            else -> throw RuntimeException("I dont know this position ${guard.value}")
+        }
+
+        if (guardMap[nextStep.y][nextStep.x].value != "#") {
+            return nextStep
+        }
+
+        val rotateGuard = rotateGuardRight(guard)
+        return findNextPosition(rotateGuard, guardMap, failureCount + 1)
+    }
+
+
+    private fun rotateGuardRight(guard: Point): Point {
+        return when (guard.copy().value) {
+            "^" -> guard.copy(value = ">")
+            "<" -> guard.copy(value = "^")
+            ">" -> guard.copy(value = "v")
+            "v" -> guard.copy(value = "<")
+            else -> throw RuntimeException("I can't point this way ${guard.value}")
+        }
+    }
+
+
+    override fun answerTwo(): String {
+        val initialGuardMap: MutableList<MutableList<Point>> = readInput.mapIndexed { y, s ->
+            s.mapIndexed { x, c ->
+                Point(x, y, value = c.toString())
+            }.toMutableList()
+        }.toMutableList()
+
+        // Find the guard's starting position
+        val guardStart = initialGuardMap.flatten().find { it.value == "^" }!!
+
+        // Find all walkable locations where an obstruction can be placed
+        val walkableLocations = initialGuardMap.flatten().filter { it.value == "." }
+
+        var loopCount = 0
+
+        // Iterate through each potential obstruction location
+        for (obstacle in walkableLocations) {
+            // Create a copy of the map with the obstruction added
+            val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList() }
+            clonedMap[obstacle.y][obstacle.x].value = "#"
+
+            // Check if the guard gets stuck in a loop
+            if (isGuardLoop(clonedMap, guardStart)) {
+                loopCount++
+            }
+        }
+
+        return loopCount.toString()
+    }
+
+    private fun isGuardLoop(guardMap: List<MutableList<Point>>, guardStart: Point): Boolean {
+        val visitedStates = mutableSetOf<Pair<Point, String>>() // Tracks position and direction
+        var guard = guardStart.copy() // Start guard at the initial position
+
+        while (true) {
+            val currentState = guard to guard.value // Position and direction
+
+            if (visitedStates.contains(currentState)) {
+                return true // Loop detected
+            }
+            visitedStates.add(currentState)
+
+            // Find the next position for the guard
+            val nextPosition = runCatching { findNextPosition(guard, guardMap) }.getOrElse {
+                return false // Guard stopped moving, no loop
+            }
+
+            // Update the guard's position and direction
+            guardMap[guard.y][guard.x] = guard.copy(value = "X") // Mark the old position
+            guard = nextPosition // Move guard
+            guardMap[nextPosition.y][nextPosition.x] = nextPosition.copy() // Update map with new position
+        }
+    }
+
+
+    private fun printMap(guardMap: List<List<Point>>) {
+        println("")
+        println("")
+        guardMap.forEach {
+            it.forEach {
+                print(it.value)
+            }
+            println()
+        }
+    }
+
+}

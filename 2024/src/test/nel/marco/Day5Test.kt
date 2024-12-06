@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test
 
 class Day5Test {
 
-    val input = ReadUtil.readInputAsList(5, exampleInput = false, macBook = true)
-    val exampleInput = ReadUtil.readInputAsList(5, exampleInput = true, macBook = true)
+    val input = ReadUtil.readInputAsList(5, exampleInput = false, macBook = false)
+    val exampleInput = ReadUtil.readInputAsList(5, exampleInput = true, macBook = false)
 
 
     @Test
