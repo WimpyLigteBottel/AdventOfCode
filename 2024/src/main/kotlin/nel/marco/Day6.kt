@@ -1,10 +1,18 @@
 package nel.marco
 
+import java.util.concurrent.atomic.AtomicLong
+
 
 class Day6(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerOne(): String {
+        val guardMap: MutableList<MutableList<Point>> = locationsWalked()
+
+        return (guardMap.flatten().count { it.value != "." && it.value != "#" }).toString()
+    }
+
+    private fun locationsWalked(): MutableList<MutableList<Point>> {
         val guardMap: MutableList<MutableList<Point>> = readInput.mapIndexed { y, s ->
             s.mapIndexed { x, c ->
                 Point(x, y, value = c.toString())
@@ -26,9 +34,9 @@ class Day6(readInput: List<String>) : Day(readInput) {
                 guard = nextPosition
             }
         }
-
-        return (guardMap.flatten().count { it.value != "." && it.value != "#" }).toString()
+        return guardMap
     }
+
 
     private fun findNextPosition(guard: Point, guardMap: List<List<Point>>): Point {
         val nextStep: Point = when (guard.copy().value) {
@@ -43,8 +51,7 @@ class Day6(readInput: List<String>) : Day(readInput) {
             return nextStep
         }
 
-        val rotateGuard = rotateGuardRight(guard)
-        return findNextPosition(rotateGuard, guardMap)
+        return findNextPosition(rotateGuardRight(guard), guardMap)
     }
 
 
@@ -69,16 +76,16 @@ class Day6(readInput: List<String>) : Day(readInput) {
         // Find the guard's starting position
         val guardStart = initialGuardMap.flatten().find { it.value == "^" }!!
 
-        val walkableLocations = initialGuardMap.flatten().filter { it.value == "." }
+        val walkableLocations = locationsWalked().flatten().filter { it.value == "X" }
 
-        var loopCount = 0
+        var loopCount = AtomicLong(0)
 
         walkableLocations.parallelStream().forEach { obstacle ->
             val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList()}
             clonedMap[obstacle.y][obstacle.x].value = "#"
 
             if (isGuardLoop(clonedMap, guardStart)) {
-                loopCount++
+                loopCount.getAndIncrement()
             }
         }
 
