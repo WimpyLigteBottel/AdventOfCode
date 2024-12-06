@@ -81,8 +81,8 @@ class Day6(readInput: List<String>) : Day(readInput) {
 
         var loopCount = 0
 
-        // Iterate through each potential obstruction location
-        for (obstacle in walkableLocations) {
+
+        walkableLocations.parallelStream().forEach { obstacle ->
             // Create a copy of the map with the obstruction added
             val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList() }
             clonedMap[obstacle.y][obstacle.x].value = "#"
