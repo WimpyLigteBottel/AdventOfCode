@@ -25,19 +25,12 @@ class Day6(readInput: List<String>) : Day(readInput) {
 
                 guard = nextPosition
             }
-        }.onFailure {
-            printMap(guardMap)
         }
 
         return (guardMap.flatten().count { it.value != "." && it.value != "#" }).toString()
     }
 
-    private fun findNextPosition(guard: Point, guardMap: List<List<Point>>, failureCount: Int = 0): Point {
-
-        if (failureCount >= 4) {
-            throw RuntimeException("FAILED, i am stuck in loop")
-        }
-
+    private fun findNextPosition(guard: Point, guardMap: List<List<Point>>): Point {
         val nextStep: Point = when (guard.copy().value) {
             "^" -> guard.copy().down()
             "<" -> guard.copy().left()
@@ -51,7 +44,7 @@ class Day6(readInput: List<String>) : Day(readInput) {
         }
 
         val rotateGuard = rotateGuardRight(guard)
-        return findNextPosition(rotateGuard, guardMap, failureCount + 1)
+        return findNextPosition(rotateGuard, guardMap)
     }
 
 
@@ -76,18 +69,14 @@ class Day6(readInput: List<String>) : Day(readInput) {
         // Find the guard's starting position
         val guardStart = initialGuardMap.flatten().find { it.value == "^" }!!
 
-        // Find all walkable locations where an obstruction can be placed
         val walkableLocations = initialGuardMap.flatten().filter { it.value == "." }
 
         var loopCount = 0
 
-
         walkableLocations.parallelStream().forEach { obstacle ->
-            // Create a copy of the map with the obstruction added
-            val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList() }
+            val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList()}
             clonedMap[obstacle.y][obstacle.x].value = "#"
 
-            // Check if the guard gets stuck in a loop
             if (isGuardLoop(clonedMap, guardStart)) {
                 loopCount++
             }
@@ -97,8 +86,8 @@ class Day6(readInput: List<String>) : Day(readInput) {
     }
 
     private fun isGuardLoop(guardMap: List<MutableList<Point>>, guardStart: Point): Boolean {
-        val visitedStates = mutableSetOf<Pair<Point, String>>() // Tracks position and direction
-        var guard = guardStart.copy() // Start guard at the initial position
+        val visitedStates = mutableSetOf<Pair<Point, String>>()
+        var guard = guardStart.copy()
 
         while (true) {
             val currentState = guard to guard.value // Position and direction
@@ -113,22 +102,9 @@ class Day6(readInput: List<String>) : Day(readInput) {
                 return false // Guard stopped moving, no loop
             }
 
-            // Update the guard's position and direction
             guardMap[guard.y][guard.x] = guard.copy(value = "X") // Mark the old position
             guard = nextPosition // Move guard
             guardMap[nextPosition.y][nextPosition.x] = nextPosition.copy() // Update map with new position
-        }
-    }
-
-
-    private fun printMap(guardMap: List<List<Point>>) {
-        println("")
-        println("")
-        guardMap.forEach {
-            it.forEach {
-                print(it.value)
-            }
-            println()
         }
     }
 

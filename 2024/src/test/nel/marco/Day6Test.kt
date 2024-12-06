@@ -30,7 +30,7 @@ class Day6Test {
         MarcoUtil.avgTime("part1",5) {
             assertEquals("4433", day.answerOne())
         }
-        MarcoUtil.avgTime("part2",60) {
+        MarcoUtil.avgTime("part2",30) {
             assertEquals("1516", day.answerTwo())
         }
     }
