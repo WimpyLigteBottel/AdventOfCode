@@ -15,7 +15,7 @@ class MarcoUtil {
             println("$name took $timeItTook ms")
         }
 
-        fun avgTime(name: String, inSeconds:Long = 5, work: () -> Unit) {
+        fun avgTime(name: String, inSeconds: Long = 5, work: () -> Unit) {
             val futureDate = Instant.now().plusSeconds(inSeconds)
 
             val mutableListOf = ArrayList<Long>(10000)
@@ -28,5 +28,25 @@ class MarcoUtil {
 
             println("$name took ${mutableListOf.average()} ms average (totalRuns=${mutableListOf.size};inSeconds=$inSeconds)")
         }
+
+        fun generatePermutations(input: String): List<String> {
+            val results = mutableListOf<String>()
+
+            fun permute(current: String, remaining: String) {
+                if (remaining.isEmpty()) {
+                    results.add(current)
+                    return
+                }
+                for (i in remaining.indices) {
+                    val newCurrent = current + remaining[i]
+                    val newRemaining = remaining.substring(0, i) + remaining.substring(i + 1)
+                    permute(newCurrent, newRemaining)
+                }
+            }
+
+            permute("", input)
+            return results
+        }
+
     }
 }
