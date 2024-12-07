@@ -1,22 +1,20 @@
 package nel.marco
 
 import java.math.BigInteger
-import kotlin.streams.toList
 
 
 class Day7(readInput: List<String>) : Day(readInput) {
+    val possibleOperations = listOf("+", "*", "|")
 
-    /*
-        190: 10 19
-        3267: 81 40 27
-        83: 17 5
-        156: 15 6
-        7290: 6 8 6 15
-        161011: 16 10 13
-        192: 17 8 14
-        21037: 9 7 18 13
-        292: 11 6 16 20
-     */
+    val operators = possibleOperations.associateWith { operator ->
+        when (operator) {
+            "+" -> { a: BigInteger, b: BigInteger -> a + b }
+            "*" -> { a: BigInteger, b: BigInteger -> a * b }
+            "|" -> { a: BigInteger, b: BigInteger -> "$a$b".toBigInteger() }
+            else -> throw IllegalArgumentException("Unsupported operator: $operator")
+        }
+    }
+
     override fun answerOne(): String {
 
         var listPossibleEquations = listOf("+", "*")
@@ -43,12 +41,15 @@ class Day7(readInput: List<String>) : Day(readInput) {
         answer: String,
         possibleEquations: List<String>
     ): Boolean {
-
         var allMutations = mutations(possibleEquations, numbersList)
 
         allMutations.forEach {
-            val parsed = parseEquation(it, possibleEquations)
-            if(parsed == answer){
+            val orderOfSymbols = it.replace("\\d+".toRegex(), "").map {
+                it.toString()
+            }
+
+            val parsed = parseEquation(it, orderOfSymbols)
+            if (parsed == answer) {
                 return true
             }
         }
@@ -57,41 +58,24 @@ class Day7(readInput: List<String>) : Day(readInput) {
     }
 
 
-    private fun parseEquation(mutation: String, possibleEquations: List<String>): String {
-        val operators = possibleEquations.associateWith { operator ->
-            when (operator) {
-                "+" -> { a: BigInteger, b: BigInteger -> a + b }
-                "*" -> { a: BigInteger, b: BigInteger -> a * b }
-                "|" -> { a: BigInteger, b: BigInteger -> "$a$b".toBigInteger() }
-                else -> throw IllegalArgumentException("Unsupported operator: $operator")
-            }
-        }
-
-        // get the symbols in order
-        var orderOfSymbols = mutableListOf<String>()
-
-        mutation.forEach {
-            if (possibleEquations.contains(it.toString())) {
-                orderOfSymbols.add(it.toString())
-            }
-        }
-
+    private fun parseEquation(mutation: String, orderOfSymbols: List<String>): String {
         // get digits in order
-        var digitsInOrder: MutableList<BigInteger> =  mutation
-            .replace("|"," ")
-            .replace("*"," ")
-            .replace("+"," ")
+        var digitsInOrder: MutableList<BigInteger> = mutation
+            .replace("|", " ")
+            .replace("*", " ")
+            .replace("+", " ")
             .split(" ")
             .map { it.toBigInteger() }
             .toMutableList()
 
-        while(digitsInOrder.size > 1){
-            val function = operators[orderOfSymbols.removeFirst()] ?: continue
-            var result = function(digitsInOrder[0],digitsInOrder[1])
+        orderOfSymbols.forEach {
+            var result =  operators[it]!!(digitsInOrder[0], digitsInOrder[1])
 
             digitsInOrder.removeFirst()
             digitsInOrder.set(0, result)
         }
+
+
 
 
         return digitsInOrder.first().toString()
@@ -102,8 +86,6 @@ class Day7(readInput: List<String>) : Day(readInput) {
         numbersList: List<String>
     ): MutableList<String> {
         val result = mutableListOf<String>()
-
-        // Helper function to generate permutations recursively
         fun generate(current: String, index: Int) {
             if (index == numbersList.size) {
                 result.add(current)
@@ -115,7 +97,6 @@ class Day7(readInput: List<String>) : Day(readInput) {
             }
         }
 
-        // Initialize the recursion with the first number
         if (numbersList.isNotEmpty()) {
             generate(numbersList[0], 1)
         }
@@ -125,14 +106,13 @@ class Day7(readInput: List<String>) : Day(readInput) {
 
 
     override fun answerTwo(): String {
-
         var concat = readInput
             .parallelStream()
             .map {
                 var (answer, numbers) = it.split(":")
                 var numbersList = numbers.split(" ").filter { it != "" }
 
-                if (findPossibleAnswer(numbersList, answer, listOf("+", "*", "|"))) {
+                if (findPossibleAnswer(numbersList, answer, possibleOperations)) {
                     return@map answer.toBigInteger()
                 }
                 BigInteger.ZERO
