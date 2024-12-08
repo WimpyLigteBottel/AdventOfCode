@@ -31,8 +31,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
         val distanceY = abs(it.second.y - it.first.y)
 
         runCatching {
-
-            for (x in 1..50) {
+            for (x in 1..readInput.size) {
                 if (!part2 && x == 2) {
                     break
                 }
@@ -54,7 +53,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         // bottom
         kotlin.runCatching {
-            for (x in 1..50) {
+            for (x in 1..readInput.size) {
                 if (!part2 && x == 2) {
                     break
                 }
@@ -85,7 +84,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         // top
         kotlin.runCatching {
-            for (x in 1..50) {
+            for (x in 1..readInput.size) {
                 if (!part2 && x == 2) {
                     break
                 }
@@ -103,7 +102,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
         }
         // bottom
         kotlin.runCatching {
-            for (x in 1..50) {
+            for (x in 1..readInput.size) {
                 if (!part2 && x == 2) {
                     break
                 }
@@ -186,6 +185,5 @@ class Day8(readInput: List<String>) : Day(readInput) {
             println()
         }
     }
-
 
 }
