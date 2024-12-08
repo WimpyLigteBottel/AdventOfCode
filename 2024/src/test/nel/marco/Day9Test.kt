@@ -21,9 +21,6 @@ class Day9Test {
         assertEquals("X", day.answerTwo())
     }
 
-
-
-    @Test
     fun avg() {
         val day = day
         MarcoUtil.avgTime("part1", 5) {
