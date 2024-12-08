@@ -44,9 +44,10 @@ class Day8(readInput: List<String>) : Day(readInput) {
                     break
                 }
 
-                newMap[Point(aX, ay)]!! // fail if its off the map
+                newMap[Point(aX, ay)]?.let {
+                    newMap[Point(aX, ay)] = "#"
+                }
 
-                newMap[Point(aX, ay)] = "#"
             }
 
         }
@@ -66,9 +67,9 @@ class Day8(readInput: List<String>) : Day(readInput) {
                 }
 
 
-                newMap[Point(aX, ay)]!! // fail if its off the map
-
-                newMap[Point(aX, ay)] = "#"
+                newMap[Point(aX, ay)]?.let {
+                    newMap[Point(aX, ay)] = "#"
+                }
             }
         }
     }
@@ -95,9 +96,9 @@ class Day8(readInput: List<String>) : Day(readInput) {
                 if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
                     break
                 }
-                newMap[Point(aX, ay)]!! // fail if its off the map
-
-                newMap[Point(aX, ay)] = "#"
+                newMap[Point(aX, ay)]?.let {
+                    newMap[Point(aX, ay)] = "#"
+                }
             }
         }
         // bottom
@@ -114,9 +115,9 @@ class Day8(readInput: List<String>) : Day(readInput) {
                     break
                 }
 
-                newMap[Point(aX, ay)]!! // fail if its off the map
-
-                newMap[Point(aX, ay)] = "#"
+                newMap[Point(aX, ay)]?.let {
+                    newMap[Point(aX, ay)] = "#"
+                }
             }
         }
     }
@@ -186,8 +187,5 @@ class Day8(readInput: List<String>) : Day(readInput) {
         }
     }
 
-
-    private fun manhattanDistance(pointA: Point, pointB: Point) =
-        abs(pointB.x - pointA.x) + abs(pointB.y - pointA.y);
 
 }
