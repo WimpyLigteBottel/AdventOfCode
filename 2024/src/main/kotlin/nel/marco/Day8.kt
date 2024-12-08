@@ -24,33 +24,51 @@ class Day8(readInput: List<String>) : Day(readInput) {
     private fun anodeFitOnMap(
         it: Pair<Point, Point>,
         newMap: MutableMap<Point, String>,
+        part2: Boolean = false
     ) {
 
         val distanceX = abs(it.second.x - it.first.x)
         val distanceY = abs(it.second.y - it.first.y)
 
         kotlin.runCatching {
-            var aX = it.first.x - distanceX
-            var ay = it.first.y - distanceY
 
-            newMap[Point(aX, ay)]!! // fail if its off the map
+            for(x in 1 .. 50){
+                if(!part2 && x == 2){
+                    break
+                }
 
-            newMap[Point(aX, ay)] = "#"
+
+                var aX = it.first.x - distanceX * x
+                var ay = it.first.y - distanceY * x
+
+                newMap[Point(aX, ay)]!! // fail if its off the map
+
+                newMap[Point(aX, ay)] = "#"
+            }
+
         }
 
         // bottom
         kotlin.runCatching {
-            var aX = it.second.x + distanceX
-            var ay = it.second.y + distanceY
-            newMap[Point(aX, ay)]!! // fail if its off the map
+            for(x in 1 .. 50){
+                if(!part2 && x == 2){
+                    break
+                }
 
-            newMap[Point(aX, ay)] = "#"
+                var aX = it.second.x + distanceX * x
+                var ay = it.second.y + distanceY * x
+
+                newMap[Point(aX, ay)]!! // fail if its off the map
+
+                newMap[Point(aX, ay)] = "#"
+            }
         }
     }
 
     private fun anodeFitOnMapReverse(
         it: Pair<Point, Point>,
-        newMap: MutableMap<Point, String>
+        newMap: MutableMap<Point, String>,
+        part2: Boolean = false
     ) {
 
         val distanceX = abs(it.second.x - it.first.x)
@@ -58,19 +76,32 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         // top
         kotlin.runCatching {
-            var aX = it.second.x - distanceX
-            var ay = it.second.y + distanceY
-            newMap[Point(aX, ay)]!!
+            for(x in 1 .. 50){
+                if(!part2 && x == 2){
+                    break
+                }
 
-            newMap[Point(aX, ay)] = "#"
+                var aX = it.second.x - distanceX * x
+                var ay = it.second.y + distanceY * x
+                newMap[Point(aX, ay)]!! // fail if its off the map
+
+                newMap[Point(aX, ay)] = "#"
+            }
         }
         // bottom
         kotlin.runCatching {
-            var aX = it.first.x + distanceX
-            var ay = it.first.y - distanceY
-            newMap[Point(aX, ay)]!!
+            for(x in 1 .. 50){
+                if(!part2 && x == 2){
+                    break
+                }
 
-            newMap[Point(aX, ay)] = "#"
+                var aX = it.first.x + distanceX * x
+                var ay = it.first.y - distanceY * x
+
+                newMap[Point(aX, ay)]!! // fail if its off the map
+
+                newMap[Point(aX, ay)] = "#"
+            }
         }
     }
 
@@ -81,25 +112,16 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         var toBeChecked = setupAtennasToCheck(newMap)
 
-
-        // if first and second
-        // if first and third
-        // if second and third
-
         toBeChecked.forEach {
             if (it.first.x <= it.second.x) {
-                anodeFitOnMap(it, newMap)
+                anodeFitOnMap(it, newMap , true)
             } else {
-                anodeFitOnMapReverse(it, newMap)
+                anodeFitOnMapReverse(it, newMap, true)
             }
 
         }
 
-        printMap(newMap, readInput.size)
-
-
-
-        return "${newMap.filter { it.value == "#" }.count()}"
+        return "${newMap.filter { it.value != "." }.count()}"
     }
 
     private fun setupAtennasToCheck(newMap: MutableMap<Point, String>): MutableList<Pair<Point, Point>> {
