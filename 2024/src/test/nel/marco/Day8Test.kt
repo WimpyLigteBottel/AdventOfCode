@@ -20,6 +20,8 @@ class Day8Test {
         assertEquals("912", Day8(input).answerTwo())
     }
 
+
+
     @Test
     fun avg() {
         val day = Day8(input)

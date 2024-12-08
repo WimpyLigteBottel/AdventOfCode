@@ -1,7 +1,5 @@
 package nel.marco
 
-import kotlin.math.abs
-
 
 class Day8(readInput: List<String>) : Day(readInput) {
 
@@ -11,14 +9,23 @@ class Day8(readInput: List<String>) : Day(readInput) {
         var toBeChecked = setupAtennasToCheck(newMap)
 
         toBeChecked.forEach {
-            if (it.first.x <= it.second.x) {
-                anodeFitOnMap(it, newMap)
-            } else {
-                anodeFitOnMapReverse(it, newMap)
-            }
+            anodeFitOnMap(it, newMap)
         }
 
         return "${newMap.filter { it.value == "#" }.count()}"
+    }
+
+    override fun answerTwo(): String {
+
+        var newMap = setupGridMap()
+
+        var toBeChecked = setupAtennasToCheck(newMap)
+
+        toBeChecked.forEach {
+                anodeFitOnMap(it, newMap, true)
+        }
+
+        return "${newMap.filter { it.value != "." }.count()}"
     }
 
     private fun anodeFitOnMap(
@@ -27,8 +34,8 @@ class Day8(readInput: List<String>) : Day(readInput) {
         part2: Boolean = false
     ) {
 
-        val distanceX = abs(it.second.x - it.first.x)
-        val distanceY = abs(it.second.y - it.first.y)
+        val distanceX = it.second.x - it.first.x
+        val distanceY = it.second.y - it.first.y
 
         runCatching {
             for (x in 1..readInput.size) {
@@ -73,73 +80,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
         }
     }
 
-    private fun anodeFitOnMapReverse(
-        it: Pair<Point, Point>,
-        newMap: MutableMap<Point, String>,
-        part2: Boolean = false
-    ) {
-
-        val distanceX = abs(it.second.x - it.first.x)
-        val distanceY = abs(it.second.y - it.first.y)
-
-        // top
-        kotlin.runCatching {
-            for (x in 1..readInput.size) {
-                if (!part2 && x == 2) {
-                    break
-                }
-
-                var aX = it.second.x - distanceX * x
-                var ay = it.second.y + distanceY * x
-
-                if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
-                    break
-                }
-                newMap[Point(aX, ay)]?.let {
-                    newMap[Point(aX, ay)] = "#"
-                }
-            }
-        }
-        // bottom
-        kotlin.runCatching {
-            for (x in 1..readInput.size) {
-                if (!part2 && x == 2) {
-                    break
-                }
-
-                var aX = it.first.x + distanceX * x
-                var ay = it.first.y - distanceY * x
-
-                if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
-                    break
-                }
-
-                newMap[Point(aX, ay)]?.let {
-                    newMap[Point(aX, ay)] = "#"
-                }
-            }
-        }
-    }
-
-
-    override fun answerTwo(): String {
-
-        var newMap = setupGridMap()
-
-        var toBeChecked = setupAtennasToCheck(newMap)
-
-        toBeChecked.forEach {
-            if (it.first.x <= it.second.x) {
-                anodeFitOnMap(it, newMap, true)
-            } else {
-                anodeFitOnMapReverse(it, newMap, true)
-            }
-
-        }
-
-        return "${newMap.filter { it.value != "." }.count()}"
-    }
-
+    // TODO: look into reversing for performance
     private fun setupAtennasToCheck(newMap: MutableMap<Point, String>): MutableList<Pair<Point, Point>> {
         var toBeChecked = mutableListOf<Pair<Point, Point>>()
 
