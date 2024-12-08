@@ -75,13 +75,10 @@ class Day7(readInput: List<String>) : Day(readInput) {
             digitsInOrder.set(0, result)
         }
 
-
-
-
         return digitsInOrder.first().toString()
     }
 
-    fun mutations(
+    private fun mutations(
         possibleEquations: List<String>,
         numbersList: List<String>
     ): MutableList<String> {
