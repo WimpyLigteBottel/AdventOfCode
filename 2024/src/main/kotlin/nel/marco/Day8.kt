@@ -30,16 +30,19 @@ class Day8(readInput: List<String>) : Day(readInput) {
         val distanceX = abs(it.second.x - it.first.x)
         val distanceY = abs(it.second.y - it.first.y)
 
-        kotlin.runCatching {
+        runCatching {
 
-            for(x in 1 .. 50){
-                if(!part2 && x == 2){
+            for (x in 1..50) {
+                if (!part2 && x == 2) {
                     break
                 }
 
-
                 var aX = it.first.x - distanceX * x
                 var ay = it.first.y - distanceY * x
+
+                if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
+                    break
+                }
 
                 newMap[Point(aX, ay)]!! // fail if its off the map
 
@@ -50,13 +53,18 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         // bottom
         kotlin.runCatching {
-            for(x in 1 .. 50){
-                if(!part2 && x == 2){
+            for (x in 1..50) {
+                if (!part2 && x == 2) {
                     break
                 }
 
                 var aX = it.second.x + distanceX * x
                 var ay = it.second.y + distanceY * x
+
+                if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
+                    break
+                }
+
 
                 newMap[Point(aX, ay)]!! // fail if its off the map
 
@@ -76,13 +84,17 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         // top
         kotlin.runCatching {
-            for(x in 1 .. 50){
-                if(!part2 && x == 2){
+            for (x in 1..50) {
+                if (!part2 && x == 2) {
                     break
                 }
 
                 var aX = it.second.x - distanceX * x
                 var ay = it.second.y + distanceY * x
+
+                if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
+                    break
+                }
                 newMap[Point(aX, ay)]!! // fail if its off the map
 
                 newMap[Point(aX, ay)] = "#"
@@ -90,13 +102,17 @@ class Day8(readInput: List<String>) : Day(readInput) {
         }
         // bottom
         kotlin.runCatching {
-            for(x in 1 .. 50){
-                if(!part2 && x == 2){
+            for (x in 1..50) {
+                if (!part2 && x == 2) {
                     break
                 }
 
                 var aX = it.first.x + distanceX * x
                 var ay = it.first.y - distanceY * x
+
+                if (aX > readInput.size || ay > readInput.size || aX < 0 || ay < 0) {
+                    break
+                }
 
                 newMap[Point(aX, ay)]!! // fail if its off the map
 
@@ -114,7 +130,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
         toBeChecked.forEach {
             if (it.first.x <= it.second.x) {
-                anodeFitOnMap(it, newMap , true)
+                anodeFitOnMap(it, newMap, true)
             } else {
                 anodeFitOnMapReverse(it, newMap, true)
             }
