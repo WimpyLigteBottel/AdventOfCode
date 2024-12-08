@@ -7,14 +7,102 @@ class Day8(readInput: List<String>) : Day(readInput) {
 
     override fun answerOne(): String {
 
-        var newMap = mutableMapOf<Point, String>()
-        for (x in readInput.indices) {
-            for (y in readInput[x].indices) {
-                val key = Point(y, x) // flipped only for this once
-                newMap[key] = readInput[x][y].toString()
+        var newMap = setupGridMap()
+        var toBeChecked = setupAtennasToCheck(newMap)
+
+        toBeChecked.forEach {
+            if (it.first.x <= it.second.x) {
+                anodeFitOnMap(it, newMap)
+            } else {
+                anodeFitOnMapReverse(it, newMap)
             }
         }
 
+        return "${newMap.filter { it.value == "#" }.count()}"
+    }
+
+    private fun anodeFitOnMap(
+        it: Pair<Point, Point>,
+        newMap: MutableMap<Point, String>,
+    ) {
+
+        val distanceX = abs(it.second.x - it.first.x)
+        val distanceY = abs(it.second.y - it.first.y)
+
+        kotlin.runCatching {
+            var aX = it.first.x - distanceX
+            var ay = it.first.y - distanceY
+
+            newMap[Point(aX, ay)]!! // fail if its off the map
+
+            newMap[Point(aX, ay)] = "#"
+        }
+
+        // bottom
+        kotlin.runCatching {
+            var aX = it.second.x + distanceX
+            var ay = it.second.y + distanceY
+            newMap[Point(aX, ay)]!! // fail if its off the map
+
+            newMap[Point(aX, ay)] = "#"
+        }
+    }
+
+    private fun anodeFitOnMapReverse(
+        it: Pair<Point, Point>,
+        newMap: MutableMap<Point, String>
+    ) {
+
+        val distanceX = abs(it.second.x - it.first.x)
+        val distanceY = abs(it.second.y - it.first.y)
+
+        // top
+        kotlin.runCatching {
+            var aX = it.second.x - distanceX
+            var ay = it.second.y + distanceY
+            newMap[Point(aX, ay)]!!
+
+            newMap[Point(aX, ay)] = "#"
+        }
+        // bottom
+        kotlin.runCatching {
+            var aX = it.first.x + distanceX
+            var ay = it.first.y - distanceY
+            newMap[Point(aX, ay)]!!
+
+            newMap[Point(aX, ay)] = "#"
+        }
+    }
+
+
+    override fun answerTwo(): String {
+
+        var newMap = setupGridMap()
+
+        var toBeChecked = setupAtennasToCheck(newMap)
+
+
+        // if first and second
+        // if first and third
+        // if second and third
+
+        toBeChecked.forEach {
+            if (it.first.x <= it.second.x) {
+                anodeFitOnMap(it, newMap)
+            } else {
+                anodeFitOnMapReverse(it, newMap)
+            }
+
+        }
+
+        printMap(newMap, readInput.size)
+
+
+
+        return "${newMap.filter { it.value == "#" }.count()}"
+    }
+
+    private fun setupAtennasToCheck(newMap: MutableMap<Point, String>): MutableList<Pair<Point, Point>> {
         var toBeChecked = mutableListOf<Pair<Point, Point>>()
 
         newMap
@@ -35,94 +123,18 @@ class Day8(readInput: List<String>) : Day(readInput) {
                     }
                 }
             }
+        return toBeChecked
+    }
 
-
-        var counter = 0
-        println("XXXXXXX")
-
-
-        toBeChecked.forEach {
-
-            if (it.first.x <= it.second.x) {
-                counter += anodeFitOnMap(it, newMap)
-            } else {
-                counter += anodeFitOnMapReverse(it, newMap)
+    private fun setupGridMap(): MutableMap<Point, String> {
+        var newMap = mutableMapOf<Point, String>()
+        for (x in readInput.indices) {
+            for (y in readInput[x].indices) {
+                val key = Point(y, x) // flipped only for this once
+                newMap[key] = readInput[x][y].toString()
             }
-
         }
-
-        printMap(newMap, readInput.size)
-
-
-
-        return "${newMap.filter { it.value == "#" }.count()}"
-    }
-
-    private fun anodeFitOnMap(
-        it: Pair<Point, Point>,
-        newMap: MutableMap<Point, String>,
-    ): Int {
-
-        val distanceX = abs(it.second.x - it.first.x)
-        val distanceY = abs(it.second.y - it.first.y)
-
-        // top
-        var counter1 = 0
-        kotlin.runCatching {
-            var aX = it.first.x - distanceX
-            var ay = it.first.y - distanceY
-
-            newMap[Point(aX, ay)] = "#"
-        }.onSuccess {
-            counter1++
-        }
-
-        // bottom
-        kotlin.runCatching {
-            var aX = it.second.x + distanceX
-            var ay = it.second.y + distanceY
-            newMap[Point(aX, ay)] = "#"
-        }.onSuccess {
-            counter1++
-        }
-
-        return counter1
-    }
-
-    private fun anodeFitOnMapReverse(
-        it: Pair<Point, Point>,
-        newMap: MutableMap<Point, String>
-    ): Int {
-
-        val distanceX = abs(it.second.x - it.first.x)
-        val distanceY = abs(it.second.y - it.first.y)
-
-        // top
-        var counter1 = 0
-        kotlin.runCatching {
-            var aX = it.second.x - distanceX
-            var ay = it.second.y + distanceY
-
-            newMap[Point(aX, ay)] = "#"
-        }.onSuccess {
-            counter1++
-        }
-
-        // bottom
-        kotlin.runCatching {
-            var aX = it.first.x + distanceX
-            var ay = it.first.y - distanceY
-            newMap[Point(aX, ay)] = "#"
-        }.onSuccess {
-            counter1++
-        }
-
-        return counter1
-    }
-
-
-    override fun answerTwo(): String {
-        return ""
+        return newMap
     }
 
     fun printMap(newMap: MutableMap<Point, String>, size: Int) {
@@ -136,8 +148,6 @@ class Day8(readInput: List<String>) : Day(readInput) {
         }
     }
 
-
-    private fun Pair<Point, Point>.distanceBetween() = manhattanDistance(this.first, this.second)
 
     private fun manhattanDistance(pointA: Point, pointB: Point) =
         abs(pointB.x - pointA.x) + abs(pointB.y - pointA.y);

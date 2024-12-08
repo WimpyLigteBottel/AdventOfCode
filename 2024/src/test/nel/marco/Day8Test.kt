@@ -11,12 +11,12 @@ class Day8Test {
     @Test
     fun answerOne() {
         assertEquals("14", Day8(exampleInput).answerOne())
-        assertEquals("", Day8(input).answerOne())
+        assertEquals("244", Day8(input).answerOne())
     }
 
     @Test
     fun answerTwo() {
-        assertEquals("", Day8(exampleInput).answerTwo())
+        assertEquals("34", Day8(exampleInput).answerTwo())
         assertEquals("", Day8(input).answerTwo())
     }
 
@@ -24,10 +24,10 @@ class Day8Test {
     fun avg() {
         val day = Day8(input)
         MarcoUtil.avgTime("part1", 5) {
-            assertEquals("X", day.answerOne())
+            assertEquals("244", day.answerOne())
         }
-        MarcoUtil.avgTime("part2", 5) {
-            assertEquals("X", day.answerTwo())
-        }
+//        MarcoUtil.avgTime("part2", 5) {
+//            assertEquals("X", day.answerTwo())
+//        }
     }
 }
