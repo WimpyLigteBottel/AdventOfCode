@@ -1,10 +1,10 @@
 package nel.marco
 
 
-class Day9(readInput: List<String>) : Day(readInput) {
+class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExample = useExample, macBook = useMac) {
 
     override fun answerOne(): String {
-       return ""
+        return ""
     }
 
     override fun answerTwo(): String {

@@ -1,7 +1,7 @@
 package nel.marco
 
 
-class Day3(readInput: List<String>) : Day(readInput) {
+class Day3(useExample: Boolean = false, useMac: Boolean = false) : Day(3, useExample = useExample, macBook = useMac) {
 
     companion object {
         private val MULTIPLY_REGEX = "mul\\((\\d+),(\\d+)\\)".toRegex()

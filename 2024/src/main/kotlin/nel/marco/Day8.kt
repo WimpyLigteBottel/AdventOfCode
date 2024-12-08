@@ -1,7 +1,7 @@
 package nel.marco
 
 
-class Day8(readInput: List<String>) : Day(readInput) {
+class Day8(useExample: Boolean = false, useMac: Boolean = false) : Day(8, useExample = useExample, macBook = useMac) {
 
     override fun answerOne(): String {
 
@@ -22,7 +22,7 @@ class Day8(readInput: List<String>) : Day(readInput) {
         var toBeChecked = setupAtennasToCheck(newMap)
 
         toBeChecked.forEach {
-                anodeFitOnMap(it, newMap, true)
+            anodeFitOnMap(it, newMap, true)
         }
 
         return "${newMap.filter { it.value != "." }.count()}"

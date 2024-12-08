@@ -3,7 +3,7 @@ package nel.marco
 import java.util.concurrent.atomic.AtomicLong
 
 
-class Day6(readInput: List<String>) : Day(readInput) {
+class Day6(useExample: Boolean = false, useMac: Boolean = false) : Day(6, useExample = useExample, macBook = useMac) {
 
 
     override fun answerOne(): String {
@@ -81,7 +81,7 @@ class Day6(readInput: List<String>) : Day(readInput) {
         var loopCount = AtomicLong(0)
 
         walkableLocations.parallelStream().forEach { obstacle ->
-            val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList()}
+            val clonedMap = initialGuardMap.map { row -> row.map { it.copy() }.toMutableList() }
             clonedMap[obstacle.y][obstacle.x].value = "#"
 
             if (isGuardLoop(clonedMap, guardStart)) {

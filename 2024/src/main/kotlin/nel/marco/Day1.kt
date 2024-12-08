@@ -3,7 +3,8 @@ package nel.marco
 import kotlin.math.absoluteValue
 
 
-class Day1(readInput: List<String>) : Day(readInput) {
+class Day1(useExample: Boolean = false, useMac: Boolean = false) :
+    Day(dayNumber = 1, useExample = useExample, macBook = useMac) {
 
     override fun answerOne(): String {
 

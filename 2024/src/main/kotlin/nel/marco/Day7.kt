@@ -3,7 +3,7 @@ package nel.marco
 import java.math.BigInteger
 
 
-class Day7(readInput: List<String>) : Day(readInput) {
+class Day7(useExample: Boolean = false, useMac: Boolean = false) : Day(7, useExample = useExample, macBook = useMac) {
     val possibleOperations = listOf("+", "*", "|")
 
     val operators = possibleOperations.associateWith { operator ->
@@ -69,7 +69,7 @@ class Day7(readInput: List<String>) : Day(readInput) {
             .toMutableList()
 
         orderOfSymbols.forEach {
-            var result =  operators[it]!!(digitsInOrder[0], digitsInOrder[1])
+            var result = operators[it]!!(digitsInOrder[0], digitsInOrder[1])
 
             digitsInOrder.removeFirst()
             digitsInOrder.set(0, result)

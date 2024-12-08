@@ -5,22 +5,25 @@ import org.junit.jupiter.api.Test
 
 class Day1Test {
 
+    val day = Day1(useExample = false, useMac = false)
+    val example = Day1(useExample = true, useMac = false)
+
     @Test
     fun answerOne() {
-        assertEquals("11", Day1(ReadUtil.readInputAsList(1, exampleInput = true, macBook = true)).answerOne())
-        assertEquals("2375403", Day1(ReadUtil.readInputAsList(1, macBook = true)).answerOne())
+        assertEquals("11", example.answerOne())
+        assertEquals("2375403", day.answerOne())
     }
 
 
     @Test
     fun answerTwo() {
-        assertEquals("31", Day1(ReadUtil.readInputAsList(1, exampleInput = true, macBook = true)).answerTwo())
-        assertEquals("23082277", Day1(ReadUtil.readInputAsList(1, macBook = true)).answerTwo())
+        assertEquals("31", example.answerTwo())
+        assertEquals("23082277", day.answerTwo())
     }
 
 
     fun avgTime() {
-        val input = Day1(ReadUtil.readInputAsList(1, macBook = true))
+        val input = Day1(useExample = true, useMac = false)
         MarcoUtil.avgTime("part1") {
             assertEquals("2375403", input.answerOne())
         }

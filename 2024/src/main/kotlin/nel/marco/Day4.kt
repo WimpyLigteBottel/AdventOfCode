@@ -1,7 +1,7 @@
 package nel.marco
 
 
-class Day4(readInput: List<String>) : Day(readInput) {
+class Day4(useExample: Boolean = false, useMac: Boolean = false) : Day(4, useExample = useExample, macBook = useMac) {
 
     val lengthOfPuzzle = readInput[0].length // 10 -> 140 depending on size
 

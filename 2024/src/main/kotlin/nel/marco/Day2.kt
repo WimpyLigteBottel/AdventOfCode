@@ -1,10 +1,9 @@
 package nel.marco
 
 import kotlin.math.absoluteValue
-import kotlin.streams.asSequence
 
 
-class Day2(readInput: List<String>) : Day(readInput) {
+class Day2(useExample: Boolean = false, useMac: Boolean = false) : Day(2, useExample = useExample, macBook = useMac) {
 
     override fun answerOne(): String {
         return readInput

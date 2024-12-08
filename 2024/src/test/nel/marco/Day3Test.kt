@@ -1,8 +1,6 @@
 package nel.marco
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 
 /*
@@ -28,31 +26,30 @@ Handle the new instructions; what do you get if you add up all of the results of
  */
 class Day3Test {
 
-    val input = ReadUtil.readInputAsList(3, exampleInput = false, macBook = false)
-    val exampleInput = ReadUtil.readInputAsList(3, exampleInput = true, macBook = false)
+    val day = Day3(useExample = false, useMac = false)
+    val example = Day3(useExample = true, useMac = false)
 
 
     @Test
     fun answerOne() {
-        assertEquals("161", Day3(exampleInput).answerOne())
-        assertEquals("188192787", Day3(input).answerOne())
+        assertEquals("161", example.answerOne())
+        assertEquals("188192787", day.answerOne())
     }
 
 
     @Test
     fun answerTwo() {
-        assertEquals("48", Day3(exampleInput).answerTwo())
-        assertEquals("113965544", Day3(input).answerTwo())
+        assertEquals("48", example.answerTwo())
+        assertEquals("113965544", day.answerTwo())
     }
 
 
-    @Test
     fun avg() {
-        val day = Day3(input)
-        MarcoUtil.avgTime("part1",30) {
+        val day = day
+        MarcoUtil.avgTime("part1", 30) {
             assertEquals("188192787", day.answerOne())
         }
-        MarcoUtil.avgTime("part2",30) {
+        MarcoUtil.avgTime("part2", 30) {
             assertEquals("113965544", day.answerTwo())
         }
     }

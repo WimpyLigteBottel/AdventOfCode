@@ -1,7 +1,7 @@
 package nel.marco
 
 
-class Day5(readInput: List<String>) : Day(readInput) {
+class Day5(useExample: Boolean = false, useMac: Boolean = false) : Day(5, useExample = useExample, macBook = useMac) {
 
     var verifyList: List<Pair<String, String>> = emptyList();
     var rows: List<String> = emptyList()
