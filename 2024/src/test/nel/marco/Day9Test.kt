@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test
 
 class Day9Test {
 
-    val day = Day9(useExample = false, useMac = true)
-    val example = Day9(useExample = true, useMac = true)
+    val day = Day9(useExample = false, useMac = false)
+    val example = Day9(useExample = true, useMac = false)
 
     @Test
     fun answerOne() {
         assertEquals("1928", example.answerOne())
-        assertNotEquals("6273684533700", day.answerOne()) // not 6273684533700
         assertEquals("X", day.answerOne()) // not 6273684533700
     }
 
