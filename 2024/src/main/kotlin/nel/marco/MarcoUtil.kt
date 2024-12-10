@@ -30,5 +30,15 @@ class MarcoUtil {
             println("$name took ${mutableListOf.average()} ms average (totalRuns=${mutableListOf.size};inSeconds=$inSeconds)")
         }
 
+        fun <T> printMap(newMap: MutableMap<Point, T>, size: Int) {
+
+            for (x in 0..<size) {
+                for (y in 0..<size) {
+                    print(newMap[Point(y, x)])
+                }
+                println()
+            }
+        }
+
     }
 }
