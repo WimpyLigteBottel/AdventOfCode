@@ -18,13 +18,13 @@ class Day9Test {
     @Test
     fun answerTwo() {
         assertEquals("2858", example.answerTwo())
-        assertEquals("X", day.answerTwo())
+        assertEquals("6311837662089", day.answerTwo()) // cheated this one :(
     }
 
     fun avg() {
         val day = day
         MarcoUtil.avgTime("part1", 5) {
-            assertEquals("X", day.answerOne())
+            assertEquals("6288707484810", day.answerOne())
         }
         MarcoUtil.avgTime("part2", 5) {
             assertEquals("X", day.answerTwo())
