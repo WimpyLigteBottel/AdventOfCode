@@ -25,10 +25,10 @@ class Day10Test {
     fun avg() {
         val day = day
         MarcoUtil.avgTime("part1", 5) {
-            assertEquals("X", day.answerOne())
+            assertEquals("514", day.answerOne())
         }
         MarcoUtil.avgTime("part2", 5) {
-            assertEquals("X", day.answerTwo())
+            assertEquals("1162", day.answerTwo())
         }
     }
 }
