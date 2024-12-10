@@ -18,50 +18,13 @@ class Day10(useExample: Boolean = false, useMac: Boolean = false) : Day(10, useE
             }
         }
 
-        var toBeProcessed = mutableListOf<Point>()
-
-        // get all the 0's
-        map.filter { it.value == 0 }.forEach {
-            toBeProcessed.add(it.key)
-        }
-
-        var totaal = 0
-
-        while (toBeProcessed.isNotEmpty()) {
-
-            var first = toBeProcessed.removeFirst()
-
-            totaal += findNext(first, 1, mutableListOf()).toSet().size
-        }
-
-        return totaal.toString()
-    }
-
-    fun howManyPathOptions(
-        current: Point,
-        up: Point,
-        down: Point,
-        left: Point,
-        right: Point
-    ): Int {
-        val mapCurrentValue = map[current] ?: -1
-
-        var count = 0
-
-        if (map[up] == mapCurrentValue + 1) {
-            count++
-        }
-        if (map[down] == mapCurrentValue + 1) {
-            count++
-        }
-        if (map[left] == mapCurrentValue + 1) {
-            count++
-        }
-        if (map[right] == mapCurrentValue + 1) {
-            count++
-        }
-
-        return count
+        return map
+            .filter { it.value == 0 }
+            .map { it.key }
+            .parallelStream()
+            .mapToInt { findNext(it, 1, mutableListOf()).toSet().size }
+            .sum()
+            .toString()
     }
 
     fun findNext(current: Point, score: Int, completed: MutableList<Point>): MutableList<Point> {
@@ -75,8 +38,6 @@ class Day10(useExample: Boolean = false, useMac: Boolean = false) : Day(10, useE
         var down = current.copy().down()
         var left = current.copy().left()
         var right = current.copy().right()
-
-        var pathOptions = howManyPathOptions(current, up, down, left, right)
 
         if (map[up] == mapCurrentValue + 1) {
             findNext(up, score, completed)
@@ -108,23 +69,13 @@ class Day10(useExample: Boolean = false, useMac: Boolean = false) : Day(10, useE
             }
         }
 
-        var toBeProcessed = mutableListOf<Point>()
-
-        // get all the 0's
-        map.filter { it.value == 0 }.forEach {
-            toBeProcessed.add(it.key)
-        }
-
-        var totaal = 0
-
-        while (toBeProcessed.isNotEmpty()) {
-
-            var first = toBeProcessed.removeFirst()
-
-            totaal += findNext(first, 1, mutableListOf()).size
-        }
-
-        return totaal.toString()
+        return map
+            .filter { it.value == 0 }
+            .map { it.key }
+            .parallelStream()
+            .mapToInt { findNext(it, 1, mutableListOf()).size }
+            .sum()
+            .toString()
     }
 
 }

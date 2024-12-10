@@ -1,7 +1,7 @@
 package nel.marco
 
 import java.math.BigInteger
-import java.util.Collections
+import java.util.*
 
 
 class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExample = useExample, macBook = useMac) {
@@ -9,15 +9,13 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
     override fun answerOne(): String {
 
         val mapList = 10000
-        val map: MutableMap<Int, String> = (0..mapList)
-            .mapIndexed { index, c -> index to c.toString() }
-            .associate { it.first to it.second }
-            .toMutableMap()
+        val map: MutableMap<Int, String> =
+            (0..mapList).mapIndexed { index, c -> index to c.toString() }.associate { it.first to it.second }
+                .toMutableMap()
 
-        val reverse: MutableMap<String, Int> = (0..mapList)
-            .mapIndexed { index, c -> index to c.toString() }
-            .associate { it.second to it.first }
-            .toMutableMap()
+        val reverse: MutableMap<String, Int> =
+            (0..mapList).mapIndexed { index, c -> index to c.toString() }.associate { it.second to it.first }
+                .toMutableMap()
 
 
         var newList = expandList(map)
@@ -25,21 +23,44 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
 
         var total = newList
-            .filter { it != "." }
             .mapIndexed { index: Int, indexedValue: String ->
-                val index = BigInteger("$index")
-                val other = BigInteger("${reverse[indexedValue]!!}")
-
-                index.times(other)
+                BigInteger(index.toString()).times(BigInteger((reverse[indexedValue] ?: 0).toString()))
             }.fold(BigInteger.ZERO) { acc, bigInteger -> acc.add(bigInteger) }
 
         return "$total"
     }
 
+    override fun answerTwo(): String {
+        val mapList = 10000
+        val map: MutableMap<Int, String> =
+            (0..mapList).mapIndexed { index, c -> index to c.toString() }.associate { it.first to it.second }
+                .toMutableMap()
+
+        val reverse: MutableMap<String, Int> =
+            (0..mapList).mapIndexed { index, c -> index to c.toString() }.associate { it.second to it.first }
+                .toMutableMap()
+
+
+        var newList = expandList(map)
+        compactV2(newList)
+
+
+        var total = newList.mapIndexed { index: Int, indexedValue: String ->
+            val index = BigInteger("$index")
+            val other = BigInteger("${reverse[indexedValue] ?: 0}")
+
+            index.times(other)
+        }.fold(BigInteger.ZERO) { acc, bigInteger -> acc.add(bigInteger) }
+
+        return "$total"
+    }
+
+
     private fun expandList(map: MutableMap<Int, String>): MutableList<String> {
         val line = readInput.first().map { it }
 
-        var newList = mutableListOf<String>()
+        var newList = ArrayList<String>(94570)
+
 
         var index = 0
         var digit = 0
@@ -64,12 +85,11 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
     }
 
 
-    fun compact(packedInto: MutableList<String>) {
+    private fun compact(packedInto: MutableList<String>) {
         var counter = 0
 
         for ((index, s) in packedInto.withIndex()) {
-            if (index + counter == packedInto.size)
-                break
+            if (index + counter == packedInto.size) break
             if (s == ".") {
                 counter++
                 while (packedInto[packedInto.size - counter] == ".") {
@@ -82,17 +102,14 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
     }
 
-    var map: MutableMap<String, String> = mutableMapOf()
 
-
-    fun compactV2(packedInto: MutableList<String>) {
+    private fun compactV2(packedInto: MutableList<String>) {
         var workBackwards = packedInto[packedInto.size - 1]
 
         var toProcess = mutableListOf<Pair<MutableList<String>, Pair<Int, Int>>>()
 
         while (workBackwards != "0") {
-            var digits = digitsFromBack(packedInto, workBackwards)
-            toProcess.add(digits)
+            toProcess.add(digitsFromBack(packedInto, workBackwards))
             workBackwards = (workBackwards.toInt() - 1).toString()
         }
 
@@ -111,25 +128,21 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
                     packedInto[x] = "."
                 }
             }
-
         }
     }
 
     private fun getOpenSpots(
-        packedInto: MutableList<String>,
-        needToHandleSize: Int,
-        dontGoFurtherThan: Int
+        packedInto: MutableList<String>, needToHandleSize: Int, dontGoFurtherThan: Int
     ): Pair<Int, Int>? {
-        for ((index, s) in packedInto.withIndex()) {
-            if(index > dontGoFurtherThan){
+        for ((from, s) in packedInto.withIndex()) {
+            if (from > dontGoFurtherThan) {
                 return null
             }
 
             if (s != ".") {
                 continue
             }
-            var from = index
-            var to = index
+            var to = from
 
             while (packedInto[to] == ".") {
                 to++
@@ -148,46 +161,17 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
         return null
     }
 
-    fun digitsFromBack(
-        list: MutableList<String>,
-        workBackwords: String
+    private fun digitsFromBack(
+        list: MutableList<String>, workBackwords: String
     ): Pair<MutableList<String>, Pair<Int, Int>> {
 
         var start = list.indexOf(workBackwords)
         var end = list.lastIndexOf(workBackwords)
 
-        if (start == -1 || end == -1)
-            return mutableListOf<String>() to (start to end)
+        if (start == -1 || end == -1) return mutableListOf<String>() to (start to end)
 
         val subList = list.subList(start, end + 1)
         return subList to (start to end)
     }
 
-    override fun answerTwo(): String {
-        val mapList = 10000
-        val map: MutableMap<Int, String> = (0..mapList)
-            .mapIndexed { index, c -> index to c.toString() }
-            .associate { it.first to it.second }
-            .toMutableMap()
-
-        val reverse: MutableMap<String, Int> = (0..mapList)
-            .mapIndexed { index, c -> index to c.toString() }
-            .associate { it.second to it.first }
-            .toMutableMap()
-
-
-        var newList = expandList(map)
-        compactV2(newList)
-
-
-        var total = newList
-            .mapIndexed { index: Int, indexedValue: String ->
-                val index = BigInteger("$index")
-                val other = BigInteger("${reverse[indexedValue] ?: 0}")
-
-                index.times(other)
-            }.fold(BigInteger.ZERO) { acc, bigInteger -> acc.add(bigInteger) }
-
-        return "$total"
-    }
 }
