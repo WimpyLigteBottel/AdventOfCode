@@ -96,42 +96,35 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
             workBackwards = (workBackwards.toInt() - 1).toString()
         }
 
-        var openSpots = getOpenSpots(packedInto)
-
         toProcess.forEach { a ->
-
             val size = a.first.size
 
-            openSpots
-                .filter { it.second - it.first >= size }
-                .firstOrNull()?.let { firstOpenSlot ->
-                    for (x in firstOpenSlot.first until firstOpenSlot.first + a.first.size) {
-                        if (a.first.isNotEmpty()) {
-                            packedInto[x] = a.first.first()
-                        }
-                    }
+            val spot = getOpenSpots(packedInto.toMutableList(), size, packedInto.indexOf(a.first.first()))
 
-                    for (x in a.second.first..a.second.second) {
-                        packedInto[x] = "."
+            spot?.let { firstOpenSlot ->
+                for (x in firstOpenSlot.first until firstOpenSlot.first + a.first.size) {
+                    if (a.first.isNotEmpty()) {
+                        packedInto[x] = a.first.first()
                     }
-
-                    val distance = firstOpenSlot.second - firstOpenSlot.first
-                    if (distance > a.first.size) {
-                        val used = distance - size
-                        openSpots.add(Pair(firstOpenSlot.second- used, firstOpenSlot.second))
-                        openSpots.sortBy { it.first }
-                    }
-
-                    openSpots.remove(firstOpenSlot)
                 }
+                for (x in a.second.first..a.second.second) {
+                    packedInto[x] = "."
+                }
+            }
 
         }
     }
 
-    private fun getOpenSpots(packedInto: MutableList<String>): MutableList<Pair<Int, Int>> {
-        var openSpots = mutableListOf<Pair<Int, Int>>()
-
+    private fun getOpenSpots(
+        packedInto: MutableList<String>,
+        needToHandleSize: Int,
+        dontGoFurtherThan: Int
+    ): Pair<Int, Int>? {
         for ((index, s) in packedInto.withIndex()) {
+            if(index > dontGoFurtherThan){
+                return null
+            }
+
             if (s != ".") {
                 continue
             }
@@ -140,14 +133,19 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
             while (packedInto[to] == ".") {
                 to++
+
+                if (to >= packedInto.size) {
+                    return null
+                }
             }
-            if (openSpots.filter { it.second == to }.size > 0) {
+
+            if (to - from < needToHandleSize) {
                 continue
             }
 
-            openSpots.add(Pair(from, to))
+            return Pair(from, to)
         }
-        return openSpots
+        return null
     }
 
     fun digitsFromBack(
@@ -179,12 +177,7 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
 
         var newList = expandList(map)
-        println(newList)
-
-        kotlin.runCatching {
-            compactV2(newList)
-        }
-        println(newList)
+        compactV2(newList)
 
 
         var total = newList
