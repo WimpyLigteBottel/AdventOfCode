@@ -8,7 +8,7 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
     override fun answerOne(): String {
 
-        val mapList = 100000
+        val mapList = 10000
         val map: MutableMap<Int, String> = (0..mapList)
             .mapIndexed { index, c -> index to c.toString() }
             .associate { it.first to it.second }
@@ -65,15 +65,12 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
 
     fun compact(packedInto: MutableList<String>) {
-        val dots = packedInto.filter { it != "." }.count()
-
         var counter = 0
 
         for ((index, s) in packedInto.withIndex()) {
             if(index + counter == packedInto.size)
                 break
             if (s == ".") {
-
                 counter++
                 while (packedInto[packedInto.size - counter] == ".") {
                     counter++
@@ -83,10 +80,33 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
             }
         }
 
-        packedInto.removeAll { it == "" }
     }
 
     override fun answerTwo(): String {
-        return ""
+        val mapList = 10000
+        val map: MutableMap<Int, String> = (0..mapList)
+            .mapIndexed { index, c -> index to c.toString() }
+            .associate { it.first to it.second }
+            .toMutableMap()
+
+        val reverse: MutableMap<String, Int> = (0..mapList)
+            .mapIndexed { index, c -> index to c.toString() }
+            .associate { it.second to it.first }
+            .toMutableMap()
+
+
+        var newList = expandList(map)
+        compact(newList)
+
+
+        var total = newList
+            .mapIndexed { index: Int, indexedValue: String ->
+                val index = BigInteger("$index")
+                val other = BigInteger("${reverse[indexedValue]}")
+
+                index.times(other)
+            }.fold(BigInteger.ZERO) { acc, bigInteger -> acc.add(bigInteger) }
+
+        return "$total"
     }
 }
