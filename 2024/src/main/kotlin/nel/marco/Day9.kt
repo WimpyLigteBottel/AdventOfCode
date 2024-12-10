@@ -99,7 +99,7 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
         toProcess.forEach { a ->
             val size = a.first.size
 
-            val spot = getOpenSpots(packedInto.toMutableList(), size, packedInto.indexOf(a.first.first()))
+            val spot = getOpenSpots(packedInto, size, a.second.first)
 
             spot?.let { firstOpenSlot ->
                 for (x in firstOpenSlot.first until firstOpenSlot.first + a.first.size) {
