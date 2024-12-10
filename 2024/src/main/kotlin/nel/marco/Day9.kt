@@ -104,9 +104,8 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
 
 
     private fun compactV2(packedInto: MutableList<String>) {
-        var workBackwards = packedInto[packedInto.size - 1]
-
-        var toProcess = mutableListOf<Pair<MutableList<String>, Pair<Int, Int>>>()
+        var workBackwards: String = packedInto[packedInto.size - 1]
+        var toProcess = mutableListOf<Pair<String, Pair<Int, Int>>>()
 
         while (workBackwards != "0") {
             toProcess.add(digitsFromBack(packedInto, workBackwards))
@@ -114,15 +113,13 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
         }
 
         toProcess.forEach { a ->
-            val size = a.first.size
+            val size = a.second.second - a.second.first + 1
 
             val spot = getOpenSpots(packedInto, size, a.second.first)
 
             spot?.let { firstOpenSlot ->
-                for (x in firstOpenSlot.first until firstOpenSlot.first + a.first.size) {
-                    if (a.first.isNotEmpty()) {
-                        packedInto[x] = a.first.first()
-                    }
+                for (x in firstOpenSlot.first until firstOpenSlot.first + size) {
+                    packedInto[x] = a.first
                 }
                 for (x in a.second.first..a.second.second) {
                     packedInto[x] = "."
@@ -132,46 +129,54 @@ class Day9(useExample: Boolean = false, useMac: Boolean = false) : Day(9, useExa
     }
 
     private fun getOpenSpots(
-        packedInto: MutableList<String>, needToHandleSize: Int, dontGoFurtherThan: Int
+        packedInto: MutableList<String>,
+        needToHandleSize: Int,
+        dontGoFurtherThan: Int
     ): Pair<Int, Int>? {
-        for ((from, s) in packedInto.withIndex()) {
+        var firstOpenSpot = packedInto.indexOf(".")
+        var from = firstOpenSpot
+
+        while (firstOpenSpot != -1) {
             if (from > dontGoFurtherThan) {
                 return null
             }
 
-            if (s != ".") {
+            if (packedInto[from] != ".") {
+                // multi jump check
+                if (packedInto[from + 1] != ".") {
+                    from += 2
+                    continue
+                }
+                from++
                 continue
             }
             var to = from
 
             while (packedInto[to] == ".") {
                 to++
-
-                if (to >= packedInto.size) {
-                    return null
-                }
             }
 
-            if (to - from < needToHandleSize) {
-                continue
+            val avail = to - from
+
+            val pair = Pair(from, to)
+            if (avail >= needToHandleSize) {
+                return pair
             }
 
-            return Pair(from, to)
+            from += avail
         }
         return null
     }
 
     private fun digitsFromBack(
-        list: MutableList<String>, workBackwords: String
-    ): Pair<MutableList<String>, Pair<Int, Int>> {
+        list: MutableList<String>,
+        workBackwords: String
+    ): Pair<String, Pair<Int, Int>> {
 
         var start = list.indexOf(workBackwords)
         var end = list.lastIndexOf(workBackwords)
 
-        if (start == -1 || end == -1) return mutableListOf<String>() to (start to end)
-
-        val subList = list.subList(start, end + 1)
-        return subList to (start to end)
+        return workBackwords to (start to end)
     }
 
 }
