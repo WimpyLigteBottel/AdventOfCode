@@ -23,12 +23,10 @@ class Day11(useExample: Boolean = false, useMac: Boolean = false) : Day(11, useE
         map.forEach { (key, value) ->
             val applyRule = applyRule(key)
             applyRule.first.let {
-                secondMap.putIfAbsent(it, 0)
-                secondMap[it] = secondMap[it]!! + value
+                secondMap.compute(it) { _, v -> (v ?: 0) + value }
             }
             applyRule.second?.let {
-                secondMap.putIfAbsent(it, 0)
-                secondMap[it] = secondMap[it]!! + value
+                secondMap.compute(it) { _, v -> (v ?: 0) + value }
             }
 
         }
@@ -37,21 +35,21 @@ class Day11(useExample: Boolean = false, useMac: Boolean = false) : Day(11, useE
         map.putAll(secondMap)
     }
 
+    private val TIMES = BigInteger.valueOf(2024)
+
     fun applyRule(bigInteger: BigInteger): Pair<BigInteger, BigInteger?> {
         if (bigInteger == BigInteger.ZERO) {
             return BigInteger.ONE to null
-        } else {
-            val digit = bigInteger.toString()
-            if (digit.length % 2 == 0) {
-                val half = digit.length / 2
-
-                var firstHalf = digit.substring(0, half).toBigInteger()
-                var secondHalf = digit.substring(half).toBigInteger()
-
-                return firstHalf to secondHalf
-            }
         }
-        return bigInteger.times(BigInteger.valueOf(2024)) to null
+
+        val digit = bigInteger.toString()
+        if (digit.length % 2 == 0) {
+            val half = digit.length / 2
+            return digit.substring(0, half).toBigInteger() to digit.substring(half).toBigInteger()
+        }
+
+
+        return bigInteger.times(TIMES) to null
     }
 
 
@@ -64,8 +62,8 @@ class Day11(useExample: Boolean = false, useMac: Boolean = false) : Day(11, useE
 
         return map
             .map { it.value.toBigInteger() }
-            .fold(BigInteger.ZERO){ acc, i -> acc.add(i) }
-                .toString()
+            .fold(BigInteger.ZERO) { acc, i -> acc.add(i) }
+            .toString()
 
     }
 
