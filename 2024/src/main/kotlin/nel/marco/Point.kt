@@ -118,3 +118,23 @@ data class Point(var x: Int = 0, var y: Int = 0, var value: String = "") {
     }
 
 }
+
+fun Point.surroundingPoints(withCorners: Boolean = true): List<Point> {
+    val down = this.clone().up()
+    val downLeft = this.clone().left().up()
+    val downRight = this.clone().right().up()
+
+    val left = this.clone().left()
+    val right = this.clone().right()
+
+    val up = this.clone().down()
+    val upRight = this.clone().right().down()
+    val upLeft = this.clone().left().down()
+
+    if (!withCorners) {
+        return listOf(up, down, left, right)
+    }
+
+
+    return listOf(up, down, left, right, upLeft, upRight, downLeft, downRight)
+}
