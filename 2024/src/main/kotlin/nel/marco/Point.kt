@@ -1,6 +1,6 @@
 package nel.marco
 
-data class Point(var x: Int = 0, var y: Int = 0, var value: String = "") {
+data class Point(open var x: Int = 0, open var y: Int = 0, open var value: String = "") {
 
     val isDigitRegex = "\\d".toRegex()
 
@@ -119,6 +119,13 @@ data class Point(var x: Int = 0, var y: Int = 0, var value: String = "") {
 
 }
 
+enum class Sides {
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT
+}
+
 fun Point.surroundingPoints(withCorners: Boolean = true): List<Point> {
     val down = this.clone().up()
     val downLeft = this.clone().left().up()
@@ -138,3 +145,32 @@ fun Point.surroundingPoints(withCorners: Boolean = true): List<Point> {
 
     return listOf(up, down, left, right, upLeft, upRight, downLeft, downRight)
 }
+
+fun Point.findGroup(map: MutableMap<Point, String>, invalidMarker: String = "."): List<Point> {
+    var group = mutableSetOf<Point>()
+
+    var toBeProcessed = mutableListOf(this)
+
+    while (toBeProcessed.size != 0) {
+        val elements = toBeProcessed.first().findMatchingPointsAndUpdateMap(map, invalidMarker)
+            .filter { !group.contains(it) }
+        toBeProcessed.addAll(elements)
+        group.addAll(elements)
+        toBeProcessed.removeIf { toBeProcessed.first() == it }
+
+    }
+
+    return group.toList()
+}
+
+private fun Point.findMatchingPointsAndUpdateMap(
+    map: MutableMap<Point, String>,
+    invalidMarker: String
+) = this.surroundingPoints(false)
+    .filter { map[it] == this.value }
+    .map {
+        val point = it.copy(value = this.value)
+        map[it] = invalidMarker
+
+        point
+    }
