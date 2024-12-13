@@ -11,14 +11,13 @@ class Day13Test {
 
     @Test
     fun answerOne() {
-        assertEquals("11", example.answerOne())
-        assertEquals("X", day.answerOne())
+        assertEquals("480", example.answerOne())
+        assertEquals("40069", day.answerOne())
     }
 
 
     @Test
     fun answerTwo() {
-        assertEquals("X", example.answerTwo())
         assertEquals("X", day.answerTwo())
     }
 
