@@ -399,18 +399,18 @@ class Day12Test {
     @Test
     fun answerTwo() {
         assertEquals("1206", example.answerTwo())
-        assertEquals("X", day.answerTwo())
+        assertEquals("887932", day.answerTwo())
     }
 
-//    @Test
+    @Test
     fun avg() {
         val day = day
         MarcoUtil.avgTime("part1", 5) {
             assertEquals("1461806", day.answerOne())
         }
-//        MarcoUtil.avgTime("part2", 5) {
-//            assertEquals("X", day.answerTwo())
-//        }
+        MarcoUtil.avgTime("part2", 5) {
+            assertEquals("887932", day.answerTwo())
+        }
     }
 }
 

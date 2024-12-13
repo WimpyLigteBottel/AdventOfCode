@@ -98,11 +98,11 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
                 count+=4
 
                 globalCounter+=4
-                println("${square.value}:  size ${1} * count $count | == " + count * 1)
+//                println("${square.value}:  size ${1} * count $count | == " + count * 1)
             }else {
 
                 globalCounter+=count * listOfValues.size
-                println("${square.value}:  size ${listOfValues.size} * count $count == " + count * listOfValues.size)
+//                println("${square.value}:  size ${listOfValues.size} * count $count == " + count * listOfValues.size)
             }
 
 
@@ -125,7 +125,7 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
             var goingUp: Square? = firstSideMostCompleted.copy()
             while (goingUp != null) {
                 val up = listOfValues.find { goingUp!!.copy().up().isSame(it) }
-                val upRight = up?.let { listOfValues.find { up.copy().down().right().isSame(it) } }
+                val upRight = up?.let { listOfValues.find { up.copy().right().isSame(it) } }
 
                 if (upRight != null) {
                     goingUp = null
@@ -141,7 +141,7 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
             var goingDown: Square? = firstSideMostCompleted.copy()
             while (goingDown != null) {
                 val down = listOfValues.find { goingDown!!.copy().down().isSame(it) }
-                val downLeft = down?.let { listOfValues.find { goingDown!!.copy().up().right().isSame(it) } }
+                val downLeft = down?.let { listOfValues.find { down.copy().right().isSame(it) } }
 
                 if (downLeft != null) {
                     goingDown = null
