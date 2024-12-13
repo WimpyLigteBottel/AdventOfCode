@@ -125,7 +125,7 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
             var goingUp: Square? = firstSideMostCompleted.copy()
             while (goingUp != null) {
                 val up = listOfValues.find { goingUp!!.copy().up().isSame(it) }
-                val upRight = up?.let { listOfValues.find { goingUp!!.copy().up().right().isSame(it) } }
+                val upRight = up?.let { listOfValues.find { up.copy().down().right().isSame(it) } }
 
                 if (upRight != null) {
                     goingUp = null
@@ -141,7 +141,7 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
             var goingDown: Square? = firstSideMostCompleted.copy()
             while (goingDown != null) {
                 val down = listOfValues.find { goingDown!!.copy().down().isSame(it) }
-                val downLeft = down?.let { listOfValues.find { goingDown!!.copy().down().right().isSame(it) } }
+                val downLeft = down?.let { listOfValues.find { goingDown!!.copy().up().right().isSame(it) } }
 
                 if (downLeft != null) {
                     goingDown = null
@@ -225,12 +225,12 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
                 val left = listOfValues.find { goingLeft!!.copy().left().isSame(it) }
                 val leftDown = left?.let { listOfValues.find { left.copy().up().isSame(it) } }
 
-                if (left == null) {
+                if (leftDown != null) {
                     goingLeft = null
                     continue
                 }
 
-                left.sidesDontCount.add(Sides.BOTTOM)
+                left?.sidesDontCount?.add(Sides.BOTTOM)
                 goingLeft = left
             }
 
