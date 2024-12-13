@@ -47,12 +47,12 @@ class Day12Test {
 
         day.cantGoRightLogic(a2, listOfValues = mutableListOf(c2, b2, rightA2))
 
-        assertEquals(0, a2.sidesCount.size)
-        assertEquals(0, a2.sidesDontCount.size)
+        assertEquals(1, a2.sidesCount.size)
+        assertEquals(1, a2.sidesDontCount.size)
         assertEquals(0, b2.sidesCount.size)
-        assertEquals(0, b2.sidesDontCount.size)
+        assertEquals(1, b2.sidesDontCount.size)
         assertEquals(0, c2.sidesCount.size)
-        assertEquals(0, c2.sidesDontCount.size)
+        assertEquals(1, c2.sidesDontCount.size)
     }
 
     @Test
@@ -94,12 +94,12 @@ class Day12Test {
 
         day.cantGoLeftLogic(a2, listOfValues = mutableListOf(c2, b2, leftOfA2))
 
-        assertEquals(0, a2.sidesCount.size)
-        assertEquals(0, a2.sidesDontCount.size)
+        assertEquals(1, a2.sidesCount.size)
+        assertEquals(1, a2.sidesDontCount.size)
         assertEquals(0, b2.sidesCount.size)
-        assertEquals(0, b2.sidesDontCount.size)
+        assertEquals(1, b2.sidesDontCount.size)
         assertEquals(0, c2.sidesCount.size)
-        assertEquals(0, c2.sidesDontCount.size)
+        assertEquals(1, c2.sidesDontCount.size)
 
 
     }
@@ -129,11 +129,11 @@ class Day12Test {
         day.cantGoLeftLogic(c1, listOfValues = mutableListOf(a1, b1, leftOfC1))
 
         assertEquals(0, a1.sidesCount.size)
-        assertEquals(0, a1.sidesDontCount.size)
+        assertEquals(1, a1.sidesDontCount.size)
         assertEquals(0, b1.sidesCount.size)
-        assertEquals(0, b1.sidesDontCount.size)
-        assertEquals(0, c1.sidesCount.size)
-        assertEquals(0, c1.sidesDontCount.size)
+        assertEquals(1, b1.sidesDontCount.size)
+        assertEquals(1, c1.sidesCount.size)
+        assertEquals(1, c1.sidesDontCount.size)
 
 
         val a2 = Square(x = 0, y = 0, value = "X")
@@ -178,11 +178,11 @@ class Day12Test {
         day.cantGoRightLogic(c1, listOfValues = mutableListOf(a1, b1, rightC1))
 
         assertEquals(0, a1.sidesCount.size)
-        assertEquals(0, a1.sidesDontCount.size)
+        assertEquals(1, a1.sidesDontCount.size)
         assertEquals(0, b1.sidesCount.size)
-        assertEquals(0, b1.sidesDontCount.size)
-        assertEquals(0, c1.sidesCount.size)
-        assertEquals(0, c1.sidesDontCount.size)
+        assertEquals(1, b1.sidesDontCount.size)
+        assertEquals(1, c1.sidesCount.size)
+        assertEquals(1, c1.sidesDontCount.size)
 
 
         val a2 = Square(x = 0, y = 0, value = "X")
@@ -213,9 +213,9 @@ class Day12Test {
         assertEquals(1, a.sidesCount.size)
         assertEquals(1, a.sidesDontCount.size)
         assertEquals(0, b.sidesCount.size)
-        assertEquals(0, b.sidesDontCount.size)
+        assertEquals(1, b.sidesDontCount.size)
         assertEquals(0, c.sidesCount.size)
-        assertEquals(0, c.sidesDontCount.size)
+        assertEquals(1, c.sidesDontCount.size)
 
         val a1 = Square(x = 0, y = 0, value = "X")
         val b1 = Square(x = 1, y = 0, value = "X")
@@ -229,7 +229,7 @@ class Day12Test {
         assertEquals(0, b1.sidesCount.size)
         assertEquals(1, b1.sidesDontCount.size)
         assertEquals(0, c1.sidesCount.size)
-        assertEquals(0, c1.sidesDontCount.size)
+        assertEquals(1, c1.sidesDontCount.size)
 
 
         val a2 = Square(x = 0, y = 0, value = "X")
@@ -239,12 +239,12 @@ class Day12Test {
 
         day.cantGoDownLogic(a2, listOfValues = mutableListOf(c2, b2, belowA))
 
-        assertEquals(0, a2.sidesCount.size)
-        assertEquals(0, a2.sidesDontCount.size)
+        assertEquals(1, a2.sidesCount.size)
+        assertEquals(1, a2.sidesDontCount.size)
         assertEquals(0, b2.sidesCount.size)
-        assertEquals(0, b2.sidesDontCount.size)
+        assertEquals(1, b2.sidesDontCount.size)
         assertEquals(0, c2.sidesCount.size)
-        assertEquals(0, c2.sidesDontCount.size)
+        assertEquals(1, c2.sidesDontCount.size)
 
 
     }
@@ -260,11 +260,11 @@ class Day12Test {
         day.cantGoDownLogic(c, listOfValues = mutableListOf(a, b, belowC))
 
         assertEquals(0, a.sidesCount.size)
-        assertEquals(0, a.sidesDontCount.size)
+        assertEquals(1, a.sidesDontCount.size)
         assertEquals(0, b.sidesCount.size)
-        assertEquals(0, b.sidesDontCount.size)
-        assertEquals(0, c.sidesCount.size)
-        assertEquals(0, c.sidesDontCount.size)
+        assertEquals(1, b.sidesDontCount.size)
+        assertEquals(1, c.sidesCount.size)
+        assertEquals(1, c.sidesDontCount.size)
 
         val a1 = Square(x = 0, y = 0, value = "X")
         val b1 = Square(x = 1, y = 0, value = "X")
@@ -274,9 +274,9 @@ class Day12Test {
         day.cantGoDownLogic(c1, listOfValues = mutableListOf(a1, b1, belowB1))
 
         assertEquals(0, a1.sidesCount.size)
-        assertEquals(0, a1.sidesDontCount.size)
+        assertEquals(1, a1.sidesDontCount.size)
         assertEquals(0, b1.sidesCount.size)
-        assertEquals(0, b1.sidesDontCount.size)
+        assertEquals(1, b1.sidesDontCount.size)
         assertEquals(1, c1.sidesCount.size)
         assertEquals(1, c1.sidesDontCount.size)
 
@@ -289,7 +289,7 @@ class Day12Test {
         day.cantGoDownLogic(c2, listOfValues = mutableListOf(a2, b2, belowA))
 
         assertEquals(0, a2.sidesCount.size)
-        assertEquals(0, a2.sidesDontCount.size)
+        assertEquals(1, a2.sidesDontCount.size)
         assertEquals(0, b2.sidesCount.size)
         assertEquals(1, b2.sidesDontCount.size)
         assertEquals(1, c2.sidesCount.size)
@@ -306,12 +306,12 @@ class Day12Test {
 
         day.cantGoUpLogic(a, listOfValues = mutableListOf(c, b, aboveA))
 
-        assertEquals(0, a.sidesCount.size)
-        assertEquals(0, a.sidesDontCount.size)
+        assertEquals(1, a.sidesCount.size)
+        assertEquals(1, a.sidesDontCount.size)
         assertEquals(0, b.sidesCount.size)
-        assertEquals(0, b.sidesDontCount.size)
+        assertEquals(1, b.sidesDontCount.size)
         assertEquals(0, c.sidesCount.size)
-        assertEquals(0, c.sidesDontCount.size)
+        assertEquals(1, c.sidesDontCount.size)
 
         val a1 = Square(x = 0, y = 0, value = "X")
         val b1 = Square(x = 1, y = 0, value = "X")
@@ -325,7 +325,7 @@ class Day12Test {
         assertEquals(0, b1.sidesCount.size)
         assertEquals(1, b1.sidesDontCount.size)
         assertEquals(0, c1.sidesCount.size)
-        assertEquals(0, c1.sidesDontCount.size)
+        assertEquals(1, c1.sidesDontCount.size)
 
 
         val a2 = Square(x = 0, y = 0, value = "X")
@@ -338,9 +338,9 @@ class Day12Test {
         assertEquals(1, a2.sidesCount.size)
         assertEquals(1, a2.sidesDontCount.size)
         assertEquals(0, b2.sidesCount.size)
-        assertEquals(0, b2.sidesDontCount.size)
+        assertEquals(1, b2.sidesDontCount.size)
         assertEquals(0, c2.sidesCount.size)
-        assertEquals(0, c2.sidesDontCount.size)
+        assertEquals(1, c2.sidesDontCount.size)
     }
 
     @Test
@@ -354,7 +354,7 @@ class Day12Test {
         day.cantGoUpLogic(c, listOfValues = mutableListOf(a, b, aboveA))
 
         assertEquals(0, a.sidesCount.size)
-        assertEquals(0, a.sidesDontCount.size)
+        assertEquals(1, a.sidesDontCount.size)
         assertEquals(0, b.sidesCount.size)
         assertEquals(1, b.sidesDontCount.size)
         assertEquals(1, c.sidesCount.size)
@@ -368,11 +368,11 @@ class Day12Test {
         day.cantGoUpLogic(c1, listOfValues = mutableListOf(a1, b1, aboveC1))
 
         assertEquals(0, a1.sidesCount.size)
-        assertEquals(0, a1.sidesDontCount.size)
+        assertEquals(1, a1.sidesDontCount.size)
         assertEquals(0, b1.sidesCount.size)
-        assertEquals(0, b1.sidesDontCount.size)
-        assertEquals(0, c1.sidesCount.size)
-        assertEquals(0, c1.sidesDontCount.size)
+        assertEquals(1, b1.sidesDontCount.size)
+        assertEquals(1, c1.sidesCount.size)
+        assertEquals(1, c1.sidesDontCount.size)
 
 
         val a2 = Square(x = 0, y = 0, value = "X")
@@ -383,9 +383,9 @@ class Day12Test {
         day.cantGoUpLogic(c2, listOfValues = mutableListOf(a2, b2, aboveB))
 
         assertEquals(0, a2.sidesCount.size)
-        assertEquals(0, a2.sidesDontCount.size)
+        assertEquals(1, a2.sidesDontCount.size)
         assertEquals(0, b2.sidesCount.size)
-        assertEquals(0, b2.sidesDontCount.size)
+        assertEquals(1, b2.sidesDontCount.size)
         assertEquals(1, c2.sidesCount.size)
         assertEquals(1, c2.sidesDontCount.size)
     }
