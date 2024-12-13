@@ -79,146 +79,30 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
             // while all sides are not account for
             while (listOfValues.map { it.sidesDontCount.size <= 4 }.isNotEmpty()) {
                 // 2. Find most complete squares?
-                var firstSideMostCompleted = listOfValues.first { it.sidesDontCount.size == 3 }
-                    ?: listOfValues.first { it.sidesDontCount.size == 2 }
-                    ?: listOfValues.first { it.sidesDontCount.size == 1 }
-                    ?: listOfValues.first { it.sidesDontCount.size == 0 }
+                var firstSideMostCompleted = listOfValues.firstOrNull { it.sidesDontCount.size == 3 }
+                    ?: listOfValues.firstOrNull { it.sidesDontCount.size == 2 }
+                    ?: listOfValues.firstOrNull { it.sidesDontCount.size == 1 }
+                    ?: listOfValues.firstOrNull { it.sidesDontCount.size == 0 }
                     ?: break
 
+                cantGoUpLogic(firstSideMostCompleted, listOfValues)
+                cantGoDownLogic(firstSideMostCompleted, listOfValues)
+                cantGoLeftLogic(firstSideMostCompleted, listOfValues)
+                cantGoRightLogic(firstSideMostCompleted, listOfValues)
+            }
 
 
-                // if you cant go up
-                if (
-                    !firstSideMostCompleted.sidesDontCount.contains(Sides.TOP) &&
-                    !firstSideMostCompleted.sidesCount.contains(Sides.TOP)
-                ) {
-                    // mark done
-                    firstSideMostCompleted.sidesCount.add(Sides.TOP)
-                    firstSideMostCompleted.sidesDontCount.add(Sides.TOP)
+            var count = listOfValues.map { it.sidesCount }.sumOf { it.size }
 
+            if(count == 0){
+                count+=4
 
-                    // go left and if you can't go up mark as done
-                    var markerForLeft: Square? = firstSideMostCompleted.copy()
-                    while (markerForLeft != null) {
-                        val valueOnLeft = listOfValues.find { markerForLeft?.left() == it }
-                        val valueAbove = listOfValues.find { it.up() == valueOnLeft }
+                globalCounter+=4
+                println("${square.value}:  size ${1} * count $count | == " + count * 1)
+            }else {
 
-                        valueOnLeft?.let {
-                            if (valueAbove != null) {
-                                valueOnLeft.sidesDontCount.add(Sides.TOP)
-                                markerForLeft = null
-                            }
-
-                            markerForLeft = markerForLeft?.left()
-                        } ?: break // break out of going left loop
-                    }
-
-                    // go right and if you can't go up mark as done
-                    var markerForRight: Square? = firstSideMostCompleted.copy()
-                    while (markerForRight != null) {
-                        val valueOnRight = listOfValues.find { markerForLeft?.right() == it }
-                        val valueAbove = listOfValues.find { it.up() == valueOnRight }
-
-                        valueOnRight?.let {
-                            if (valueAbove != null) {
-                                valueOnRight.sidesDontCount.add(Sides.TOP)
-                                markerForLeft = null
-                            }
-                            markerForRight = markerForRight?.left()
-                        } ?: break // break out of going left loop
-                    }
-                }
-
-                // if you cant go down
-                if (
-                    !firstSideMostCompleted.sidesDontCount.contains(Sides.BOTTOM) &&
-                    !firstSideMostCompleted.sidesCount.contains(Sides.BOTTOM)
-                ) {
-                    // mark done
-                    firstSideMostCompleted.sidesCount.add(Sides.BOTTOM)
-                    firstSideMostCompleted.sidesDontCount.add(Sides.BOTTOM)
-
-
-                    // go left and if you can't go up mark as done
-                    var markerForLeft: Square? = firstSideMostCompleted.copy()
-                    while (markerForLeft != null) {
-                        val valueOnLeft = listOfValues.find { markerForLeft?.left() == it } // remember
-                        val valueAbove = listOfValues.find { it.down() == valueOnLeft } // remember
-
-                        valueOnLeft?.let {
-                            if (valueAbove != null) {
-                                valueOnLeft.sidesDontCount.add(Sides.BOTTOM)
-                                markerForLeft = null
-                            }
-
-                            markerForLeft = markerForLeft?.left()
-                        } ?: break // break out of going left loop
-                    }
-
-                    // go right and if you can't go up mark as done
-                    var markerForRight: Square? = firstSideMostCompleted.copy()
-                    while (markerForRight != null) {
-                        val valueOnRight = listOfValues.find { markerForLeft?.right() == it } // remember
-                        val valueBelow = listOfValues.find { it.down() == valueOnRight }   // remember
-
-                        valueOnRight?.let {
-                            if (valueBelow != null) {
-                                valueOnRight.sidesDontCount.add(Sides.BOTTOM)
-                                markerForLeft = null
-                            }
-                            markerForRight = markerForRight?.left()
-                        } ?: break // break out of going left loop
-                    }
-                }
-
-
-
-
-                // if you cant go left
-                if (
-                    !firstSideMostCompleted.sidesDontCount.contains(Sides.LEFT) &&
-                    !firstSideMostCompleted.sidesCount.contains(Sides.LEFT)
-                ) {
-                    // mark done
-                    firstSideMostCompleted.sidesCount.add(Sides.LEFT)
-                    firstSideMostCompleted.sidesDontCount.add(Sides.LEFT)
-
-
-                    // go up and if you can't go left mark as done
-                    var markerForLeft: Square? = firstSideMostCompleted.copy()
-                    while (markerForLeft != null) {
-                        val valueOnLeft = listOfValues.find { markerForLeft?.left() == it } // remember
-                        val valueAbove = listOfValues.find { it.down() == valueOnLeft } // remember
-
-                        valueOnLeft?.let {
-                            if (valueAbove != null) {
-                                valueOnLeft.sidesDontCount.add(Sides.BOTTOM)
-                                markerForLeft = null
-                            }
-
-                            markerForLeft = markerForLeft?.left()
-                        } ?: break // break out of going left loop
-                    }
-
-                    // go down and if you can't go down mark as done
-                    var markerForRight: Square? = firstSideMostCompleted.copy()
-                    while (markerForRight != null) {
-                        val valueOnRight = listOfValues.find { markerForLeft?.right() == it } // remember
-                        val valueBelow = listOfValues.find { it.down() == valueOnRight }   // remember
-
-                        valueOnRight?.let {
-                            if (valueBelow != null) {
-                                valueOnRight.sidesDontCount.add(Sides.BOTTOM)
-                                markerForLeft = null
-                            }
-                            markerForRight = markerForRight?.left()
-                        } ?: break // break out of going left loop
-                    }
-                }
-                // if you cant go right
-                // mark as done
-                // go up and if you can't go left mark as done
-                // go down and if you can't go down mark as done
+                globalCounter+=count * listOfValues.size
+                println("${square.value}:  size ${listOfValues.size} * count $count == " + count * listOfValues.size)
             }
 
 
@@ -227,22 +111,215 @@ class Day12(useExample: Boolean = false, useMac: Boolean = false) : Day(12, useE
         return globalCounter.toString()
     }
 
-    private fun markOnEachSquareSidesThatDontCount(
+    fun cantGoRightLogic(firstSideMostCompleted: Square, listOfValues: List<Square>) {
+
+
+        if (
+            !firstSideMostCompleted.sidesDontCount.contains(Sides.RIGHT) &&
+            !firstSideMostCompleted.sidesCount.contains(Sides.RIGHT)
+        ) {
+            // mark done
+            firstSideMostCompleted.sidesCount.add(Sides.RIGHT)
+            firstSideMostCompleted.sidesDontCount.add(Sides.RIGHT)
+
+            var goingUp: Square? = firstSideMostCompleted.copy()
+            while (goingUp != null) {
+                val up = listOfValues.find { goingUp!!.copy().up().isSame(it) }
+                val upRight = up?.let { listOfValues.find { goingUp!!.copy().up().right().isSame(it) } }
+
+                if (upRight != null) {
+                    goingUp = null
+                    continue
+                }
+
+                up?.let {
+                    up.sidesDontCount.add(Sides.RIGHT)
+                    goingUp = up
+                } ?: break // break out of going left loop
+            }
+
+            var goingDown: Square? = firstSideMostCompleted.copy()
+            while (goingDown != null) {
+                val down = listOfValues.find { goingDown!!.copy().down().isSame(it) }
+                val downLeft = down?.let { listOfValues.find { goingDown!!.copy().down().right().isSame(it) } }
+
+                if (downLeft != null) {
+                    goingDown = null
+                    continue
+                }
+
+                down?.let {
+                    down.sidesDontCount.add(Sides.RIGHT)
+                    goingDown = down
+                } ?: break // break out of going left loop
+            }
+        }
+    }
+
+    fun cantGoLeftLogic(
+        firstSideMostCompleted: Square,
+        listOfValues: List<Square>
+    ) {
+
+
+        if (
+            !firstSideMostCompleted.sidesDontCount.contains(Sides.LEFT) &&
+            !firstSideMostCompleted.sidesCount.contains(Sides.LEFT)
+        ) {
+            // mark done
+            firstSideMostCompleted.sidesCount.add(Sides.LEFT)
+            firstSideMostCompleted.sidesDontCount.add(Sides.LEFT)
+
+            // go up and if you can't go left mark as done
+            var goingUp: Square? = firstSideMostCompleted.copy()
+            while (goingUp != null) {
+                val up = listOfValues.find { goingUp!!.copy().up().isSame(it) }
+                val upLeft = up?.let { listOfValues.find { goingUp!!.copy().up().left().isSame(it) } }
+
+                if (upLeft != null) {
+                    goingUp = null
+                    continue
+                }
+
+                up?.let {
+                    up.sidesDontCount.add(Sides.LEFT)
+                    goingUp = up
+                } ?: break // break out of going left loop
+            }
+
+            // go down and if you can't go left mark as done
+            var goingDown: Square? = firstSideMostCompleted.copy()
+            while (goingDown != null) {
+                val down = listOfValues.find { goingDown!!.copy().down().isSame(it) }
+                val downLeft = down?.let { listOfValues.find { goingDown!!.copy().down().left().isSame(it) } }
+
+                if (downLeft != null) {
+                    goingDown = null
+                    continue
+                }
+
+                down?.let {
+                    down.sidesDontCount.add(Sides.LEFT)
+                    goingDown = down
+                } ?: break // break out of going left loop
+            }
+        }
+    }
+
+    //WORKING
+    fun cantGoDownLogic(
+        firstSideMostCompleted: Square,
+        listOfValues: List<Square>
+    ) {
+
+        if (
+            !firstSideMostCompleted.sidesDontCount.contains(Sides.BOTTOM) &&
+            !firstSideMostCompleted.sidesCount.contains(Sides.BOTTOM)
+        ) {
+            // mark done
+            firstSideMostCompleted.sidesCount.add(Sides.BOTTOM)
+            firstSideMostCompleted.sidesDontCount.add(Sides.BOTTOM)
+
+            var goingLeft: Square? = firstSideMostCompleted.copy()
+            while (goingLeft != null) {
+                val left = listOfValues.find { goingLeft!!.copy().left().isSame(it) }
+                val leftDown = left?.let { listOfValues.find { left.copy().up().isSame(it) } }
+
+                if (left == null) {
+                    goingLeft = null
+                    continue
+                }
+
+                left.sidesDontCount.add(Sides.BOTTOM)
+                goingLeft = left
+            }
+
+            var goingRight: Square? = firstSideMostCompleted.copy()
+            while (goingRight != null) {
+                val right = listOfValues.find { goingRight!!.copy().right().isSame(it) }
+                val valueBelowAndRight =
+                    right?.let { listOfValues.find { right.copy().up().isSame(it) } }
+
+                if (valueBelowAndRight != null) {
+                    goingRight = null
+                    continue
+                }
+
+                right?.sidesDontCount?.add(Sides.BOTTOM)
+                goingRight = right
+            }
+        }
+    }
+
+    fun cantGoUpLogic(
+        firstSideMostCompleted: Square,
+        listOfValues: List<Square>
+    ) {
+
+        if (
+            !firstSideMostCompleted.sidesDontCount.contains(Sides.TOP) &&
+            !firstSideMostCompleted.sidesCount.contains(Sides.TOP)
+        ) {
+            // mark done
+            firstSideMostCompleted.sidesCount.add(Sides.TOP)
+            firstSideMostCompleted.sidesDontCount.add(Sides.TOP)
+
+
+            // go left and if you can't go up mark as done
+            var goingLeft: Square? = firstSideMostCompleted.copy()
+            while (goingLeft != null) {
+                val left = listOfValues.find { goingLeft!!.copy().left().isSame(it) }
+                val leftUp = left?.let { listOfValues.find { goingLeft!!.copy().left().down().isSame(it) } }
+
+                if (leftUp != null) {
+                    goingLeft = null
+                    continue
+                }
+
+                left?.let {
+                    left.sidesDontCount.add(Sides.TOP)
+                    goingLeft = left
+                } ?: break // break out of going left loop
+            }
+
+
+            // go right and if you can't go up mark as done
+            var goingRight: Square? = firstSideMostCompleted.copy()
+            while (goingRight != null) {
+                val right = listOfValues.find { goingRight!!.copy().right().isSame(it) }
+                val rightUp =
+                    right?.let { listOfValues.find { goingRight!!.copy().right().down().isSame(it) } }
+
+                if (rightUp != null) {
+                    goingRight = null
+                    continue
+                }
+
+                right?.let {
+                    right.sidesDontCount.add(Sides.TOP)
+                    goingRight = right
+                } ?: break // break out of going left loop
+            }
+        }
+    }
+
+    fun markOnEachSquareSidesThatDontCount(
         listOfValues: List<Square>,
         map: MutableMap<Point, String>
     ) {
         listOfValues.forEach { currentSquare ->
-            val currentPoint = currentSquare.toPoint()
-            map[currentPoint.right()]?.let {
-                currentSquare.sidesDontCount.add(Sides.RIGHT)
-            }
-            map[currentPoint.left()]?.let {
+            val filterWithoutCurrentSquare = listOfValues.filter { !it.isSame(currentSquare) }
+
+            filterWithoutCurrentSquare.find { currentSquare.isSame(it.copy().right()) }?.let {
                 currentSquare.sidesDontCount.add(Sides.LEFT)
             }
-            map[currentPoint.up()]?.let {
+            filterWithoutCurrentSquare.find { currentSquare.isSame(it.copy().left()) }?.let {
+                currentSquare.sidesDontCount.add(Sides.RIGHT)
+            }
+            filterWithoutCurrentSquare.find { currentSquare.isSame(it.copy().up()) }?.let {
                 currentSquare.sidesDontCount.add(Sides.TOP)
             }
-            map[currentPoint.down()]?.let {
+            filterWithoutCurrentSquare.find { currentSquare.isSame(it.copy().down()) }?.let {
                 currentSquare.sidesDontCount.add(Sides.BOTTOM)
             }
         }
@@ -271,6 +348,16 @@ data class Square(
     var sidesCount: MutableSet<Sides> = mutableSetOf(),
     var sidesDontCount: MutableSet<Sides> = mutableSetOf(),
 ) {
+
+    fun isSame(other: Square?): Boolean {
+        other ?: return false
+
+
+        return this.x == other.x && this.y == other.y
+    }
+
+    fun isDone(): Boolean = this.sidesDontCount.size == 4
+
     fun right(): Square {
         x++
         return this
