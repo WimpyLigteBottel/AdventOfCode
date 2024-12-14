@@ -1,6 +1,7 @@
 package nel.marco
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -18,7 +19,8 @@ class Day13Test {
 
     @Test
     fun answerTwo() {
-        assertEquals("X", day.answerTwo())
+        assertEquals("875318608908", example.answerTwo())
+        assertEquals("71493195288102", day.answerTwo())
     }
 
 
@@ -26,10 +28,10 @@ class Day13Test {
     @Disabled
     fun avgTime() {
         MarcoUtil.avgTime("part1") {
-            assertEquals("X", day.answerOne())
+            assertEquals("40069", Day13(useExample = false, useMac = false).answerOne())
         }
         MarcoUtil.avgTime("part2") {
-            assertEquals("X", day.answerTwo())
+            assertEquals("71493195288102", Day13(useExample = false, useMac = false).answerTwo())
         }
     }
 }

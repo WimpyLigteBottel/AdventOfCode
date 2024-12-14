@@ -1,5 +1,9 @@
 package nel.marco
 
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.math.RoundingMode
+
 
 class Day13(useExample: Boolean = false, useMac: Boolean = false) :
     Day(dayNumber = 13, useExample = useExample, macBook = useMac) {
@@ -8,17 +12,21 @@ class Day13(useExample: Boolean = false, useMac: Boolean = false) :
     override fun answerTwo(): String {
         readInput.add("")
 
-        var total = 0L
+        var total = BigInteger.ZERO
 
-        while (readInput.isNotEmpty()) {
-            var buttonA = readInput.removeFirst().setupButton()
-            var buttonB = readInput.removeFirst().setupButton()
-            var prizeTarget = readInput.removeFirst().setupPrizeTarget(true)
-            readInput.removeFirst()
-            val rationPress = isPossible(prizeTarget, buttonA, buttonB)
-            rationPress?.let {
-                total += rationPress.tokenCost()
+        while (readInput.isNotEmpty() && readInput.size != 1) {
+
+            runCatching {
+
+                var buttonA = readInput.removeFirst().setupButton()
+                var buttonB = readInput.removeFirst().setupButton()
+                var prizeTarget = readInput.removeFirst().setupPrizeTarget(true)
+                readInput.removeFirst()
+                val rationPress = mathSolution(prizeTarget, buttonA, buttonB)
+                total = total.add(rationPress.tokenCost())
+            }.onFailure {
             }
+
         }
 
 
@@ -28,75 +36,70 @@ class Day13(useExample: Boolean = false, useMac: Boolean = false) :
     override fun answerOne(): String {
         readInput.add("")
 
-        var total = 0L
+        var total = BigInteger.ZERO
 
-        while (readInput.isNotEmpty()) {
+        while (readInput.isNotEmpty() && readInput.size != 1) {
             var buttonA = readInput.removeFirst().setupButton()
             var buttonB = readInput.removeFirst().setupButton()
             var prizeTarget = readInput.removeFirst().setupPrizeTarget()
             readInput.removeFirst()
-            val rationPress = isPossible(prizeTarget, buttonA, buttonB)
-            rationPress?.let {
-                total += rationPress.tokenCost()
-                println("${rationPress.tokenCost()} == ${rationPress.first} * 3 + ${rationPress.second} * 1")
-            }
+            val rationPress = mathSolution(prizeTarget, buttonA, buttonB)
+            total = total.add(rationPress.tokenCost())
         }
 
 
         return total.toString()
     }
 
-    fun Pair<Long, Long>.tokenCost() = this.first * 3 + this.second * 1
+    fun Pair<BigInteger, BigInteger>.tokenCost() = this.first.times(BigInteger("3")).add(this.second)
 
+    fun mathSolution(
+        target: Pair<BigInteger, BigInteger>,
+        a: Pair<BigInteger, BigInteger>,
+        b: Pair<BigInteger, BigInteger>
+    ): Pair<BigInteger, BigInteger> {
+        val first = target.second.times(b.first)
+        val second = target.first.times(b.second)
 
-    fun findTarget(target: Long, a: Long, b: Long): MutableList<Pair<Long, Long>> {
-        var possible = mutableListOf<Pair<Long, Long>>()
+        var top = first.minus(second)
 
+        var bottom = ((b.first.times(a.second))
+            .minus(
+                a.first.times(b.second)
+            ))
 
-        for (counterA in 0..100L) {
-            for (counterB in 0..100L) {
-                val aTimes = a * counterA
-                val bTimes = b * counterB
-
-                if (aTimes + bTimes > target) {
-                    break
-                } else if (aTimes + bTimes == target) {
-                    possible.add(counterA to counterB)
-                }
-            }
+        if (!top.abs().mod(bottom.abs()).equals(BigInteger.ZERO)) {
+            return BigInteger.ZERO to BigInteger.ZERO
         }
 
-        return possible
-    }
+        var n: BigDecimal = top.toBigDecimal().divide(bottom.toBigDecimal())
 
-    fun isPossible(target: Pair<Long, Long>, a: Pair<Long, Long>, b: Pair<Long, Long>): Pair<Long, Long>? {
+        var m: BigDecimal =
+            (target.first.toBigDecimal().setScale(2, RoundingMode.FLOOR).minus(n.times(a.first.toBigDecimal()))).divide(
+                b.first.toBigDecimal()
+            ).setScale(2)
 
-        var xIsPossible = findTarget(target.first, a.first, b.first)
-        var yIsPossible = findTarget(target.second, a.second, b.second)
-
-        var overlap = xIsPossible.intersect(yIsPossible.toSet())
-
-
-        return overlap.singleOrNull()
+        return n.toBigInteger() to m.toBigInteger()
     }
 
 
-    fun String.setupButton(): Pair<Long, Long> {
+    fun String.setupButton(): Pair<BigInteger, BigInteger> {
 
-        var x = this.substringAfter("X+").substringBefore(",").toLong()
-        var y = this.substringAfter("Y+").substringAfterLast(",").toLong()
+        var x = this.substringAfter("X+").substringBefore(",").toBigInteger()
+        var y = this.substringAfter("Y+").substringAfterLast(",").toBigInteger()
 
         return x to y
     }
 
-    fun String.setupPrizeTarget(part2: Boolean = false): Pair<Long, Long> {
+    fun String.setupPrizeTarget(part2: Boolean = false): Pair<BigInteger, BigInteger> {
 
-        var x = this.substringAfter("X=").substringBefore(",").toLong()
-        var y = this.substringAfter("Y=").substringAfterLast(",").toLong()
+        var x = this.substringAfter("X=").substringBefore(",").toBigInteger()
+        var y = this.substringAfter("Y=").substringAfterLast(",").toBigInteger()
 
-        if (part2)
-            return 10000000000000 + x to 10000000000000 + y
-        else
+        if (part2) {
+            val offset = BigInteger("10000000000000")
+            return x.add(offset) to y.add(offset)
+        } else
             return x to y
     }
 

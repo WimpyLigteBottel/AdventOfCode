@@ -16,14 +16,14 @@ class MarcoUtil {
             println("$name took $timeItTook ms")
         }
 
-        fun avgTime(name: String, inSeconds: Long = 5, work: () -> Unit) {
+        fun avgTime(name: String, inSeconds: Long = 1, work: () -> Unit) {
             val futureDate = Instant.now().plusSeconds(inSeconds)
 
             val mutableListOf = ArrayList<Long>(10000)
             while (Instant.now().isBefore(futureDate)) {
                 val now = Instant.now()
                 work.invoke()
-                val timeItTook = Duration.between(now, Instant.now()).toMillis()
+                val timeItTook = Duration.between(now, Instant.now()).toNanos()
                 mutableListOf.add(timeItTook)
             }
 
