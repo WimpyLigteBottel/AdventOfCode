@@ -1,6 +1,6 @@
 mod util;
 
-use std::collections::HashMap;
+use std::collections::VecDeque;
 use std::ops::Mul;
 use util::read_results;
 
@@ -8,64 +8,133 @@ fn main() {
     let path = "src/day1/input.txt";
     let result = read_results(path);
 
-    println!("{}", day1(&result));
-    println!("{}", day2(&result));
-}
-
-fn day2(result: &Vec<String>) -> i64 {
-    let (smallest_left, smallest_right) = left_and_right(result,false);
-    let mut map: HashMap<i64, i64> = HashMap::new();
-
-    smallest_left.iter().for_each(|x| {
-        let counter = smallest_right.iter().filter(|y| return y.eq(&x)).count() as i64;
-
-        map.insert(i64::from(*x), i64::from(*x).mul(counter));
-    });
-
-    let mut total: i64 = 0;
-    smallest_left.iter().for_each(|x| {
-        let transformed = x.cast_unsigned() as i64;
-        let value = map.get(&transformed).unwrap_or(&0);
-        total += value;
-    });
-
-    total
+    println!("{}", day1(&result).eq("1086"));
+    println!("{}", day2(&result).eq("6268"));
 }
 
 fn day1(result: &Vec<String>) -> String {
-    let (smallest_left, smallest_right) = left_and_right(result, true);
-    let mut total = 0;
+    let mut dial = 50;
+    let mut counter = 0;
 
-    if smallest_right.len() != smallest_left.len() {
-        panic!("Something went wrong")
-    }
-
-    for i in 0..smallest_left.len() {
-        let distance = smallest_left[i] - smallest_right[i];
-
-        total += distance.abs();
-    }
-
-    total.to_string()
-}
-
-/*
-Gets the smallest from left to right
-*/
-fn left_and_right(result: &Vec<String>, sort: bool) -> (Vec<i32>, Vec<i32>) {
-    let mut smallest_left: Vec<i32> = Vec::new();
-    let mut smallest_right: Vec<i32> = Vec::new();
-
-    result.iter().for_each(|x| {
-        let split: Vec<String> = x.split("   ").map(|x| x.to_string()).collect();
-        smallest_left.push(split[0].parse().unwrap_or(0));
-        smallest_right.push(split[1].parse().unwrap_or(0));
+    result.iter().for_each(|s| {
+        // gets the direction
+        let direction = &s[0..1];
+        // the amount of turns (i am % 100 to get only turns that are necessary for performance)
+        let turns = s[1..].parse::<i32>().expect("Couldn't parse number") % 100;
+        dial = perform_turn(dial, direction, turns);
+        if (dial == 0) {
+            counter += 1
+        }
     });
 
-    if sort {
-        smallest_left.sort_unstable();
-        smallest_right.sort_unstable();
-    }
+    counter.to_string()
+}
 
-    (smallest_left, smallest_right)
+
+/// # Description
+/// Will loop x times in specified direction the return the result back.
+///
+/// If dial goes over 99 then it goes to 0
+/// if dial goes below 0 then it goes to 99
+///
+/// # Arguments
+///
+/// * `old_dial`: the starting number
+/// * `direction`: determines if it should add or remove
+/// * `turns`: how many times you need to repeat
+///
+/// returns: i32
+///
+/// # Examples
+///
+/// Example 1
+/// ```
+/// dial == 0
+/// direction = R
+/// turns = 1
+///
+/// result == 1
+/// ```
+///
+/// Example: 2
+/// ```
+/// dial == 99
+/// direction = R
+/// turns = 1
+///
+/// result = 0
+/// ```
+/// Example: 3
+/// ```
+/// dial == 0
+/// direction = L
+/// turns = 1
+///
+/// result = 99
+/// ```
+fn perform_turn(old_dial: i32, direction: &str, turns: i32) -> i32 {
+    let mut dial = old_dial;
+    match (direction) {
+        "L" => {
+            for _ in 0..turns {
+                dial -= 1;
+                if (dial < 0) {
+                    dial = 99
+                }
+            }
+        }
+        "R" => {
+            for _ in 0..turns {
+                dial += 1;
+                if (dial > 99) {
+                    dial = 0
+                }
+            }
+        }
+        _ => {}
+    }
+    dial
+}
+
+fn day2(result: &Vec<String>) -> String {
+    let mut dial = 50;
+    let mut counter = 0;
+
+    result.iter().for_each(|s| {
+        // gets the direction
+        let direction = &s[0..1];
+        // the amount of turns (i am % 100 to get only turns that are necessary for performance)
+        let turns = s[1..].parse::<i32>().expect("Couldn't parse number") % 100;
+        // if full rotation is made then it has landed on 0
+        counter += s[1..].parse::<i32>().expect("Couldn't parse number") / 100;
+
+        match (direction) {
+            "L" => {
+                for _ in 0..turns {
+                    dial -= 1;
+                    if (dial < 0) {
+                        dial = 99
+                    }
+                    if (dial == 0) {
+                        counter += 1
+                    }
+                }
+            }
+            "R" => {
+                for _ in 0..turns {
+                    dial += 1;
+
+                    if (dial == 100) {
+                        dial = 0
+                    }
+                    if (dial == 0) {
+                        counter += 1
+                    }
+                }
+            }
+            _ => {}
+        }
+    });
+
+    counter.to_string()
 }
