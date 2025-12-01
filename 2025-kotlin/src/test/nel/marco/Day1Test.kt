@@ -24,11 +24,11 @@ class Day1Test {
 
     @Test
     fun avgPart1(){
-        MarcoUtil.avgTime("day 1 part 1"){
+        MarcoUtil.avgTime("day 1 part 1", 5){
             day.answerOne()
         }
 
-        MarcoUtil.avgTime("day 1 part 2"){
+        MarcoUtil.avgTime("day 1 part 2",5 ){
             day.answerTwo()
         }
     }

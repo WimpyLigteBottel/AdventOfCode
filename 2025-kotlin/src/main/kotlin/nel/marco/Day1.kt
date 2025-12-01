@@ -1,9 +1,9 @@
 package nel.marco
 
-
-class Day1(useExample: Boolean = false, useMac: Boolean = true) :
-    Day(dayNumber = 1, useExample = useExample, macBook = useMac) {
-
+class Day1(
+    useExample: Boolean = false,
+    useMac: Boolean = true,
+) : Day(dayNumber = 1, useExample = useExample, macBook = useMac) {
     override fun answerOne(): String {
         var list = setupDial()
 
@@ -13,15 +13,16 @@ class Day1(useExample: Boolean = false, useMac: Boolean = true) :
             val direction = it.first()
             val turns = it.substring(1).toInt()
 
-            when(direction) {
+            when (direction) {
                 'L' -> {
-                    repeat (turns) {
-                        list.addFirst(list.removeLast())
+                    repeat(turns) {
+                        turnLeft(list)
                     }
                 }
+
                 'R' -> {
-                    repeat (turns) {
-                        list.add(list.removeFirst())
+                    repeat(turns) {
+                        turnRight(list)
                     }
                 }
             }
@@ -30,10 +31,8 @@ class Day1(useExample: Boolean = false, useMac: Boolean = true) :
             }
         }
 
-
         return "$counter"
     }
-
 
     override fun answerTwo(): String {
         var list = setupDial()
@@ -43,21 +42,22 @@ class Day1(useExample: Boolean = false, useMac: Boolean = true) :
             val direction = it.first()
             val turns = it.substring(1).toInt()
 
-            when(direction) {
+            when (direction) {
                 'L' -> {
-                    repeat (turns) {
+                    repeat(turns) {
                         if (list.first() == 0) {
                             counter++
                         }
-                        list.addFirst(list.removeLast())
+                        turnLeft(list)
                     }
                 }
+
                 'R' -> {
-                    repeat (turns) {
+                    repeat(turns) {
                         if (list.first() == 0) {
                             counter++
                         }
-                        list.addLast(list.removeFirst())
+                        turnRight(list)
                     }
                 }
             }
@@ -66,8 +66,16 @@ class Day1(useExample: Boolean = false, useMac: Boolean = true) :
         return "$counter"
     }
 
-    private fun setupDial(startingDigit: Int = 50): MutableList<Int> {
-        var list = ArrayList<Int>(100)
+    private fun turnRight(list: MutableList<Int>) {
+        list.addLast(list.removeFirst())
+    }
+
+    private fun turnLeft(list: MutableList<Int>) {
+        list.addFirst(list.removeLast())
+    }
+
+    private fun setupDial(startingDigit: Int = 50): ArrayDeque<Int> {
+        val list = ArrayDeque<Int>(100)
 
         for (i in startingDigit..99) {
             list.add(i)
