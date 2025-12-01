@@ -18,7 +18,18 @@ class Day1Test {
     @Test
     fun answerTwo() {
         assertEquals("6", example.answerTwo())
-        assertEquals("X", day.answerTwo())
+        assertEquals("6268", day.answerTwo())
     }
 
+
+    @Test
+    fun avgPart1(){
+        MarcoUtil.avgTime("day 1 part 1"){
+            day.answerOne()
+        }
+
+        MarcoUtil.avgTime("day 1 part 2"){
+            day.answerTwo()
+        }
+    }
 }
