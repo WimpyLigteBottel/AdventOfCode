@@ -12,8 +12,8 @@ class ReadUtil {
         fun readInputAsList(dayNumber: Int, exampleInput: Boolean = false, macBook: Boolean = true): List<String> {
 
             val basePath = when (macBook) {
-                true -> "/Users/mnel/repo/temp/AdventOfCode/2024/src/main/resources/"
-                false -> "C:\\code\\AdventOfCode\\2024\\src\\main\\resources"
+                true -> "/Users/mnel/repo/AdventOfCode/2025-kotlin/src/main/resources"
+                false -> "C:\\code\\AdventOfCode\\2025-kotlin\\src\\main\\resources"
             }
 
 
