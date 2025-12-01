@@ -10,26 +10,23 @@ class Day1(useExample: Boolean = false, useMac: Boolean = true) :
         var counter = 0
 
         readInput.forEach {
-            if (it.startsWith("L")) {
-                var turns = it.substring(1).toInt()
+            val direction = it.first()
+            val turns = it.substring(1).toInt()
 
-                while (turns > 0) {
-                    turns--;
-                    list.add(0, list.removeLast())
+            when(direction) {
+                'L' -> {
+                    repeat (turns) {
+                        list.addFirst(list.removeLast())
+                    }
+                }
+                'R' -> {
+                    repeat (turns) {
+                        list.add(list.removeFirst())
+                    }
                 }
             }
-
-            if (it.startsWith("R")) {
-                var turns = it.substring(1).toInt()
-
-                while (turns > 0) {
-                    turns--;
-                    list.add(list.removeFirst())
-                }
-            }
-            if (list.get(0) == 0) {
+            if (list.first() == 0) {
                 counter++
-
             }
         }
 
@@ -43,46 +40,42 @@ class Day1(useExample: Boolean = false, useMac: Boolean = true) :
         var counter = 0
 
         readInput.forEach {
-            var turns = it.substring(1).toInt()
+            val direction = it.first()
+            val turns = it.substring(1).toInt()
 
-            if (it.startsWith("L")) {
-                while (turns > 0) {
-                    if (list.first() == 0) {
-                        counter++
+            when(direction) {
+                'L' -> {
+                    repeat (turns) {
+                        if (list.first() == 0) {
+                            counter++
+                        }
+                        list.addFirst(list.removeLast())
                     }
-                    turns--
-                    list.add(0, list.removeLast())
+                }
+                'R' -> {
+                    repeat (turns) {
+                        if (list.first() == 0) {
+                            counter++
+                        }
+                        list.addLast(list.removeFirst())
+                    }
                 }
             }
-
-            if (it.startsWith("R")) {
-                while (turns > 0) {
-                    if (list.first() == 0) {
-                        counter++
-                    }
-                    turns--
-                    list.add(list.removeFirst())
-                }
-            }
-
         }
-
 
         return "$counter"
     }
 
-    private fun setupDial(): MutableList<Int> {
-        var list = mutableListOf<Int>()
+    private fun setupDial(startingDigit: Int = 50): MutableList<Int> {
+        var list = ArrayList<Int>(100)
 
-        for (i in 0..99) {
+        for (i in startingDigit..99) {
+            list.add(i)
+        }
+        for (i in 0..<startingDigit) {
             list.add(i)
         }
 
-        var pointer = 50
-
-        repeat(pointer) {
-            list.add(list.removeFirst())
-        }
         return list
     }
 }
