@@ -5,19 +5,19 @@ import org.junit.jupiter.api.Test
 
 class Day1Test {
 
-    val day = Day1(useExample = false, useMac = false)
-    val example = Day1(useExample = true, useMac = false)
+    val day = Day1(useExample = false, useMac = true)
+    val example = Day1(useExample = true, useMac = true)
 
     @Test
     fun answerOne() {
-        assertEquals("X", example.answerOne())
-        assertEquals("XX", day.answerOne())
+        assertEquals("3", example.answerOne())
+        assertEquals("1086", day.answerOne())
     }
 
 
     @Test
     fun answerTwo() {
-        assertEquals("X", example.answerTwo())
+        assertEquals("6", example.answerTwo())
         assertEquals("X", day.answerTwo())
     }
 
