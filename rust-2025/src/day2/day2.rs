@@ -1,15 +1,15 @@
 use rayon::prelude::*;
 
-pub(crate) fn part1(result: &Vec<String>) -> String {
+pub(crate) fn part1(result: &[String]) -> String {
     let digits = split_into_numbers(&*result);
 
     digits
         .par_iter()
         .filter_map(|d| {
-            let (first,second) =  d.split_at(d.len() / 2);
+            let (first, second) = d.split_at(d.len() / 2);
 
-            if first == second && !second.starts_with("0"){
-                return d.parse::<i128>().ok()
+            if first == second && !second.starts_with("0") {
+                return d.parse::<i128>().ok();
             }
             return None;
         })
@@ -17,18 +17,25 @@ pub(crate) fn part1(result: &Vec<String>) -> String {
         .to_string()
 }
 
-pub(crate) fn part2(result: &Vec<String>) -> String {
+pub(crate) fn part2(result: &[String]) -> String {
     let digits = split_into_numbers(&*result);
 
     digits
         .par_iter()
         .filter_map(|d| {
             let max = d.len() / 2 + 1;
+            // Start from i=1, since i=0 gives empty string
+            for i in 1..max {
+                let pattern = &d[0..i];
 
-            for i in 0..max {
-                let temp = d[0..i].to_string();
-                if d.replace(temp.as_str(), "").is_empty() {
-                    return d.parse::<i128>().ok();
+                // Check if entire string is made of repeating pattern
+                if d.len() % i == 0 {
+                    let repetitions = d.len() / i;
+                    let expected = &pattern.repeat(repetitions);
+
+                    if d == expected {
+                        return d.parse::<i128>().ok();
+                    }
                 }
             }
             return None;
@@ -38,11 +45,9 @@ pub(crate) fn part2(result: &Vec<String>) -> String {
 }
 
 fn split_into_numbers(result: &[String]) -> Vec<String> {
-    let first = result.first().expect("Should be single string only");
-
-    first
-        .split(',')
-        .par_bridge()
+    result[0]
+        .split(",")
+        .par_bridge() // parallelism for speed
         .flat_map(|x| {
             let parts: Vec<&str> = x.split('-').collect();
 
