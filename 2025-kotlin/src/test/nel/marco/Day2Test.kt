@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test
 
 class Day2Test {
 
-    val day = Day2(useExample = false, useMac = true)
-    val example = Day2(useExample = true, useMac = true)
+    val day = Day2(useExample = false, useMac = false)
+    val example = Day2(useExample = true, useMac = false)
 
     @Test
     fun answerOne() {

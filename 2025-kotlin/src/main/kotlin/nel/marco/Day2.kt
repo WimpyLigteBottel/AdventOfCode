@@ -7,65 +7,74 @@ class Day2(
     useMac: Boolean = true,
 ) : Day(dayNumber = 2, useExample = useExample, macBook = useMac) {
     override fun answerOne(): String {
-        val lines = readInput.first().split(",")
-
-        val digits = expandDigits(lines)
+        val digits = expandDigits()
 
         val count =
             digits
-                .filter { it ->
-                    if (it.length % 2 == 0) {
-                        val left = it.substring(0, it.length / 2)
-                        val right = it.substring(it.length / 2)
+                .parallelStream()
+                .map { it ->
+                    if (it.length % 2 != 0) {
+                        return@map BigInteger.ZERO
+                    }
+                    val midPoint = it.length / 2
 
-                        if (right.startsWith("0") && left == right) {
-                            return@filter false
-                        }
+                    val left = it.substring(0, midPoint)
+                    val right = it.substring(midPoint)
 
-                        return@filter left == right
+                    if (!right.startsWith("0") && left == right) {
+                        return@map it.toBigInteger()
                     }
 
-                    return@filter false
-                }.map { it.toBigInteger() }
+                    return@map BigInteger.ZERO
+                }
+                .toList()
                 .fold(BigInteger.ZERO) { a, b -> a + b }
 
         return count.toString()
     }
 
-    private fun expandDigits(lines: List<String>): MutableList<String> {
-        val digits = mutableSetOf<String>()
-
-        lines.forEach { line ->
-            val first = line.split("-")[0].toBigInteger()
-            val until = line.split("-")[1].toBigInteger()
-            var current = first
-            while (current <= until) {
-                digits.add(current.toString())
-                current = current.add(BigInteger.ONE)
-            }
-        }
-        return digits.toMutableList()
-    }
 
     override fun answerTwo(): String {
-        val lines = readInput.first().split(",")
-
-        val digits = expandDigits(lines)
+        val digits = expandDigits()
 
         val invalidDigits =
             digits
-                .filter {
+                .parallelStream()
+                .map {
                     // if more than half the does not work exit out
                     for (end in 0 until it.length / 2 + 1) {
                         val temp = it.substring(0, end)
                         if (it.replace(temp, "").isBlank()) {
-                            return@filter true
+                            return@map it.toBigInteger()
                         }
                     }
-                    return@filter false
-                }.map { it.toBigInteger() }
+                    return@map BigInteger.ZERO
+                }
+                .toList()
 
 
         return invalidDigits.fold(BigInteger.ZERO) { a, b -> a + b }.toString()
+    }
+
+    private fun expandDigits(): List<String> {
+        val lines = readInput.first().split(",")
+
+        return lines
+            .stream()
+            .parallel()
+            .flatMap { line ->
+                val split = line.split("-")
+
+                val first = split[0].toLong()
+                val until = split[1].toLong()
+
+                val digits = ArrayDeque<String>(initialCapacity = (until.toInt() - first.toInt()))
+
+                for (x in first..until) {
+                    digits.add(x.toString())
+                }
+                digits.stream()
+            }
+            .toList()
     }
 }
