@@ -1,4 +1,4 @@
-pub(crate) fn day1(result: &Vec<String>) -> String {
+pub(crate) fn part1(result: &Vec<String>) -> String {
     let mut dial = 50;
     let mut counter = 0;
 
@@ -13,7 +13,7 @@ pub(crate) fn day1(result: &Vec<String>) -> String {
     counter.to_string()
 }
 
-pub(crate) fn day2(result: &Vec<String>) -> String {
+pub(crate) fn part2(result: &Vec<String>) -> String {
     let mut dial = 50;
     let mut counter = 0;
 
