@@ -23,7 +23,7 @@ class MarcoUtil {
             while (Instant.now().isBefore(futureDate)) {
                 val now = Instant.now()
                 work.invoke()
-                val timeItTook = Duration.between(now, Instant.now()).toNanos()
+                val timeItTook = Duration.between(now, Instant.now()).toMillis()
                 mutableListOf.add(timeItTook)
             }
 

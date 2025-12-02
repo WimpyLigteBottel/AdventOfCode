@@ -54,26 +54,14 @@ class Day2(
 
         val invalidDigits =
             digits
-                .filter { it ->
-                    for (start in 0..it.length) {
-                        for (end in start + 1 until it.length) {
-                            val temp = it.substring(start, end)
-                            if(it.replace(temp,"").isBlank()){
-                                return@filter true
-                            }
+                .filter {
+                    // if more than half the does not work exit out
+                    for (end in 0 until it.length / 2 + 1) {
+                        val temp = it.substring(0, end)
+                        if (it.replace(temp, "").isBlank()) {
+                            return@filter true
                         }
                     }
-
-                    if (it.length % 2 == 0) {
-                        val left = it.substring(0, it.length / 2)
-                        val right = it.substring(it.length / 2)
-                        if (right.startsWith("0") && left == right) {
-                            return@filter false
-                        }
-
-                        return@filter left == right
-                    }
-
                     return@filter false
                 }.map { it.toBigInteger() }
 
