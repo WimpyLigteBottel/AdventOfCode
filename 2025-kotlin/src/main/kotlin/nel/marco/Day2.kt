@@ -14,7 +14,6 @@ class Day2(
         val count =
             digits
                 .filter { it ->
-
                     if (it.length % 2 == 0) {
                         val left = it.substring(0, it.length / 2)
                         val right = it.substring(it.length / 2)
@@ -59,9 +58,7 @@ class Day2(
                     for (start in 0..it.length) {
                         for (end in start + 1 until it.length) {
                             val temp = it.substring(start, end)
-                            val split = it.split(temp).filter { it.isNotBlank() }
-
-                            if(split.size  == 0){
+                            if(it.replace(temp,"").isBlank()){
                                 return@filter true
                             }
                         }
