@@ -1,7 +1,5 @@
 package nel.marco
 
-import java.math.BigInteger
-
 class Day2(
     useExample: Boolean = false,
     useMac: Boolean = true,
@@ -12,23 +10,21 @@ class Day2(
         val count =
             digits
                 .parallelStream()
+                .filter { it.length % 2 == 0 }
                 .map { it ->
-                    if (it.length % 2 != 0) {
-                        return@map BigInteger.ZERO
-                    }
                     val midPoint = it.length / 2
 
                     val left = it.substring(0, midPoint)
                     val right = it.substring(midPoint)
 
                     if (!right.startsWith("0") && left == right) {
-                        return@map it.toBigInteger()
+                        return@map it.toLong()
                     }
 
-                    return@map BigInteger.ZERO
+                    return@map 0L
                 }
                 .toList()
-                .fold(BigInteger.ZERO) { a, b -> a + b }
+                .fold(0L) { a, b -> a + b }
 
         return count.toString()
     }
@@ -42,18 +38,19 @@ class Day2(
                 .parallelStream()
                 .map {
                     // if more than half the does not work exit out
-                    for (end in 0 until it.length / 2 + 1) {
+                    val max = it.length / 2 + 1
+                    for (end in 1 until max) {
                         val temp = it.substring(0, end)
-                        if (it.replace(temp, "").isBlank()) {
-                            return@map it.toBigInteger()
+                        if (it.replace(temp, "").isEmpty()) {
+                            return@map it.toLong()
                         }
                     }
-                    return@map BigInteger.ZERO
+                    return@map 0L
                 }
                 .toList()
 
 
-        return invalidDigits.fold(BigInteger.ZERO) { a, b -> a + b }.toString()
+        return invalidDigits.fold(0L) { a, b -> a + b }.toString()
     }
 
     private fun expandDigits(): List<String> {
