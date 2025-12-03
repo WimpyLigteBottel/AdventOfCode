@@ -7,48 +7,46 @@ class Day3(
     useMac: Boolean = true,
 ) : Day(dayNumber = 3, useExample = useExample, macBook = useMac) {
     override fun answerOne(): String {
-        return readInput.sumOf { line ->
-
-            var highest = 0L
-            for (i in 0..line.length - 1) {
-                for (x in i + 1..line.length - 1) {
-                    val newNumber = "${line[i]}${line[x]}".toLong()
-                    highest = Math.max(highest, newNumber)
-                }
-            }
-
-            highest
-        }.toString()
+        return readInput
+            .parallelStream()
+            .map { greedSelect(it, 2) }
+            .toList()
+            .sumOf { it }
+            .toString()
     }
 
 
     override fun answerTwo(): String {
-        return readInput.sumOf { line ->
-            greedSelect(line, 12)
-        }.toString()
+        return readInput
+            .parallelStream()
+            .map { greedSelect(it, 12) }
+            .toList()
+            .sumOf { it }
+            .toString()
     }
 
-    /*
-    987654321111111
-    811111111111119
-    234234234234278
-    818181911112111
+    /**
+     * Try to select as greedy as possible from left to right to created the highest number.
      */
-
-    fun greedSelect(input: String, k: Int): BigInteger {
+    fun greedSelect(input: String, target: Int): BigInteger {
         val stack = ArrayDeque<Char>()
-        var toRemove = input.length - k
+        //  How many tries we have that is allowed to remove a digit
+        var allowedToRemove = input.length - target
 
         for (c in input) {
-            while (stack.isNotEmpty() && toRemove > 0 && stack.last() < c) {
+            while (
+                stack.isNotEmpty() && // prevent errors
+                allowedToRemove > 0 && // check if i can still fix 'mistakes'
+                stack.last() < c // latest is bigger than last
+            ) {
                 stack.removeLast()
-                toRemove--
+                allowedToRemove--
             }
             stack.addLast(c)
         }
 
-        // If we still have too many digits (all were non-increasing)
-        while (stack.size > k) stack.removeLast()
+        // If we still have too many digits (all were non-increasing) OR i had no more removals let
+        while (stack.size > target) stack.removeLast()
 
         return stack.joinToString("").toBigInteger()
     }
