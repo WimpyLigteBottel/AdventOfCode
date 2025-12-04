@@ -34,7 +34,7 @@ class MarcoUtil {
 
             for (x in 0..<size) {
                 for (y in 0..<size) {
-                    print(newMap[Point(y, x)])
+                    print(newMap[Point(y, x)] ?: "")
                 }
                 println()
             }
