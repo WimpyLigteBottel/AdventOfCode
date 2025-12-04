@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-//part 1 took 1.518 ms average (totalRuns=3295; inSeconds=5)
+// part 1 took 1.466 ms average (totalRuns=3410; inSeconds=5)
 pub(crate) fn part1(result: &[String]) -> String {
     let toilet_paper_map = toilet_paper(result);
 
@@ -9,21 +9,22 @@ pub(crate) fn part1(result: &[String]) -> String {
     targets.to_string()
 }
 
-// part 2 took 22.959 ms average (totalRuns=218; inSeconds=5)
+// part 2 took 22.387 ms average (totalRuns=224; inSeconds=5)
 pub(crate) fn part2(result: &[String]) -> String {
     let mut toilet_paper_map = toilet_paper(result);
 
-    let mut has_changed = true;
-
-    while has_changed {
-        has_changed = false;
-
+    loop {
         let to_remove: Vec<Point> = rolls_to_remove(&toilet_paper_map, 4);
 
-        for key in to_remove {
-            toilet_paper_map.remove(&key);
-            toilet_paper_map.insert(key, 'X');
-            has_changed = true;
+
+
+        if to_remove.len() > 0 {
+            for key in to_remove.clone() {
+                toilet_paper_map.insert(key, 'X');
+            }
+        }
+        else {
+            break;
         }
     }
 
@@ -36,7 +37,7 @@ pub(crate) fn part2(result: &[String]) -> String {
 
 fn rolls_to_remove(map: &HashMap<Point, char>, count: usize) -> Vec<Point> {
     map.iter()
-        .filter(|(_, val)| (*val).eq(&'@') )
+        .filter(|(_, val)| (*val).eq(&'@'))
         .filter(|(key, _)| {
             let count_at = around(key)
                 .iter()
@@ -45,7 +46,7 @@ fn rolls_to_remove(map: &HashMap<Point, char>, count: usize) -> Vec<Point> {
                 .count();
             count_at < count
         })
-        .map(|(k, _)| k.clone())
+        .map(|(k, _)| Point(k.0, k.1))
         .collect::<Vec<Point>>()
 }
 
@@ -67,7 +68,7 @@ fn around(point: &Point) -> [Point; 8] {
     let left = Point(x - 1, y);
     let right = Point(x + 1, y);
 
-   [
+    [
         up, up_left, up_right, down, down_left, down_right, left, right,
     ]
 }
@@ -79,7 +80,7 @@ fn toilet_paper(result: &[String]) -> HashMap<Point, char> {
 
     for y in 0..result.len() as i32 {
         for x in 0..result[y as usize].len() as i32 {
-            map.insert(Point(x, y).clone(),  temp[y as usize][x as usize]);
+            map.insert(Point(x, y).clone(), temp[y as usize][x as usize]);
         }
     }
 
