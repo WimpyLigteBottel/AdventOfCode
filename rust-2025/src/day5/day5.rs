@@ -1,7 +1,7 @@
 #[derive(Debug, Clone, Copy)]
 struct Range(i128, i128);
 
-// part 1 took 0.663 ms average (totalRuns=7546; inSeconds=5)
+// part 1 took 0.087 ms average (totalRuns=57218; inSeconds=5)
 pub(crate) fn part1(result: &[String]) -> String {
     // Get ids
     let ids = result
@@ -26,7 +26,7 @@ pub(crate) fn part1(result: &[String]) -> String {
         })
         .collect::<Vec<Range>>();
 
-    let ranges = mergeRanges(ranges);
+    let ranges = merge_ranges(ranges);
 
     let fresh_count = ids
         .iter()
@@ -40,26 +40,19 @@ pub(crate) fn part1(result: &[String]) -> String {
     fresh_count.to_string()
 }
 
-// part 2 took 0.233 ms average (totalRuns=21426; inSeconds=5)
+//part 2 took 0.034 ms average (totalRuns=146536; inSeconds=5)
 pub(crate) fn part2(result: &[String]) -> String {
     let mut abc = result
         .iter()
         .filter(|id| id.contains("-"))
         .map(|x| {
             let split: Vec<String> = x.split("-").map(|x| x.to_string()).collect();
-            (split[0].clone(), split[1].clone())
+            (split[0].parse().unwrap(), split[1].parse().unwrap())
         })
-        .map(|(a, b)| {
-            Range(
-                a.parse::<i128>().expect("Expected a number for A"),
-                b.parse::<i128>().expect("Expected a number for B"),
-            )
-        })
+        .map(|(a, b)| Range(a, b))
         .collect::<Vec<Range>>();
 
-    abc.sort_by_key(|x| x.0);
-
-    let ranges = mergeRanges(abc);
+    let ranges = merge_ranges(abc);
 
     let fresh_count = ranges
         .iter()
@@ -69,7 +62,7 @@ pub(crate) fn part2(result: &[String]) -> String {
     fresh_count.to_string()
 }
 
-fn mergeRanges(mut input: Vec<Range>) -> Vec<Range> {
+fn merge_ranges(mut input: Vec<Range>) -> Vec<Range> {
     input.sort_by_key(|x| x.0);
     let mut result: Vec<Range> = Vec::new();
 
@@ -80,15 +73,15 @@ fn mergeRanges(mut input: Vec<Range>) -> Vec<Range> {
             .last()
             .expect("No last found, there should have been value added already");
 
-        if (current_range.0 > last.1 + 1) {
-            result.push((Range(current_range.0, current_range.1)));
+        if current_range.0 > last.1 + 1 {
+            result.push(Range(current_range.0, current_range.1));
             return;
         } else {
             let last = result
                 .pop()
                 .expect("No last found, there should have been value added already");
 
-            let new_range = Range(last.0, maxOf(last.1, current_range.1));
+            let new_range = Range(last.0, max_of(last.1, current_range.1));
 
             result.push(new_range)
         }
@@ -97,8 +90,8 @@ fn mergeRanges(mut input: Vec<Range>) -> Vec<Range> {
     result
 }
 
-fn maxOf(a: i128, b: i128) -> i128 {
-    if (a > b) {
+fn max_of(a: i128, b: i128) -> i128 {
+    if a > b {
         return a;
     }
     b
