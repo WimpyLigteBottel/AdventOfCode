@@ -1,10 +1,9 @@
 package nel.marco
 
 import java.math.BigInteger
-import java.util.concurrent.ConcurrentLinkedDeque
 
-private fun BigInteger.isBetween(it: Pair<BigInteger, BigInteger>): Boolean {
-    return it.first <= this && it.second >= this
+private fun BigInteger.isBetween(it: Day5.Range): Boolean {
+    return it.start <= this && it.end >= this
 }
 
 data class Day5(
@@ -14,15 +13,17 @@ data class Day5(
 
 
     override fun answerOne(): String {
-        val rangesA: List<Pair<BigInteger, BigInteger>> = readInput
+        var ranges = readInput
             .filter { it.contains("-") }
             .map { it.split("-") }
-            .map { (a, b) -> a.toBigInteger() to b.toBigInteger() }
+            .map { (a, b) -> Range(a.toBigInteger(), b.toBigInteger()) }
+            .sortedBy { it.start }
+
+        ranges = mergeRanges(ranges)
 
         val ids: List<BigInteger> = readInput.filter { !it.contains("-") && it.isNotBlank() }.map { it.toBigInteger() }
 
-
-        val isFresh = ids.count { id -> rangesA.any { id.isBetween(it) } }
+        val isFresh = ids.count { id -> ranges.any { id.isBetween(it) } }
 
         return isFresh.toString()
     }
@@ -36,29 +37,40 @@ data class Day5(
             .map { (a, b) -> Range(a.toBigInteger(), b.toBigInteger()) }
             .sortedBy { it.start }
 
+        val merged = mergeRanges(ranges)
 
-        val merged = ConcurrentLinkedDeque<Range>()
-        merged.add(ranges.first())
-
-        for (r in ranges) {
-            if (r.start > merged.last().end + BigInteger.ONE) {
-                // no overlap → add new interval
-                merged.add(r)
-            } else {
-                // overlap → merge into last
-                val last = merged.removeLast()
-                merged.add(
-                    Range(
-                        last.start,
-                        maxOf(last.end, r.end)
-                    )
-                )
-            }
-        }
-
+        // need to +1 because otherwise we dont count it correctly
         val total = merged.sumOf { it.end - it.start + BigInteger.ONE }
 
         return total.toString()
+    }
+
+    /*
+    Merges the ranges so that i can correctly count freshness
+     */
+    private fun mergeRanges(ranges: List<Range>): ArrayDeque<Range> {
+        val merged = ArrayDeque<Range>()
+        merged.add(ranges.first())
+
+        for (currentRange in ranges) {
+            var last = merged.last()
+            if (currentRange.start > last.end + BigInteger.ONE) {
+                // no overlap → add new interval
+                merged.add(currentRange)
+                continue
+            }
+
+            // remove the last value and we are going to replace it
+            last = merged.removeLast()
+
+            val newRange = Range(
+                start = last.start,
+                end = maxOf(last.end, currentRange.end)
+            )
+
+            merged.add(newRange)
+        }
+        return merged
     }
 
 }
