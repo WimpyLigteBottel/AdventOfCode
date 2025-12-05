@@ -21,19 +21,19 @@ class Day3Test {
         assertEquals("170418192256861", day.answerTwo())
     }
 
-//    day 2 part 1 took 2.8890347997373604 ms average (totalRuns=1523;inSeconds=5)
-//    day 2 part 2 took 0.14646574626540657 ms average (totalRuns=22961;inSeconds=5)
+//    day 3 part 1 took 2.8890347997373604 ms average (totalRuns=1523;inSeconds=5)
+//    day 3 part 2 took 0.14646574626540657 ms average (totalRuns=22961;inSeconds=5)
 
 
-//    day 2 part 1 took 0.17565981294255748 ms average (totalRuns=26409;inSeconds=5)
-//    day 2 part 2 took 0.14095934754277548 ms average (totalRuns=23787;inSeconds=5)
+//   day 3 part 1 took 0.1733249098814523 ms average (totalRuns=26909;inSeconds=5)
+//   day 3 part 2 took 0.15223284348694535 ms average (totalRuns=28036;inSeconds=5)
     @Test
     fun avgPart1() {
-        MarcoUtil.avgTime("day 2 part 1", 5) {
+        MarcoUtil.avgTime("day 3 part 1", 5) {
             assertEquals("17100", day.answerOne())
         }
 
-        MarcoUtil.avgTime("day 2 part 2", 5) {
+        MarcoUtil.avgTime("day 3 part 2", 5) {
             assertEquals("170418192256861", day.answerTwo())
         }
     }

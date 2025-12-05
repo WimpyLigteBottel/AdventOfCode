@@ -60,7 +60,6 @@ class Day4(
             }
         }
 
-//        printMap(newMap, map.size + 1)
-        return newMap
+         return newMap
     }
 }

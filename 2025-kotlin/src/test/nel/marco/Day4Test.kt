@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test
 
 class Day4Test {
 
-    val day = Day4(useExample = false, useMac = true)
-    val example = Day4(useExample = true, useMac = true)
+    val day = Day4(useExample = false, useMac = false)
+    val example = Day4(useExample = true, useMac = false)
 
     @Test
     fun answerOne() {
@@ -18,23 +18,19 @@ class Day4Test {
     @Test
     fun answerTwo() {
         assertEquals("43", example.answerTwo())
-        assertEquals("xx", day.answerTwo())
+        assertEquals("9086", day.answerTwo())
     }
 
-//    day 2 part 1 took 2.8890347997373604 ms average (totalRuns=1523;inSeconds=5)
-//    day 2 part 2 took 0.14646574626540657 ms average (totalRuns=22961;inSeconds=5)
-
-
-//    day 2 part 1 took 0.17565981294255748 ms average (totalRuns=26409;inSeconds=5)
-//    day 2 part 2 took 0.14095934754277548 ms average (totalRuns=23787;inSeconds=5)
+    //part 1 took 8.924214417744917 ms average (totalRuns=541;inSeconds=5)
+    //part 2 took 154.57575757575756 ms average (totalRuns=33;inSeconds=5)
     @Test
     fun avgPart1() {
-        MarcoUtil.avgTime("day 2 part 1", 5) {
-            assertEquals("XX", day.answerOne())
+        MarcoUtil.avgTime("part 1", 5) {
+            assertEquals("1416", day.answerOne())
         }
 
-        MarcoUtil.avgTime("day 2 part 2", 5) {
-            assertEquals("xx", day.answerTwo())
+        MarcoUtil.avgTime("part 2", 5) {
+            assertEquals("9086", day.answerTwo())
         }
     }
 }
