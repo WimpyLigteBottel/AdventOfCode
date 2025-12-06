@@ -3,7 +3,7 @@ struct OperatorAndIndex {
     index: usize,
 }
 
-// part 1 took 0.031 ms average (totalRuns=163366; inSeconds=5)
+// part 1 took 0.022 ms average (totalRuns=224142; inSeconds=5)
 pub(crate) fn part1(result: &[String]) -> String {
     let operator = get_operators_and_starting_index(result);
 
@@ -14,10 +14,10 @@ pub(crate) fn part1(result: &[String]) -> String {
         let next = operator[x + 1].index; // <-- FIXED
 
         let new_list = [
-            result[0][current..next].trim().parse::<i128>().unwrap(),
-            result[1][current..next].trim().parse::<i128>().unwrap(),
-            result[2][current..next].trim().parse::<i128>().unwrap(),
-            result[3][current..next].trim().parse::<i128>().unwrap(),
+            fast_parse(&result[0][current..next]),
+            fast_parse(&result[1][current..next]),
+            fast_parse(&result[2][current..next]),
+            fast_parse(&result[3][current..next]),
         ];
 
         total += calculate_answer(operator[x].operator, Vec::from(new_list));
@@ -53,7 +53,7 @@ fn get_operators_and_starting_index(result: &[String]) -> Vec<OperatorAndIndex> 
     operators
 }
 
-// part 2 took 0.373 ms average (totalRuns=24780;; inSeconds=5)
+// part 2 took 0.045 ms average (totalRuns=111675; inSeconds=5)
 pub(crate) fn part2(result: &[String]) -> String {
     let operator = get_operators_and_starting_index(&result);
 
@@ -61,23 +61,39 @@ pub(crate) fn part2(result: &[String]) -> String {
 
     for x in 0..operator.len() - 1 {
         let current = operator[x].index;
-        let next = operator[x + 1].index; // <-- FIXED
+        let next = operator[x + 1].index;
+        let width = next - current - 1;
 
-        let new_list: Vec<i128> = (0..next - current - 1)
-            .map(|y| {
-                let one = &result[0][current..next][y..y + 1].trim();
-                let two = &result[1][current..next][y..y + 1].trim();
-                let three = &result[2][current..next][y..y + 1].trim();
-                let four = &result[3][current..next][y..y + 1].trim();
+        // Each "column" yields one number built from 4 rows
+        let mut new_list = Vec::with_capacity(width);
 
-                let new = [*one, *two, *three, *four].join("");
+        for i in 0..width {
+            let mut value: i128 = 0;
 
-                new.parse::<i128>().unwrap()
-            })
-            .collect();
+            // Read one digit from each row (only ASCII digits)
+            for row in 0..4 {
+                let c = result[row].as_bytes()[current + i];
+                if c != b' ' {
+                    value = value * 10 + (c - b'0') as i128;
+                }
+            }
 
-        total += calculate_answer(operator[x].operator, new_list)
+            new_list.push(value);
+        }
+
+        total += calculate_answer(operator[x].operator, new_list);
     }
 
     total.to_string()
+}
+
+// parses digits without allocating a String
+fn fast_parse(s: &str) -> i128 {
+    let mut out = 0i128;
+    for c in s.bytes() {
+        if c != b' ' {
+            out = out * 10 + (c - b'0') as i128;
+        }
+    }
+    out
 }
