@@ -38,10 +38,8 @@ data class Day6(
         var total = BigInteger.ZERO
 
         for (x in 0 until operator.size) {
-            val newList = getNumbersAsList(numbersRow1, x, numbersRow2, numbersRow3, numbersRow4, isExample)
-
-            val operator = (operator[x].first)
-            total += calculateAnswer(operator, newList)
+            val newList = getNumbersAsList(x, numbersRow1, numbersRow2, numbersRow3, numbersRow4, isExample)
+            total += calculateAnswer(operator[x].first, newList)
         }
 
 
@@ -49,8 +47,8 @@ data class Day6(
     }
 
     private fun getNumbersAsList(
-        numbersRow1: MutableList<String>,
         x: Int,
+        numbersRow1: MutableList<String>,
         numbersRow2: MutableList<String>,
         numbersRow3: MutableList<String>,
         numbersRow4: MutableList<String>,
