@@ -3,9 +3,9 @@ struct OperatorAndIndex {
     index: usize,
 }
 
-// part 1 took 0.037 ms average (totalRuns=133305; inSeconds=5)
+// part 1 took 0.031 ms average (totalRuns=163366; inSeconds=5)
 pub(crate) fn part1(result: &[String]) -> String {
-    let mut operator = get_operators_and_starting_index(result);
+    let operator = get_operators_and_starting_index(result);
 
     let mut total: i128 = 0;
 
@@ -27,15 +27,12 @@ pub(crate) fn part1(result: &[String]) -> String {
 }
 
 fn calculate_answer(operator: char, new_list: Vec<i128>) -> i128 {
-    let mut answer = 0;
-    if (operator == '*') {
-        answer = new_list.iter().fold(1, |acc, i| acc * i)
+    if operator == '*' {
+        return new_list.iter().product();
+    } else if operator == '+' {
+        return new_list.iter().sum();
     }
-
-    if (operator == '+') {
-        answer = new_list.iter().fold(0, |acc, i| acc + i)
-    }
-    answer
+    0
 }
 
 fn get_operators_and_starting_index(result: &[String]) -> Vec<OperatorAndIndex> {
@@ -56,9 +53,9 @@ fn get_operators_and_starting_index(result: &[String]) -> Vec<OperatorAndIndex> 
     operators
 }
 
-// part 2 took 0.373 ms average (totalRuns=13406; inSeconds=5)
+// part 2 took 0.373 ms average (totalRuns=24780;; inSeconds=5)
 pub(crate) fn part2(result: &[String]) -> String {
-    let mut operator = get_operators_and_starting_index(&result);
+    let operator = get_operators_and_starting_index(&result);
 
     let mut total: i128 = 0;
 
@@ -73,10 +70,7 @@ pub(crate) fn part2(result: &[String]) -> String {
                 let three = &result[2][current..next][y..y + 1].trim();
                 let four = &result[3][current..next][y..y + 1].trim();
 
-                let new = [*one, *two, *three, *four]
-                    .join("")
-                    .replace(" ", "")
-                    .to_string();
+                let new = [*one, *two, *three, *four].join("");
 
                 new.parse::<i128>().unwrap()
             })
