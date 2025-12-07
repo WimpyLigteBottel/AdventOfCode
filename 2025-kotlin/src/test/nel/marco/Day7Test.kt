@@ -17,19 +17,19 @@ class Day7Test {
 
     @Test
     fun answerTwo() {
-        assertEquals("41", example.answerTwo())
-        assertEquals("x", day.answerTwo())
+        assertEquals("40", example.answerTwo())
+        assertEquals("18818811755665", day.answerTwo())
 
     }
 
     @Test
     fun avgPart1() {
         MarcoUtil.avgTime("part 1", 5) {
-            assertEquals("x", day.answerOne())
+            assertEquals("1537", day.answerOne())
         }
 
         MarcoUtil.avgTime("part 2", 5) {
-            assertEquals("x", day.answerTwo())
+            assertEquals("18818811755665", day.answerTwo())
         }
     }
 }

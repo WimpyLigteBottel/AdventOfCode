@@ -1,5 +1,6 @@
 package nel.marco
 
+import java.math.BigInteger
 import java.util.*
 
 
@@ -22,8 +23,14 @@ data class Day7(
                 val right = it.clone().right().retrieve(grid)
                 val up = it.clone().down().retrieve(grid)
 
-                listOf(left.value, right.value, up.value).count { it == "|" || it == "║" } == 3
+                listOf(left.value, right.value, up.value).count {
+                    runCatching {
+                        BigInteger(it)
+                    }.isSuccess
+                } == 3
             }
+
+        printMap(grid)
 
         return result.toString()
     }
@@ -36,46 +43,61 @@ data class Day7(
         stack.add(start)
 
         while (stack.isNotEmpty()) {
-            printMap(grid)
-            val current = stack.peek()
+            val current = stack.pop()
 
             if (current.y >= grid.size - 1) {
-                stack.pop();
                 continue
             }
 
             val next = current.clone().up().retrieve(grid)
 
             if (next.value == ".") {
-                stack.pop()
-
                 if (current.value == "║") {
                     next.value = current.value
                 } else {
-                    next.value = "|"
+                    next.value = "1"
                 }
                 stack.add(next);
             } else if (next.value == "^") {
-                stack.pop()
                 stack.add(next.clone().down().left())
                 stack.add(next.clone().down().right())
-            } else if (next.value == "|" || next.value == "║") {
-                next.value = "║"
-                stack.pop()
+            } else {
+                next.value = BigInteger(next.value).plus(BigInteger.ONE).toString()
             }
-
         }
     }
 
 
     override fun answerTwo(): String {
         val grid = createGrid()
+        val width = grid[0].size
+        val height = grid.size
+
+        // dp[row][col] = number of timelines reaching this cell
+        val dp = Array(height) { Array(width) { BigInteger.ZERO } }
+
         val start = findStart(grid)
+        dp[start!!.y][start.x] = BigInteger.ONE
 
-        processActions(start, grid)
+        for (r in start.y until height - 1) {
+            for (c in 0 until width) {
+                val timelines = dp[r][c]
+                if (timelines == BigInteger.ZERO) continue
 
-        return ""
+                when (grid[r + 1][c].value) {
+                    "." -> dp[r + 1][c] += timelines
+                    "^" -> {
+                        if (c - 1 >= 0) dp[r + 1][c - 1] += timelines
+                        if (c + 1 < width) dp[r + 1][c + 1] += timelines
+                    }
+                }
+            }
+        }
+
+        // Sum timelines in the last row
+        return dp[height - 1].fold(BigInteger.ZERO) { acc, v -> acc + v }.toString()
     }
+
 
     fun Point.retrieve(grid: List<List<Point>>): Point = grid[this.y][this.x]
 
@@ -88,11 +110,8 @@ data class Day7(
                 columns.add(Point(x = column, y = row, value = readInput[row][column].toString()))
             }
 
-            if (columns.size != columns.filter { it.value == "." }.size) {
-                grid.add(columns)
-            }
+            grid.add(columns)
         }
-        printMap(grid)
 
         return grid
     }
