@@ -2,7 +2,7 @@ package nel.marco
 
 import java.math.BigInteger
 
-typealias OperatorAndIndex = Pair<String, Int>
+typealias OperatorAndIndex = Pair<Char, Int>
 
 
 data class Day6(
@@ -22,47 +22,36 @@ data class Day6(
 
         val isExample = readInput[3].contains("*")
 
-        val numbersRow1 = mutableListOf<String>()
-        val numbersRow2 = mutableListOf<String>()
-        val numbersRow3 = mutableListOf<String>()
-        val numbersRow4 = mutableListOf<String>()
         val operator = getOperatorsAndStartingIndex(isExample)
 
+        var total = 0L
 
-        // get the numbers for the other rows
-        populateRows(operator, numbersRow1, numbersRow2, numbersRow3, numbersRow4)
+        for (x in 0 until operator.size - 1) {
 
-        // removed the extra operator to make my life easier
-        operator.removeLast()
+            val current = operator[x].second
+            val next = operator[x + 1].second - 1
 
-        var total = BigInteger.ZERO
-
-        for (x in 0 until operator.size) {
-            val newList = getNumbersAsList(x, numbersRow1, numbersRow2, numbersRow3, numbersRow4, isExample)
+            var newList = listOf(
+                readInput[0].substring(current, next),
+                readInput[1].substring(current, next),
+                readInput[2].substring(current, next),
+                readInput[3].substring(current, next)
+            ).map { it.replace(" ", "") }.map { it.toLong() }
+            if (isExample) {
+                newList = listOf(
+                    readInput[0].substring(current, next),
+                    readInput[1].substring(current, next),
+                    readInput[2].substring(current, next),
+                ).map { it.replace(" ", "") }.map { it.toLong() }
+            }
             total += calculateAnswer(operator[x].first, newList)
         }
-
 
         return total.toString()
     }
 
-    private fun getNumbersAsList(
-        x: Int,
-        numbersRow1: MutableList<String>,
-        numbersRow2: MutableList<String>,
-        numbersRow3: MutableList<String>,
-        numbersRow4: MutableList<String>,
-        isExample: Boolean
-    ): List<BigInteger> {
-        var newList = mutableListOf(numbersRow1[x], numbersRow2[x], numbersRow3[x], numbersRow4[x])
-        if (isExample) {
-            newList = mutableListOf(numbersRow1[x], numbersRow2[x], numbersRow3[x])
-        }
-        return newList.map { it.replace(" ", "") }.map { it.toBigInteger() }
-    }
-
     private fun populateRows(
-        operator: MutableList<Pair<String, Int>>,
+        operator: MutableList<Pair<Char, Int>>,
         numbersRow1: MutableList<String>,
         numbersRow2: MutableList<String>,
         numbersRow3: MutableList<String>,
@@ -96,7 +85,7 @@ data class Day6(
         // removed the extra operator i added in input
         operator.removeLast()
 
-        var total = BigInteger.ZERO
+        var total = 0L
 
         for (x in 0..operator.size - 1) {
 
@@ -111,18 +100,13 @@ data class Day6(
     }
 
     private fun calculateAnswer(
-        operator: String,
-        newList: List<BigInteger>
-    ): BigInteger {
-        var answer = BigInteger.ZERO
-        if (operator == "*") {
-            answer = newList.fold(BigInteger.ONE) { acc, i -> acc.times(i) }
+        operator: Char,
+        newList: List<Long>
+    ): Long {
+        if (operator == '*') {
+            return newList.fold(1) { acc, i -> acc.times(i) }
         }
-
-        if (operator == "+") {
-            answer = newList.fold(BigInteger.ZERO) { acc, i -> acc.plus(i) }
-        }
-        return answer
+        return newList.sumOf { it }
     }
 
     private fun getNumbersAsListButReversed(
@@ -132,19 +116,19 @@ data class Day6(
         numbersRow3: MutableList<String>,
         numbersRow4: MutableList<String>,
         isExample: Boolean,
-    ): List<BigInteger> {
+    ): List<Long> {
         val newList = mutableListOf<String>()
 
         for (y in 0..numbersRow1[x].length - 1) {
             val one = numbersRow1[x][y].toString()
             val two = numbersRow2[x][y].toString()
             val three = numbersRow3[x][y].toString()
-            val four = if(isExample) "" else numbersRow4[x][y].toString()
+            val four = if (isExample) "" else numbersRow4[x][y].toString()
 
             val joinedNumber = listOf(one, two, three, four).joinToString("").trim()
             newList.add(joinedNumber)
         }
-        return newList.map { it.toBigInteger() }
+        return newList.map { it.toLong() }
     }
 
 
@@ -158,11 +142,11 @@ data class Day6(
 
         for (index in 0..readInput[0].length - 1) {
             val operator = if (isExample)
-                readInput[3][index].toString()
+                readInput[3][index]
             else
-                readInput[4][index].toString()
+                readInput[4][index]
 
-            if (operator != " ")
+            if (operator != ' ')
                 operators.add(operator to index)
         }
         return operators

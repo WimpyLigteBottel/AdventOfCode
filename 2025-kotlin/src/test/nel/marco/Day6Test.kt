@@ -22,8 +22,8 @@ class Day6Test {
 
     }
 
-//    part 1 took 0.1622354290480659 ms average (totalRuns=19182;inSeconds=5)
-//    part 2 took 0.2315369261477046 ms average (totalRuns=13026;inSeconds=5)
+//    part 1 took 0.10298581209853885 ms average (totalRuns=28334;inSeconds=5)
+//    part 2 took 0.16965194991912777 ms average (totalRuns=16693;inSeconds=5)
 
     @Test
     fun avgPart1() {
