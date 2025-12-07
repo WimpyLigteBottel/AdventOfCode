@@ -15,7 +15,7 @@ data class Point(open var x: Int = 0, open var y: Int = 0, open var value: Strin
     }
 
     fun clone(): Point {
-        return Point(this.x, this.y)
+        return Point(this.x, this.y, this.value)
     }
 
     fun isOneSpotAway(other: Point): Boolean {
