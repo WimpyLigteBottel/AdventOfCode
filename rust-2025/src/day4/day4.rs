@@ -16,8 +16,6 @@ pub(crate) fn part2(result: &[String]) -> String {
     loop {
         let to_remove: Vec<Point> = rolls_to_remove(&toilet_paper_map, 4);
 
-
-
         if to_remove.len() > 0 {
             for key in to_remove.clone() {
                 toilet_paper_map.insert(key, 'X');

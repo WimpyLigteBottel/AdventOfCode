@@ -1,38 +1,30 @@
-mod day6;
+mod day7;
 mod util;
 
-use crate::day6::day6::{part1, part2};
+use crate::day7::day7::{part1, part2};
 use crate::util::avg_time;
 use util::read_results;
 
 fn main() {
-    let day = "day6";
+    let day = "day7";
     let path = "src/".to_owned() + day + "/input";
     let result = read_results(path.as_str());
 
-    println!("{:?}", part1(&result).eq("6343365546996"));
-    println!("{:?}", part2(&result).eq("11136895955912"));
+    let answer1 = "1537";
+    let answer2 = "18818811755665";
 
+    println!("{:?}", part1(&result).eq(answer1));
+    println!("{:?}", part2(&result).eq(answer2));
+
+    avg(result, answer1, answer2);
+}
+
+fn avg(result: Vec<String>, answer1: &str, answer2: &str) {
     avg_time("part 1", 5, || {
-        let _ = part1(&result).eq("6343365546996");
+        let _ = part1(&result).eq(answer1);
     });
 
     avg_time("part 2", 5, || {
-        let _ = part2(&result).eq("11136895955912");
+        let _ = part2(&result).eq(answer2);
     });
 }
-
-
-/*
-
-   @Test
-    fun avgPart1() {
-        MarcoUtil.avgTime("part 1", 5) {
-            assertEquals("6343365546996", day.answerOne())
-        }
-
-        MarcoUtil.avgTime("part 2", 5) {
-            assertEquals("11136895955912", day.answerTwo())
-        }
-    }
- */
